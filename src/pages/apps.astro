@@ -1,0 +1,111 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`Apps — ${SITE_TITLE}`}
+      description="Apps and business ventures by Nikka — tools, products, and projects in the wild."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <div class="page-header">
+        <div class="page-eyebrow">Products</div>
+        <h1 class="page-title">Apps & <em>Ventures</em></h1>
+        <p class="page-subtitle">
+          Apps I've published and business projects I'm working on.
+          More coming soon.
+        </p>
+      </div>
+
+      <div class="coming-soon">
+        <div class="coming-soon-icon">✦</div>
+        <p class="coming-soon-text">This page is being built. Check back soon.</p>
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 120px 60px 100px;
+  }
+
+  .page-header { margin-bottom: 64px; }
+
+  .page-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-terracotta);
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--color-terracotta);
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .page-title em { font-style: italic; color: var(--color-terracotta); }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .coming-soon {
+    padding: 80px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .coming-soon-icon {
+    font-size: 2rem;
+    color: var(--color-terracotta);
+    opacity: 0.4;
+  }
+
+  .coming-soon-text {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-weight: 300;
+  }
+
+  @media (max-width: 768px) {
+    main { padding: 100px 24px 80px; }
+  }
+</style>

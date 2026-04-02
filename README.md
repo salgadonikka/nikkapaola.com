@@ -1,62 +1,174 @@
-# Astro Starter Kit: Blog
+# nikkapaola.com
 
-```sh
-npm create astro@latest -- --template blog
+Personal blog and portfolio of Nikka Paola Salgado — a Filipino software developer, thyroid cancer survivor, and traveler writing about life, health, code, travel, finance, and the slow work of building a life with intention.
+
+Live at: **nikkapaola.com**
+
+---
+
+## Stack
+
+- **Astro 6** — static site framework
+- **React 19** — interactive components (mobile menu, photo gallery, newsletter form)
+- **Tailwind CSS 4** — via `@tailwindcss/vite`; all design tokens in `src/styles/global.css`
+- **MDX** — rich blog posts with embedded components
+- **TypeScript** — content collection schemas and component props
+
+---
+
+## Commands
+
+```bash
+npm install        # install dependencies
+npm run dev        # dev server at localhost:4321
+npm run build      # production build to ./dist/
+npm run preview    # preview the production build locally
+npm run astro      # run Astro CLI (e.g. astro check, astro add)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-Features:
+## Project structure
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```
+src/
+  assets/           # images (processed by Astro's Image pipeline)
+  components/
+    BaseHead.astro      # <head> with SEO, fonts, global styles
+    Header.astro        # site nav
+    Footer.astro        # site footer
+    DarkModeToggle.tsx  # light/dark toggle (React)
+    MobileMenu.tsx      # hamburger nav (React)
+    NewsletterForm.tsx  # email subscribe form (wire to Buttondown/ConvertKit)
+    PhotoGallery.tsx    # masonry grid + lightbox for album posts (React)
+    Callout.astro       # MDX callout block (note / tip / warning / aside)
+    Highlight.astro     # MDX editorial pull-quote
+    Figure.astro        # MDX image with optional caption
+    SEO.astro           # extended Open Graph / Twitter meta
+  content/
+    blog/               # all posts as .md or .mdx files
+  layouts/
+    BlogPost.astro      # layout wrapper for individual posts
+  pages/
+    index.astro         # homepage
+    about.astro         # about page
+    portfolio2.astro    # portfolio / work page
+    blog/
+      index.astro       # blog listing with category + tag filters
+      [...slug].astro   # individual post route
+    now.astro           # /now page
+    apps.astro          # /apps page
+    404.astro           # 404 page
+    rss.xml.js          # RSS feed
+  styles/
+    global.css          # design tokens (@theme {}), base styles, .prose
+public/
+  resume.pdf
+  robots.txt
+  favicon.ico
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Design system
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+All tokens live in `src/styles/global.css` under `@theme {}`:
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Token | Value |
+|---|---|
+| `--color-cream` | base background |
+| `--color-ink` | primary text |
+| `--color-ink-soft` | secondary text |
+| `--color-muted` | muted / labels |
+| `--color-terracotta` | primary accent |
+| `--color-sage` | secondary accent |
+| `--color-gold` | decorative accent |
+| `--color-border` | borders and dividers |
+| `--font-serif` | Playfair Display |
+| `--font-sans` | DM Sans |
 
-## 🧞 Commands
+Dark mode is controlled via `html[data-theme="dark"]` (user toggle) and `@media (prefers-color-scheme: dark)` (OS default).
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Writing a new blog post
 
-## 👀 Want to learn more?
+Create a `.md` or `.mdx` file in `src/content/blog/`. Frontmatter:
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```yaml
+---
+title: "Post title"
+description: "One sentence shown on listing cards."
+pubDate: 2026-04-03
+category: "Life"          # Life | Health | Travel | Software Dev | Finance | Hobbies | Learnings
+tags: ["personal", "intention"]
+readingTime: "4 min read" # fill manually
+heroImage: ./cover.jpg    # optional — relative to the .md file
+draft: false
+---
+```
 
-## Credit
+For MDX posts, import components at the top of the file (not in frontmatter):
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+```mdx
+import Callout from '../../components/Callout.astro';
+import Highlight from '../../components/Highlight.astro';
+import Figure from '../../components/Figure.astro';
+
+<Highlight>A pull-quote styled in serif with gold borders.</Highlight>
+
+<Callout type="note">A quiet aside.</Callout>
+<Callout type="tip" title="Worth trying">A practical takeaway.</Callout>
+<Callout type="warning">Something to watch out for.</Callout>
+<Callout type="aside">Off the main thread.</Callout>
+
+<Figure src="/images/photo.jpg" alt="Description" caption="Optional caption" />
+```
+
+---
+
+## Photo album posts
+
+For posts that are primarily photos, set `isAlbum: true` in frontmatter and use `PhotoGallery` in MDX:
+
+```mdx
+import PhotoGallery from '../../components/PhotoGallery.tsx';
+
+<PhotoGallery
+  client:load
+  images={["https://cdn.example.com/1.jpg", "https://cdn.example.com/2.jpg"]}
+  captions={["Caption one", "Caption two"]}
+  columns={3}
+/>
+```
+
+Do not commit large images to the repo. Use Cloudinary (free tier: 25 GB) or Cloudflare R2 (10 GB free, zero egress) and reference CDN URLs directly.
+
+---
+
+## Pages
+
+| Route | File | Notes |
+|---|---|---|
+| `/` | `index.astro` | Hero, topics grid, about strip |
+| `/blog` | `blog/index.astro` | Listing; `?cat=life` and `?tag=travel` filters |
+| `/blog/[slug]` | `blog/[...slug].astro` | Individual posts via BlogPost layout |
+| `/about` | `about.astro` | Personal about page |
+| `/portfolio` | `portfolio2.astro` | Work / portfolio with scroll-snap tiles and drawer |
+| `/now` | `now.astro` | What I'm doing now |
+| `/rss.xml` | `rss.xml.js` | RSS feed |
+
+---
+
+## Deploying
+
+Before deploying, update the `site` URL in `astro.config.mjs`:
+
+```js
+export default defineConfig({
+  site: 'https://nikkapaola.com',
+  // ...
+});
+```
+
+Then run `npm run build` — output goes to `./dist/`.

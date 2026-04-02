@@ -1,0 +1,262 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+// Update this date whenever you update the page content
+const lastUpdated = new Date('2026-03-14');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`Now — ${SITE_TITLE}`}
+      description="What Nikka is up to right now — updated regularly."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <div class="page-header">
+        <div class="page-eyebrow">
+          Updated {lastUpdated.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+        </div>
+        <h1 class="page-title">What I'm doing <em>now</em></h1>
+        <p class="page-subtitle">
+          A snapshot of where I am and what's keeping me busy.
+          Inspired by <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now pages</a>.
+        </p>
+      </div>
+
+      <div class="now-sections">
+
+        <section class="now-block">
+          <div class="now-icon">📍</div>
+          <div class="now-content">
+            <h2>Where I am</h2>
+            <p>
+              Cavite, Philippines. Working remotely, spending time with family,
+              and slowly sorting out the things I need for something exciting coming up.
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">💼</div>
+          <div class="now-content">
+            <h2>Work</h2>
+            <p>
+              Software developer and People Manager by day. Currently focused on AI fluency.
+              Also building this blog and exploring online earning opportunities.
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">🌱</div>
+          <div class="now-content">
+            <h2>The big thing</h2>
+            <p>
+              Planning a big life change! A lot of paperwork, research, and mental
+              preparations of leaving my comfort zone. It's exciting and terrifying in
+              equal parts. I will be sharing about this when the time is right.
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">📚</div>
+          <div class="now-content">
+            <h2>Reading</h2>
+            <ul>
+              <li><em>The Courage to be disliked</em> — Ichiro Kishimi, Fumitake Koga</li>
+              <li><em>Atomic Habits</em> — James Clear</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">🎗️</div>
+          <div class="now-content">
+            <h2>Health</h2>
+            <p>
+              Post-thyroid cancer, doing well. Regular check-ups, TSH levels stable.
+              Focusing on building sustainable routines — sleep, movement, less doom-scrolling.
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">✍️</div>
+          <div class="now-content">
+            <h2>Writing</h2>
+            <p>
+              Publishing posts on <a href="https://sidequeststofreedom.com/" target="_blank" rel="noopener">Side Quests To Freedom</a>.
+              Figuring out a sustainable way to maintain this along with its social media pages <a href="https://sidequeststofreedom.com/links" target="_blank" rel="noopener">linked here.</a>
+            </p>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="now-footer">
+        <p>
+          This is a <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now page</a>.
+          If you have your own site, you should make one too.
+        </p>
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 120px 60px 100px;
+  }
+
+  /* ── HEADER ── */
+  .page-header { margin-bottom: 64px; }
+
+  .page-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-terracotta);
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--color-terracotta);
+  }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .page-title em { font-style: italic; color: var(--color-terracotta); }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .page-subtitle a {
+    color: var(--color-terracotta);
+    text-decoration: underline;
+    text-decoration-color: var(--color-terracotta-light);
+    text-underline-offset: 2px;
+  }
+
+  /* ── NOW BLOCKS ── */
+  .now-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .now-block {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .now-block:first-child { border-top: 1px solid var(--color-border); }
+
+  .now-icon {
+    font-size: 1.4rem;
+    padding-top: 4px;
+  }
+
+  .now-content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    margin-bottom: 12px;
+  }
+
+  .now-content p {
+    font-size: 0.92rem;
+    color: var(--color-ink-soft);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .now-content p em { font-style: italic; }
+
+  .now-content ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .now-content li {
+    font-size: 0.92rem;
+    color: var(--color-ink-soft);
+    font-weight: 300;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .now-content li::before {
+    content: '—';
+    color: var(--color-terracotta);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+  }
+
+  .now-content em { font-style: italic; }
+
+  /* ── FOOTER NOTE ── */
+  .now-footer {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .now-footer p {
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .now-footer a {
+    color: var(--color-terracotta);
+    text-decoration: underline;
+    text-decoration-color: var(--color-terracotta-light);
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 768px) {
+    main { padding: 100px 24px 80px; }
+    .now-block { grid-template-columns: 36px 1fr; gap: 14px; }
+  }
+</style>

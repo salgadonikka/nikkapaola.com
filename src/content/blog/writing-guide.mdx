@@ -1,0 +1,195 @@
+---
+title: "Writing on This Blog: A Complete Reference"
+description: "Every frontmatter field, markdown element, and MDX component available when writing posts — with live examples."
+pubDate: 2026-03-24
+category: "Meta"
+tags: ["writing", "reference", "mdx"]
+readingTime: "6 min read"
+draft: true
+---
+
+This post documents everything available when authoring content on this blog.
+It is also a live functional test — if everything looks correct here, the rendering pipeline is working.
+
+---
+
+## Frontmatter fields
+
+Every post lives in `src/content/blog/` as a `.md` or `.mdx` file. The frontmatter block at the top controls metadata:
+
+```yaml
+---
+title: "Your Post Title"
+description: "One or two sentences shown on cards and in search results."
+pubDate: 2026-03-24 # required — ISO date
+updatedDate: 2026-03-25 # optional — shows "Updated" line in header
+heroImage: ./cover.jpg # optional — relative path to image file next to the .md
+category: "Travel" # optional — shown as label on cards and post header
+tags: ["philippines", "budget-travel"] # optional — used for filtering (/blog?tag=...)
+readingTime: "5 min read" # optional — fill manually
+isAlbum: false # optional — set true for photo-album posts
+---
+```
+
+**Rules:**
+
+- `title` and `description` are the only required fields besides `pubDate`
+- `heroImage` must be a path relative to the post file (not an absolute URL) — Astro will optimise it at build time
+- `tags` drive the filter chips on `/blog` — keep them lowercase and hyphenated for consistency
+- `category` is free-form text; whatever you write appears on the card exactly as typed
+
+---
+
+## Text formatting
+
+Standard Markdown formatting works everywhere:
+
+**Bold**, _italic_, ~~strikethrough~~, `inline code`, and [links](#).
+
+> Blockquotes render with a left border in the terracotta colour. Use them for quotes, callouts, or key takeaways.
+
+---
+
+## Headings
+
+```
+# H1 — reserved for the post title (auto-generated)
+## H2 — main sections
+### H3 — subsections
+#### H4 — rarely needed
+```
+
+Do not use `# H1` inside the post body — the layout already renders the post title as an `<h1>`. Start body sections with `##`.
+
+---
+
+## Lists
+
+Unordered:
+
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+
+Ordered:
+
+1. Step one
+2. Step two
+3. Step three
+
+---
+
+## Code blocks
+
+Fenced code blocks with a language hint get syntax highlighting via Shiki:
+
+```typescript
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+```python
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+```
+
+```bash
+npm run build
+```
+
+For inline code use backticks: `const x = 1`.
+
+---
+
+## Images
+
+For images inside a post body, use standard Markdown syntax with a **relative path**:
+
+```markdown
+![Alt text describing the image](./my-photo.jpg)
+```
+
+Place the image file in the same folder as the `.md` file. Astro will optimise it automatically (resize, convert to WebP, lazy-load).
+
+For the **hero / cover image**, set `heroImage: ./cover.jpg` in frontmatter — do not add it again in the body.
+
+---
+
+## Tables
+
+| Field       | Type     | Required | Notes                        |
+| ----------- | -------- | -------- | ---------------------------- |
+| title       | string   | Yes      | Post title                   |
+| description | string   | Yes      | Shown on cards and in search |
+| pubDate     | date     | Yes      | ISO format: `2026-03-24`     |
+| category    | string   | No       | Free-form label              |
+| tags        | string[] | No       | Lowercase, hyphenated        |
+| readingTime | string   | No       | E.g. `"5 min read"`          |
+
+---
+
+## Horizontal rules
+
+Use `---` on its own line for a section divider:
+
+---
+
+## MDX components
+
+Files saved as `.mdx` can import and use React components directly.
+
+### PhotoGallery
+
+For photo-album posts, import the gallery component:
+
+```mdx
+import PhotoGallery from "../../components/PhotoGallery.tsx";
+
+<PhotoGallery
+  client:load
+  images={[
+    "https://cdn.example.com/photo1.jpg",
+    "https://cdn.example.com/photo2.jpg",
+    "https://cdn.example.com/photo3.jpg",
+  ]}
+  captions={[
+    "Caption for photo 1",
+    "Caption for photo 2",
+    "Caption for photo 3",
+  ]}
+  columns={3}
+/>
+```
+
+**Props:**
+
+| Prop       | Type          | Default | Description                          |
+| ---------- | ------------- | ------- | ------------------------------------ |
+| `images`   | `string[]`    | —       | Array of image URLs                  |
+| `captions` | `string[]`    | `[]`    | Optional captions (matched by index) |
+| `columns`  | `2 \| 3 \| 4` | `3`     | Grid column count                    |
+
+The gallery renders a masonry-style grid with a lightbox. Use keyboard arrows to navigate, `Esc` to close.
+
+For the image hosting options (Cloudinary, Cloudflare R2, etc.) see the CLAUDE.md file.
+
+---
+
+## Photo-album posts
+
+To mark a post as a photo album, set `isAlbum: true` in frontmatter. This is a semantic flag — it does not change the layout automatically, but you can use it to filter or style album posts differently in the future.
+
+Use `.mdx` (not `.md`) for any post that embeds a `<PhotoGallery />`.
+
+---
+
+## Writing tips
+
+- **Keep `description` under 160 characters** — it's used as the meta description for SEO
+- **One `category` per post** — it shows as a coloured label on cards; too many categories fragment the filter navigation
+- **Tags are additive** — a reader filtering by `travel` will see posts tagged `travel` regardless of category
+- **Reading time is manual** — a rough rule: 200 words ≈ 1 minute
+- **`updatedDate`** is shown in the post header; use it when you substantially revise a published post, not for typo fixes
