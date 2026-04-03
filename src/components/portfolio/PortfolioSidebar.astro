@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import portfolioPhoto from '../../assets/portfolio-photo.png';
+
+interface Props {
+  sections: { num: string; label: string; id: string }[];
+}
+const { sections } = Astro.props;
+---
+
+<aside class="pf2-sidebar" id="pf2-sidebar" aria-label="Portfolio navigation">
+  <div class="si-rule"></div>
+  <div class="si-inner">
+
+    <!-- ── Identity ── -->
+    <div class="si-top">
+      <div class="si-avatar">
+        <Image
+          src={portfolioPhoto}
+          alt="Nikka Salgado"
+          width={100}
+          height={100}
+          class="si-avatar-img"
+        />
+        <span class="si-avatar-fallback" aria-hidden="true">NPS</span>
+      </div>
+      <div class="si-mono-rule"></div>
+      <div class="si-name">Nikka Paola Salgado</div>
+      <div class="si-role">Full-Stack Software Engineer</div>
+      <div class="si-stack">.NET · React · Azure</div>
+    </div>
+
+    <!-- ── Status + Contacts ── -->
+    <div class="si-bottom">
+      <div class="si-avail">
+        <span class="pulse-dot"></span>
+        <span class="si-avail-text">Open to work</span>
+      </div>
+      <div class="si-location">Poland &amp; Europe · Remote / Hybrid</div>
+      <div class="si-divider"></div>
+
+      <div class="si-contacts">
+        <a href="mailto:nikkapfs@gmail.com" class="si-contact-link" title="Email">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"></rect>
+            <path d="M1 4.5 8 9.5l7-5" stroke="currentColor" stroke-width="1.3"></path>
+          </svg>
+          <span>nikkapfs@gmail.com</span>
+        </a>
+        <a href="https://linkedin.com/in/nikkasalgado" target="_blank" rel="noopener" class="si-contact-link" title="LinkedIn">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M3.4 5.3H1V15h2.4V5.3zM2.2 4.2a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zM5.7 5.3V15H8V10c0-2.2 2.9-2.4 2.9 0V15H13.3V9.2c0-4.4-4.6-4.2-5.3-2.1V5.3H5.7z"></path>
+          </svg>
+          <span>linkedin.com/in/nikkasalgado</span>
+        </a>
+        <a href="https://github.com/salgadonikka" target="_blank" rel="noopener" class="si-contact-link" title="GitHub">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 .5C3.86.5.5 3.86.5 8a7.5 7.5 0 0 0 5.14 7.12c.38.07.52-.16.52-.36v-1.27c-2.1.46-2.54-.9-2.54-.9-.34-.87-.84-1.1-.84-1.1-.69-.47.05-.46.05-.46.76.05 1.16.78 1.16.78.67 1.16 1.76.82 2.19.63.07-.49.26-.82.48-1.01-1.67-.19-3.43-.84-3.43-3.72 0-.82.29-1.49.78-2.02-.08-.2-.34-1 .07-2.07 0 0 .64-.2 2.09.78A7.27 7.27 0 0 1 8 4.74a7.27 7.27 0 0 1 1.9.26c1.45-.98 2.09-.78 2.09-.78.41 1.07.15 1.87.07 2.07.49.53.78 1.2.78 2.02 0 2.89-1.76 3.53-3.44 3.72.27.24.51.7.51 1.4v2.08c0 .2.14.44.52.36A7.5 7.5 0 0 0 15.5 8C15.5 3.86 12.14.5 8 .5z"></path>
+          </svg>
+          <span>github.com/salgadonikka</span>
+        </a>
+        <a href="https://nikkapaola.com" class="si-contact-link" title="Website">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"></circle>
+            <path d="M8 1.5c-1.5 2-2.5 4-2.5 6.5s1 4.5 2.5 6.5M8 1.5c1.5 2 2.5 4 2.5 6.5S9.5 12.5 8 14.5M1.5 8h13" stroke="currentColor" stroke-width="1.3"></path>
+          </svg>
+          <span>nikkapaola.com</span>
+        </a>
+        <a href="/resume.pdf" target="_blank" rel="noopener" class="si-contact-link si-contact-link--resume" title="Resume">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span>View my Resume</span>
+        </a>
+      </div>
+
+      <!-- ── Navigation ── -->
+      <div class="si-divider"></div>
+      <nav class="si-nav" aria-label="Portfolio sections">
+        {sections.map((s, i) => (
+          <a
+            href={`#${s.id}`}
+            class={`si-link${i === 0 ? ' si-link--active' : ''}`}
+            data-section={s.num}
+            aria-current={i === 0 ? 'true' : 'false'}
+          >
+            <span class="si-num">{s.num}</span>
+            <span class="si-label">{s.label}</span>
+          </a>
+        ))}
+      </nav>
+      <a href="/" class="si-back">← Back to site</a>
+    </div>
+
+  </div>
+</aside>

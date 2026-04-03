@@ -1,0 +1,50 @@
+---
+interface Props {
+  sections: { num: string; label: string; id: string }[];
+}
+const { sections } = Astro.props;
+---
+
+<!-- ── MOBILE TOP BAR ── -->
+<div class="mob-bar" id="mob-bar">
+  <a href="/" class="mob-monogram">NPS</a>
+  <button
+    class="mob-hamburger"
+    id="mob-hamburger"
+    aria-label="Open navigation"
+    aria-expanded="false"
+  >
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- ── MOBILE OVERLAY ── -->
+<div class="mob-overlay" id="mob-overlay" aria-hidden="true">
+  <button class="mob-close" id="mob-close" aria-label="Close navigation">✕</button>
+  <nav class="mob-nav-list">
+    {sections.map((s) => (
+      <a href={`#${s.id}`} class="mob-nav-link" data-section={s.num}>
+        <span class="mob-nav-num">{s.num}</span>
+        <span class="mob-nav-label">{s.label}</span>
+      </a>
+    ))}
+  </nav>
+  <div class="mob-overlay-foot">
+    <div class="mob-avail">
+      <span class="pulse-dot"></span>
+      Open to work · Poland &amp; Europe
+    </div>
+    <div class="mob-contact-links">
+      <a href="mailto:nikkapfs@gmail.com">nikkapfs@gmail.com</a>
+      <a href="https://linkedin.com/in/nikkasalgado" target="_blank" rel="noopener">linkedin.com/in/nikkasalgado</a>
+      <a href="https://github.com/salgadonikka" target="_blank" rel="noopener">github.com/salgadonikka</a>
+    </div>
+    <a href="/" class="mob-site-back">← Back to nikkapaola.com</a>
+  </div>
+</div>
+
+<!-- ── MOBILE IDENTITY STRIP (hidden on desktop) ── -->
+<div class="mob-identity" aria-hidden="true">
+  <div class="mob-identity-name">Nikka Paola Salgado</div>
+  <div class="mob-identity-role">Full-Stack Software Engineer &amp; People Manager</div>
+</div>
