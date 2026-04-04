@@ -6,23 +6,62 @@
  *   <Figure src="/images/photo.jpg" alt="Description" caption="What you're looking at" />
  */
 interface Props {
-  src: string;
-  alt: string;
+  src?: string;
+  alt?: string;
   caption?: string;
   width?: number | string;
 }
 
-const { src, alt, caption, width } = Astro.props;
+const { src, alt = '', caption, width } = Astro.props;
 ---
 
 <figure class="blog-figure">
-  <img
-    src={src}
-    alt={alt}
-    style={width ? `width: ${typeof width === 'number' ? width + 'px' : width}` : undefined}
-  />
+  {src ? (
+    <img
+      src={src}
+      alt={alt}
+      style={width ? `width: ${typeof width === 'number' ? width + 'px' : width}` : undefined}
+    />
+  ) : (
+    <div class="blog-figure-placeholder" aria-label={alt} role="img">
+      <span class="blog-figure-placeholder-icon">✦</span>
+      {alt && <p class="blog-figure-placeholder-text">{alt}</p>}
+    </div>
+  )}
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
+
+<style>
+  .blog-figure-placeholder {
+    width: 100%;
+    min-height: 220px;
+    background: color-mix(in srgb, var(--color-terracotta) 6%, var(--color-cream));
+    border: 1px dashed var(--color-border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+  }
+
+  .blog-figure-placeholder-icon {
+    font-size: 1.2rem;
+    color: var(--color-muted);
+    opacity: 0.4;
+  }
+
+  .blog-figure-placeholder-text {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    font-style: italic;
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>
 
 <style>
   .blog-figure {

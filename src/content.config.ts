@@ -46,6 +46,12 @@ const blog = defineCollection({
       albumImages: z.array(z.string()).optional(),
       /** Set true to hide the post from listings and RSS; it still builds at its URL */
       draft: z.boolean().optional(),
+      /** Optional subtitle shown below the title (used in series posts) */
+      subtitle: z.string().optional(),
+      /** Series name this post belongs to, e.g. "Building Tamelo" */
+      series: z.string().optional(),
+      /** Position within the series */
+      seriesOrder: z.number().optional(),
     }),
 });
 
