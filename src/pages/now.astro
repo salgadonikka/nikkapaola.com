@@ -5,7 +5,7 @@ import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
 
 // Update this date whenever you update the page content
-const lastUpdated = new Date('2026-03-14');
+const lastUpdated = new Date('2026-04-04');
 ---
 
 <!doctype html>
@@ -96,6 +96,51 @@ const lastUpdated = new Date('2026-03-14');
             <p>
               Publishing posts on <a href="https://sidequeststofreedom.com/" target="_blank" rel="noopener">Side Quests To Freedom</a>.
               Figuring out a sustainable way to maintain this along with its social media pages <a href="https://sidequeststofreedom.com/links" target="_blank" rel="noopener">linked here.</a>
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">🛠️</div>
+          <div class="now-content">
+            <h2>Building</h2>
+            <ul>
+              <li><span class="now-li-body"><strong>Tamelo</strong><span>My personal system for getting out of the procrastination sinkhole. Started as a notebook task system, now building it as an app to allow better organization.</span></span></li>
+              <li><span class="now-li-body"><strong>My sister's portfolio site</strong><span>She's a content creator and influencer, and I am building her a proper online home.</span></span></li>
+              <li>This blog, obviously.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">🗣️</div>
+          <div class="now-content">
+            <h2>Learning</h2>
+            <ul>
+              <li><span class="now-li-body"><strong>Polish</strong><span>Very, very early beginner. The kind of beginner where every lesson feels like a small miracle.</span></span></li>
+              <li><span class="now-li-body"><strong>Spanish</strong><span>A2, 800+ day Duolingo streak and counting. At this point it's part of my identity.</span></span></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">🎵</div>
+          <div class="now-content">
+            <h2>Listening to</h2>
+            <p>
+              Taylor Swift. Specifically, still Taylor Swift. This has been going on for a couple of years now
+              and I have made peace with it.
+            </p>
+          </div>
+        </section>
+
+        <section class="now-block">
+          <div class="now-icon">⏸️</div>
+          <div class="now-content">
+            <h2>Not doing right now</h2>
+            <p>
+              The gym 😔 priorities shifted and something had to give. Still moving though:
+              yoga and light weight training at home, which honestly might be more sustainable anyway.
             </p>
           </div>
         </section>
@@ -233,6 +278,24 @@ const lastUpdated = new Date('2026-03-14');
   }
 
   .now-content em { font-style: italic; }
+
+  .now-li-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .now-li-body strong {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  .now-li-body span {
+    font-size: 0.92rem;
+    color: var(--color-ink-soft);
+    font-weight: 300;
+    line-height: 1.7;
+  }
 
   /* ── FOOTER NOTE ── */
   .now-footer {

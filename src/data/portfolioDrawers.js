@@ -199,8 +199,8 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">Technical decisions</div>
         <ul class="dr-list">
-          <li>ASP.NET Core 10 (preview) minimal API — intentionally minimal, no MediatR overhead</li>
-          <li>Supabase for PostgreSQL hosting and Row Level Security — no custom auth layer needed</li>
+          <li>ASP.NET Core 10 Web API, built with Clean Architecture, MediatR for CQRS, FluentValidation, and EF Core as the ORM</li>
+          <li>Supabase for authentication (email/password + Google OAuth) and PostgreSQL hosting. The API validates Supabase-issued JWTs and handles all data access via EF Core</li>
           <li>React 18 with TypeScript; state managed with Zustand for simplicity over Redux</li>
           <li>Circular task state: Pending → In Progress → Done → Skipped → Pending</li>
         </ul>

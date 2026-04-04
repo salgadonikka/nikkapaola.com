@@ -1,0 +1,101 @@
+<nav class="toc" id="post-toc" aria-label="Table of contents">
+  <div class="toc-label">On this page</div>
+  <ol class="toc-list" id="toc-list"></ol>
+</nav>
+
+<style>
+  .toc {
+    font-size: 0.78rem;
+    visibility: hidden; /* hidden until JS populates */
+  }
+
+  .toc.is-ready {
+    visibility: visible;
+  }
+
+  .toc-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-weight: 500;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  :global(.toc-list li.is-h3) {
+    padding-left: 12px;
+  }
+
+  :global(.toc-link) {
+    display: block;
+    padding: 4px 0 4px 8px;
+    border-left: 2px solid transparent;
+    color: var(--color-muted);
+    text-decoration: none;
+    line-height: 1.45;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  :global(.toc-link:hover) {
+    color: var(--color-ink);
+  }
+
+  :global(.toc-link.is-active) {
+    color: var(--color-terracotta);
+    border-left-color: var(--color-terracotta);
+  }
+</style>
+
+<script>
+  const toc = document.getElementById('post-toc') as HTMLElement | null;
+  const list = document.getElementById('toc-list') as HTMLElement | null;
+  const prose = document.querySelector('.prose') as HTMLElement | null;
+
+  if (toc && list && prose) {
+    const headings = [...prose.querySelectorAll('h2, h3')] as HTMLElement[];
+
+    if (headings.length < 2) {
+      toc.style.display = 'none';
+    } else {
+      headings.forEach((h, i) => {
+        if (!h.id) h.id = `heading-${i}`;
+        const li = document.createElement('li');
+        if (h.tagName === 'H3') li.classList.add('is-h3');
+        const a = document.createElement('a');
+        a.className = 'toc-link';
+        a.href = `#${h.id}`;
+        a.textContent = h.textContent ?? '';
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+
+      toc.classList.add('is-ready');
+
+      const links = [...list.querySelectorAll('.toc-link')] as HTMLAnchorElement[];
+
+      function updateActive() {
+        const scrollY = window.scrollY + 120;
+        let activeId = headings[0].id;
+        headings.forEach((h) => {
+          if ((h as HTMLElement).offsetTop <= scrollY) activeId = h.id;
+        });
+        links.forEach((a) => {
+          a.classList.toggle('is-active', a.getAttribute('href') === `#${activeId}`);
+        });
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    }
+  }
+</script>

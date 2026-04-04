@@ -13,13 +13,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image } = Astro.props;
 ---
 
-<!-- Theme: set before paint to prevent flash -->
+<!-- Theme: set before paint to prevent flash. Default is light; only switch to dark if user explicitly chose it. -->
 <script is:inline>
   (function () {
     const stored = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = stored ?? (prefersDark ? 'dark' : 'light');
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.theme = stored === 'dark' ? 'dark' : 'light';
   })();
 </script>
 
