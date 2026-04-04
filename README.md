@@ -47,6 +47,7 @@ src/
     SEO.astro           # extended Open Graph / Twitter meta
   content/
     blog/               # all posts as .md or .mdx files
+    projects/           # project entries as .md or .mdx files
   layouts/
     BlogPost.astro      # layout wrapper for individual posts
   pages/
@@ -56,12 +57,16 @@ src/
     blog/
       index.astro       # blog listing with category + tag filters
       [...slug].astro   # individual post route
+    projects/
+      index.astro       # projects listing
+      [slug].astro      # individual project detail page
     now.astro           # /now page
     apps.astro          # /apps page
     404.astro           # 404 page
     rss.xml.js          # RSS feed
   styles/
     global.css          # design tokens (@theme {}), base styles, .prose
+    projects.css        # styles for /projects index + detail pages
 public/
   resume.pdf
   robots.txt
@@ -127,6 +132,37 @@ import Figure from '../../components/Figure.astro';
 
 ---
 
+## Adding a project
+
+Create a `.md` or `.mdx` file in `src/content/projects/`. Frontmatter:
+
+```yaml
+---
+name: "Project Name"
+tagline: "One punchy line shown on the card and as the hero subtitle."
+description: "Slightly longer summary used in meta tags."
+category: "App"           # App | Business | Side Project | Content
+status: "In Progress"     # Live | In Progress | Planning | Paused
+featured: false           # true = spans full width on the grid, shows first
+order: 3                  # lower number = higher on index page
+stack:
+  - React 18
+  - TypeScript
+tags:
+  - tamelo
+  - productivity          # matched against blog post tags for "Writing about this"
+url: "https://example.com"       # optional — shows "Visit site" button
+githubUrl: "https://github.com/…" # optional — shows "View on GitHub" button
+screenshots:
+  - "https://cdn.example.com/screenshot-1.jpg"  # optional; first is the hero
+draft: false
+---
+```
+
+The body of the file is rendered as the **Overview** section on the detail page. Use `##` headings to add sub-sections (e.g., How it works, What's next). Related blog posts are auto-pulled from matching `tags`.
+
+---
+
 ## Photo album posts
 
 For posts that are primarily photos, set `isAlbum: true` in frontmatter and use `PhotoGallery` in MDX:
@@ -155,6 +191,8 @@ Do not commit large images to the repo. Use Cloudinary (free tier: 25 GB) or Clo
 | `/blog/[slug]` | `blog/[...slug].astro` | Individual posts via BlogPost layout |
 | `/about` | `about.astro` | Personal about page |
 | `/portfolio` | `portfolio2.astro` | Work / portfolio with scroll-snap tiles and drawer |
+| `/projects` | `projects/index.astro` | Grid of all projects, sorted by featured + order |
+| `/projects/[slug]` | `projects/[slug].astro` | Project detail: hero, overview, screenshots, stack, related posts |
 | `/now` | `now.astro` | What I'm doing now |
 | `/rss.xml` | `rss.xml.js` | RSS feed |
 

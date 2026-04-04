@@ -1,6 +1,6 @@
 # nikkapaola.com — Functional & Technical Documentation
 
-**Last updated:** March 2026
+**Last updated:** April 2026
 **Framework:** Astro 6
 **Live site:** https://nikkapaola.com
 
@@ -17,8 +17,10 @@
 7. [Design System](#7-design-system)
 8. [Content Management](#8-content-management)
 9. [Features](#9-features)
-10. [Build & Deployment](#10-build--deployment)
-11. [Configuration Reference](#11-configuration-reference)
+10. [Feature Flags](#10-feature-flags)
+11. [Build & Deployment](#11-build--deployment)
+12. [Configuration Reference](#12-configuration-reference)
+13. [Client Setup Guide](#13-client-setup-guide)
 
 ---
 
@@ -31,6 +33,25 @@
 - Showcase photo albums from travels
 - Maintain a `/now` page as a living snapshot of current activities
 - Be fast, accessible, and readable without JavaScript for most content
+
+### This repo as a business template
+
+This codebase is also the **base template for an influencer portfolio website business**. Features are built incrementally and made toggleable so the same codebase can be cloned per client, customized for their brand, and configured to the plan tier they've purchased.
+
+**Plan tiers (indicative):**
+
+| Feature | Basic | Standard | Premium |
+|---------|-------|----------|---------|
+| About + Portfolio | ✓ | ✓ | ✓ |
+| Contact form | ✓ | ✓ | ✓ |
+| Blog + RSS | — | ✓ | ✓ |
+| Search | — | ✓ | ✓ |
+| Newsletter form | — | ✓ | ✓ |
+| /now page | — | — | ✓ |
+| Guestbook | — | — | ✓ |
+| Projects section | — | — | ✓ |
+
+All feature toggles are controlled from a single file: `src/site.config.ts`.
 
 ---
 
@@ -133,6 +154,46 @@ Data sourced via `getCollection('blog')`, sorted by `pubDate` descending.
 Generates one static page per file in `src/content/blog/`. Calls `getStaticPaths()` using `getCollection('blog')`.
 
 Passes `id={post.id}` plus all `post.data` fields to the `BlogPost` layout.
+
+---
+
+### `/projects` — Projects Listing
+
+**File:** `src/pages/projects/index.astro`
+
+Displays all non-draft project entries from the `projects` content collection. Projects are sorted: featured first (full-width card), then by ascending `order` number.
+
+**Layout:** CSS grid with 2-column cards. Featured projects span the full width (`grid-column: 1 / -1`) and use a two-column internal layout (text left, arrow right). Each card shows category, status badge, project name, tagline, stack pills, and a hover-reveal "View project →" arrow.
+
+**Styles:** `src/styles/projects.css`
+
+---
+
+### `/projects/[slug]` — Project Detail
+
+**File:** `src/pages/projects/[slug].astro`
+
+Generates one static page per non-draft file in `src/content/projects/`. Calls `getStaticPaths()` using `getCollection('projects')`.
+
+**Sections (top to bottom):**
+
+1. **Hero** — breadcrumb (`Projects → name`), category + status badges, project title, tagline, and optional CTA links ("Visit site" / "View on GitHub")
+2. **Overview** — the MDX/Markdown body of the content file, rendered in `proj-prose` styles (serif headings, dash-prefixed lists, muted body text)
+3. **Screenshots** — grid of screenshot images if `screenshots` is provided; otherwise shows 3 placeholder boxes with dashed borders
+4. **Tech stack** — badge list of all items in `stack`
+5. **Writing about this** — auto-pulled blog posts that share one or more `tags` with the project; up to 4, sorted by most recent. Falls back to a placeholder message linking to `/blog`
+
+**Related posts logic:**
+```ts
+const relatedPosts = tags?.length
+  ? (await getCollection('blog'))
+      .filter(p => !p.data.draft && tags.some(t => p.data.tags?.includes(t)))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+      .slice(0, 4)
+  : [];
+```
+
+**Styles:** `src/styles/projects.css`
 
 ---
 
@@ -491,6 +552,67 @@ import PhotoGallery from '../../components/PhotoGallery.tsx';
 
 ---
 
+### Writing a new project entry
+
+Create a `.md` or `.mdx` file in `src/content/projects/`. The filename becomes the URL slug (e.g., `tamelo.mdx` → `/projects/tamelo`).
+
+**Full frontmatter reference:**
+
+```yaml
+---
+name: "Tamelo"
+tagline: "A weekly task planner built to escape the procrastination sinkhole."
+description: "Slightly longer summary used in meta tags and Open Graph."
+category: "App"           # App | Business | Side Project | Content
+status: "In Progress"     # Live | In Progress | Planning | Paused
+featured: true            # spans full width on /projects grid; shows first
+order: 1                  # lower = higher on the page (among non-featured)
+stack:
+  - React 18
+  - TypeScript
+  - ASP.NET Core
+tags:
+  - tamelo
+  - productivity          # matched against blog post tags for auto-pull
+url: "https://tamelo.app"          # optional — "Visit site" CTA button
+githubUrl: "https://github.com/…"  # optional — "View on GitHub" CTA button
+screenshots:
+  - "https://cdn.example.com/screenshot-1.jpg"  # first = hero (full-width)
+  - "https://cdn.example.com/screenshot-2.jpg"
+draft: false
+---
+```
+
+**Body content:**
+
+The file body renders as the Overview section. Use `##` headings to break it into sub-sections:
+
+```mdx
+## Overview
+General description of the project.
+
+## How it works
+Core mechanics or features.
+
+## What's next
+Roadmap items.
+```
+
+**Status badge colors:**
+
+| Status | Color |
+|--------|-------|
+| Live | Green (`#d4edd9` / `#2d6e3a`) |
+| In Progress | Terracotta light/dark |
+| Planning | Border grey / muted |
+| Paused | Warm white / muted |
+
+**Screenshots:** Use CDN URLs (Cloudinary or R2). The first screenshot spans the full width of the grid; subsequent ones fill the remaining columns. If no screenshots are provided, placeholder boxes are shown automatically.
+
+**Related posts:** Any blog post that shares at least one tag with the project will appear in the "Writing about this" section automatically. Keep tags consistent between projects and blog posts.
+
+---
+
 ## 9. Features
 
 ### Search (Pagefind)
@@ -529,7 +651,51 @@ On `/blog`, when filtering by category or tag, a bar appears showing:
 
 ---
 
-## 10. Build & Deployment
+## 10. Feature Flags
+
+All feature toggles are defined in `src/site.config.ts`. This is the **single file** that controls which sections of the site are active — for Nikka's personal site and for each client clone.
+
+### How it works
+
+Because Astro is a static site generator, feature flags run **at build time** — not at runtime. This means:
+- Disabled features produce zero dead code in the output
+- No runtime JS overhead for feature checking
+- The config file is simply imported wherever conditional rendering is needed
+
+### `src/site.config.ts` reference
+
+```ts
+export const FEATURES = {
+  blog: true,         // /blog listing + individual posts
+  newsletter: true,   // Email subscribe form on homepage
+  guestbook: false,   // Public guestbook with moderation
+  nowPage: true,      // /now page
+  projects: true,     // /projects listing + detail pages
+  search: true,       // /search (Pagefind)
+  rss: true,          // /rss.xml feed
+} as const;
+
+export type FeatureKey = keyof typeof FEATURES;
+```
+
+### Usage in pages/components
+
+```astro
+---
+import { FEATURES } from '../site.config';
+---
+{FEATURES.newsletter && <NewsletterForm client:load />}
+```
+
+### Adding a new toggleable feature
+
+1. Add the key to `FEATURES` in `src/site.config.ts`
+2. Wrap usage in pages/components with `{FEATURES.myFeature && ...}`
+3. If it's a whole page, either conditionally redirect in the page's frontmatter, or omit the file from the client clone
+
+---
+
+## 11. Build & Deployment
 
 ### Development
 
@@ -569,7 +735,7 @@ For Cloudflare Pages / Netlify / Vercel: set the build command to `npm run build
 
 ---
 
-## 11. Configuration Reference
+## 12. Configuration Reference
 
 ### `astro.config.mjs`
 
@@ -617,3 +783,90 @@ Controls what search engine crawlers can index. Currently set to allow all crawl
 ### `public/favicon.ico`
 
 16×16 and 32×32 icon served as the browser tab icon. Referenced in `BaseHead.astro`.
+
+---
+
+## 13. Client Setup Guide
+
+This section documents how to create a new client site from this base template.
+
+### Step 1 — Clone the repo
+
+```bash
+git clone https://github.com/nikkapaola/nikkapaola.com client-name
+cd client-name
+npm install
+```
+
+Create a new GitHub repo for the client and update the remote:
+
+```bash
+git remote set-url origin https://github.com/nikkapaola/client-name
+git push -u origin main
+```
+
+### Step 2 — Configure site identity
+
+**`src/consts.ts`:**
+```ts
+export const SITE_TITLE = 'Client Name';
+export const SITE_DESCRIPTION = 'Client tagline or description.';
+```
+
+**`astro.config.mjs`:** Update the `site` URL:
+```js
+site: 'https://clientdomain.com',
+```
+
+### Step 3 — Set feature flags
+
+Edit `src/site.config.ts` to match the client's plan tier:
+
+```ts
+export const FEATURES = {
+  blog: true,         // Standard+
+  newsletter: true,   // Standard+
+  guestbook: false,   // Premium only
+  nowPage: false,     // Premium only
+  projects: false,    // Premium only
+  search: true,       // Standard+
+  rss: true,          // Standard+
+} as const;
+```
+
+### Step 4 — Apply client branding
+
+All visual customization lives in `src/styles/global.css`. Update the CSS custom properties under `@theme {}`:
+- Swap `--color-terracotta` and accent colors for the client's palette
+- Swap `--font-serif` / `--font-sans` for the client's font choices (update the Google Fonts URL in `BaseHead.astro` too)
+
+### Step 5 — Replace content
+
+| File / Folder | What to change |
+|---------------|----------------|
+| `src/pages/about.astro` | Client bio, photo |
+| `src/pages/now.astro` | Client's current activities (or remove if not on Premium) |
+| `src/content/blog/` | Replace sample posts with client content |
+| `src/content/projects/` | Replace sample projects with client's work |
+| `src/assets/myphoto.jpg` | Client hero photo |
+| `public/favicon.ico` | Client favicon |
+
+### Step 6 — Deploy
+
+1. Push to the client's GitHub repo
+2. Create a new Cloudflare Pages project, connect to the repo
+3. Set build command: `npm run build`, output directory: `dist`
+4. Add any required environment variables (e.g., newsletter API keys)
+
+### Keeping clients updated
+
+When you improve the base template, changes do **not** automatically propagate to existing client repos (clone model). To selectively backport a fix:
+
+```bash
+# In the client repo, add the base template as a remote
+git remote add template https://github.com/nikkapaola/nikkapaola.com
+git fetch template
+
+# Cherry-pick a specific commit
+git cherry-pick <commit-sha>
+```
