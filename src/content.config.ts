@@ -2,6 +2,29 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+const projects = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    name: z.string(),
+    tagline: z.string(),
+    /** Short summary shown on the index card */
+    description: z.string(),
+    category: z.enum(['App', 'Business', 'Side Project', 'Content']),
+    status: z.enum(['Live', 'In Progress', 'Planning', 'Paused']),
+    stack: z.array(z.string()).optional(),
+    /** Matches blog post tags for "Writing about this" auto-pull */
+    tags: z.array(z.string()).optional(),
+    url: z.string().optional(),
+    githubUrl: z.string().optional(),
+    featured: z.boolean().default(false),
+    draft: z.boolean().optional(),
+    /** Screenshot URLs (CDN or absolute paths). First one is the hero. */
+    screenshots: z.array(z.string()).optional(),
+    /** Lower number = higher on index page */
+    order: z.number().default(99),
+  }),
+});
+
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
   schema: ({ image }) =>
@@ -26,4 +49,4 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+export const collections = { blog, projects };
