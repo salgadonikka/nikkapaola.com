@@ -8,9 +8,9 @@ export const drawerData = {
     eyebrow: "Experience",
     title: "WTW Manila Global Delivery Center",
     period: "Feb 2019 — Present",
-    role: "Associate Software Engineer → Lead Associate + People Manager",
+    role: "Associate Software Engineer → Lead Associate Software Engineer (+ People Manager)",
     body: `
-      <p class="dr-summary">6+ years at Willis Towers Watson's Manila delivery center, growing from associate engineer to technical lead and people manager on an enterprise benefits platform serving 100+ global clients.</p>
+      <p class="dr-summary">6+ years at Willis Towers Watson's Manila delivery center, contributing across the full stack of a multi-tier enterprise benefits administration platform serving pension and health clients across 100+ global organisations.</p>
       <div class="dr-section">
         <div class="dr-section-title">Career progression</div>
         <div class="dr-progression">
@@ -20,25 +20,19 @@ export const drawerData = {
         </div>
       </div>
       <div class="dr-section">
-        <div class="dr-section-title">Key achievement</div>
-        <div class="dr-achievement">Diagnosed and eliminated a critical data pipeline bottleneck — runtime dropped from 45 minutes to 20 seconds (135× improvement). Root cause: N+1 query pattern in SSIS loading 400K+ rows per loop. Fix: set-based SQL rewrite + indexed intermediate tables.</div>
-      </div>
-      <div class="dr-section">
-        <div class="dr-section-title">What I built &amp; maintained</div>
+        <div class="dr-section-title">What I worked on</div>
         <ul class="dr-list">
-          <li>Enterprise React + ASP.NET Core web apps for pension and health benefits administration</li>
-          <li>RESTful APIs consumed by internal tools and client-facing portals</li>
-          <li>SSIS ETL pipelines processing large-scale enrollment and benefits data</li>
-          <li>SQL Server databases with complex reporting queries and SSRS reports</li>
-          <li>OAuth2 / OIDC integration for client SSO requirements across 100+ enterprise tenants</li>
-          <li>Unit and integration test suites (NUnit)</li>
+          <li><strong>Pension payment workflow</strong> — contributed across backend, admin, and self-service portal surfaces for multiple phases of a fully redesigned pension payment feature. Received significant praise from client teams at launch.</li>
+          <li><strong>Death processing enhancements</strong> — major design enhancement and frontend update to the death processing workflow; received team recognition for this work.</li>
+          <li><strong>Audit data export</strong> — diagnosed and redesigned a critically slow export pipeline. Runtime dropped from 45 minutes to 20 seconds (135× improvement), with significant reductions in I/O and CPU usage.</li>
+          <li>Sustained contributions across the broader platform: communications, batch processes, case management, document generation, data exports, and reports.</li>
         </ul>
       </div>
       <div class="dr-section">
-        <div class="dr-section-title">As a manager</div>
-        <p>Led a distributed team, conducting regular 1:1s, performance evaluations, and coaching. Defined team and individual goals aligned to delivery priorities. Also stepped in as Scrum Master, SDET, and Technical Writer during transition periods to keep delivery on track.</p>
+        <div class="dr-section-title">As a manager (from Mar 2022)</div>
+        <p>Led an APAC shift development team — conducting 1:1s, performance evaluations, goal-setting, and coaching. Also stepped in as acting Scrum Master, SDET, and Technical Writer during transition periods to maintain delivery continuity.</p>
       </div>
-      <div class="dr-stack">ASP.NET Core · React · TypeScript · SQL Server · Azure DevOps · SSIS · SSRS · NUnit · OAuth2</div>
+      <div class="dr-stack">.NET Framework 4.8 · ASP.NET WebForms · ASP.NET MVC · ASP.NET Web API · React · TypeScript · SQL Server · SSIS · SSRS · Azure · NUnit · Selenium · Azure DevOps</div>
     `,
   },
 
@@ -228,7 +222,7 @@ export const drawerData = {
           <li>Cloudflare R2 for document storage — zero egress cost vs S3</li>
           <li>PostgreSQL via Supabase with full-text search over extracted medical data</li>
           <li>AI summarisation layer for lab result interpretation</li>
-        </ul>
+        </ul> 
       </div>
       <div class="dr-stack">.NET 8 · Next.js 14 · React Native · PostgreSQL · Cloudflare R2 · Hangfire</div>
       <a href="https://github.com/salgadonikka/mymedstory" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>

@@ -8,11 +8,11 @@ Live at: **nikkapaola.com**
 
 ## Stack
 
-- **Astro 6** — static site framework
-- **React 19** — interactive components (mobile menu, photo gallery, newsletter form)
-- **Tailwind CSS 4** — via `@tailwindcss/vite`; all design tokens in `src/styles/global.css`
-- **MDX** — rich blog posts with embedded components
-- **TypeScript** — content collection schemas and component props
+- **Astro 6** - static site framework
+- **React 19** - interactive components (mobile menu, photo gallery, newsletter form)
+- **Tailwind CSS 4** - via `@tailwindcss/vite`; all design tokens in `src/styles/global.css`
+- **MDX** - rich blog posts with embedded components
+- **TypeScript** - content collection schemas and component props
 
 ---
 
