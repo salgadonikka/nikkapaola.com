@@ -7,7 +7,7 @@ export const drawerData = {
   wtw: {
     eyebrow: "Experience",
     title: "WTW Manila Global Delivery Center",
-    period: "Feb 2019 — Present",
+    period: "Feb 2019 - Present",
     role: "Associate Software Engineer → Lead Associate Software Engineer (+ People Manager)",
     body: `
       <p class="dr-summary">6+ years at Willis Towers Watson's Manila delivery center, contributing across the full stack of a multi-tier enterprise benefits administration platform serving pension and health clients across 100+ global organisations.</p>
@@ -22,15 +22,15 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">What I worked on</div>
         <ul class="dr-list">
-          <li><strong>Pension payment workflow</strong> — contributed across backend, admin, and self-service portal surfaces for multiple phases of a fully redesigned pension payment feature. Received significant praise from client teams at launch.</li>
-          <li><strong>Death processing enhancements</strong> — major design enhancement and frontend update to the death processing workflow; received team recognition for this work.</li>
-          <li><strong>Audit data export</strong> — diagnosed and redesigned a critically slow export pipeline. Runtime dropped from 45 minutes to 20 seconds (135× improvement), with significant reductions in I/O and CPU usage.</li>
+          <li><strong>Pension payment workflow</strong> - contributed across backend, admin, and self-service portal surfaces for multiple phases of a fully redesigned pension payment feature. Received significant praise from client teams at launch.</li>
+          <li><strong>Death processing enhancements</strong> - major design enhancement and frontend update to the death processing workflow; received team recognition for this work.</li>
+          <li><strong>Audit data export</strong> - diagnosed and redesigned a critically slow export pipeline. Runtime dropped from 45 minutes to 20 seconds (135× improvement), with significant reductions in I/O and CPU usage.</li>
           <li>Sustained contributions across the broader platform: communications, batch processes, case management, document generation, data exports, and reports.</li>
         </ul>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">As a manager (from Mar 2022)</div>
-        <p>Led an APAC shift development team — conducting 1:1s, performance evaluations, goal-setting, and coaching. Also stepped in as acting Scrum Master, SDET, and Technical Writer during transition periods to maintain delivery continuity.</p>
+        <p>Led an APAC shift development team - conducting 1:1s, performance evaluations, goal-setting, and coaching. Also stepped in as acting Scrum Master, SDET, and Technical Writer during transition periods to maintain delivery continuity.</p>
       </div>
       <div class="dr-stack">.NET Framework 4.8 · ASP.NET WebForms · ASP.NET MVC · ASP.NET Web API · React · TypeScript · SQL Server · SSIS · SSRS · Azure · NUnit · Selenium · Azure DevOps</div>
     `,
@@ -39,16 +39,16 @@ export const drawerData = {
   deltek: {
     eyebrow: "Experience",
     title: "Deltek Systems (Philippines)",
-    period: "Jan 2016 — Jan 2019",
+    period: "Jan 2016 - Jan 2019",
     role: "Software Engineer — R&D & Automation",
     body: `
       <p class="dr-summary">Three years on Deltek's internal R&D team, building automation tooling and developer productivity applications from the ground up. Two of the applications developed here were adopted company-wide.</p>
       <div class="dr-section">
         <div class="dr-section-title">What I built</div>
         <ul class="dr-list">
-          <li><strong>Single Sign-On</strong> — lead developer on a company-wide SSO pilot; one of two major R&amp;D initiatives delivered by the team</li>
-          <li><strong>Test Results Manager</strong> — a centralized results tracking application for QA engineers across Deltek products</li>
-          <li><strong>Test Runner</strong> — contributed enhancements to an in-house automation tool that ran automated tests against the majority of Deltek's product suite</li>
+          <li><strong>Single Sign-On</strong> - lead developer on a company-wide SSO pilot; one of two major R&amp;D initiatives delivered by the team</li>
+          <li><strong>Test Results Manager</strong> - a centralized results tracking application for QA engineers across Deltek products</li>
+          <li><strong>Test Runner</strong> - contributed enhancements to an in-house automation tool that ran automated tests against the majority of Deltek's product suite</li>
         </ul>
       </div>
       <div class="dr-section">
@@ -61,7 +61,7 @@ export const drawerData = {
       </div>
       <div class="dr-section">
         <div class="dr-section-title">What this taught me</div>
-        <p>Building tools for other developers forces a different standard — the API has to be obvious, the errors have to be useful, and the thing has to keep working when you're not in the room. This is where I learned to write for maintainability, not just correctness.</p>
+        <p>Building tools for other developers forces a different standard - the API has to be obvious, the errors have to be useful, and the thing has to keep working when you're not in the room. This is where I learned to write for maintainability, not just correctness.</p>
       </div>
       <div class="dr-stack">C# · .NET Framework · Selenium WebDriver · Coded UI · SQL Server · MSTest</div>
     `,
@@ -70,7 +70,7 @@ export const drawerData = {
   eastwest: {
     eyebrow: "Experience",
     title: "EastWest Banking Corporation",
-    period: "Jul 2012 — Jan 2016",
+    period: "Jul 2012 - Jan 2016",
     role: "IT Management Trainee → Programmer-Analyst → Asst. Manager",
     body: `
       <p class="dr-summary">First professional role, starting as part of EastWest's competitive IT management trainee program and progressing to Assistant Manager. Spent most of this time on the Core Banking Transformation project — one of the largest system migrations in the bank's history.</p>
@@ -78,12 +78,12 @@ export const drawerData = {
         <div class="dr-section-title">Career progression</div>
         <div class="dr-progression">
           <div class="dr-prog-item"><span class="dr-prog-year">Jul 2012</span><span class="dr-prog-role">IT Management Trainee (ranked 5th overall)</span></div>
-          <div class="dr-prog-item"><span class="dr-prog-year">Aug 2013</span><span class="dr-prog-role">Programmer/Analyst — Junior Officer</span></div>
-          <div class="dr-prog-item"><span class="dr-prog-year">Jan 2015</span><span class="dr-prog-role">Programmer/Analyst — Assistant Manager</span></div>
+          <div class="dr-prog-item"><span class="dr-prog-year">Aug 2013</span><span class="dr-prog-role">Programmer/Analyst - Junior Officer</span></div>
+          <div class="dr-prog-item"><span class="dr-prog-year">Jan 2015</span><span class="dr-prog-role">Programmer/Analyst - Assistant Manager</span></div>
         </div>
       </div>
       <div class="dr-section">
-        <div class="dr-section-title">Core Banking Transformation (Jul 2013 — Nov 2014)</div>
+        <div class="dr-section-title">Core Banking Transformation (Jul 2013 - Nov 2014)</div>
         <ul class="dr-list">
           <li>Participated in functional and technical testing of Temenos T24 during the bank's migration from its legacy core banking system</li>
           <li>Developed a stored procedure used in the migration of Auto Loans Add-On data</li>
@@ -102,7 +102,7 @@ export const drawerData = {
       </div>
       <div class="dr-section">
         <div class="dr-section-title">What this gave me</div>
-        <p>Banking sets a high bar for correctness — production issues in a core banking system affect real accounts. Working under those constraints shaped how I think about data integrity, change management, and what "done" really means in a regulated environment.</p>
+        <p>Banking sets a high bar for correctness - production issues in a core banking system affect real accounts. Working under those constraints shaped how I think about data integrity, change management, and what "done" really means in a regulated environment.</p>
       </div>
       <div class="dr-stack">C# · .NET Framework · SQL Server · Temenos T24 · jBase · SSRS</div>
     `,
@@ -111,7 +111,7 @@ export const drawerData = {
   emerson: {
     eyebrow: "Internship",
     title: "Emerson Process Management",
-    period: "Apr 2012 — Jun 2012",
+    period: "Apr 2012 - Jun 2012",
     role: "Software Developer Intern",
     body: `
       <p class="dr-summary">Three-month internship at Emerson's Power and Water Solutions division, building two standalone applications as part of the intern program.</p>
@@ -119,8 +119,8 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">What I built</div>
         <ul class="dr-list">
-          <li><strong>Arduino Interface App</strong> — a Windows desktop application that communicated with an external Arduino device, reading and displaying hardware signals</li>
-          <li><strong>Mobile Chat App</strong> — a chat application built for the Android platform</li>
+          <li><strong>Arduino Interface App</strong> - a Windows desktop application that communicated with an external Arduino device, reading and displaying hardware signals</li>
+          <li><strong>Mobile Chat App</strong> - a chat application built for the Android platform</li>
         </ul>
       </div>
       <div class="dr-stack">C# · .NET Framework · Java (Android) · Arduino</div>
@@ -130,14 +130,14 @@ export const drawerData = {
   mapua: {
     eyebrow: "Education",
     title: "Mapua Institute of Technology",
-    period: "Jul 2007 — Aug 2012",
+    period: "Jul 2007 - Aug 2012",
     role: "B.S. Computer Engineering",
     body: `
       <p class="dr-summary">Bachelor of Science in Computer Engineering with a specialization in the Microsoft .NET Framework. Now known as Mapua University.</p>
       <div class="dr-divider"></div>
       <div class="dr-section">
         <div class="dr-section-title">Specialization</div>
-        <p>Microsoft .NET Framework — coursework focused on enterprise software development patterns and the Windows application stack.</p>
+        <p>Microsoft .NET Framework - coursework focused on enterprise software development patterns and the Windows application stack.</p>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Thesis</div>
@@ -149,25 +149,17 @@ export const drawerData = {
   },
 
   "benefits-platform": {
-    eyebrow: "Project — Enterprise",
+    eyebrow: "Project - Enterprise",
     title: "Benefits Outsourcing Platform",
     subtitle: "WTW Manila Global Delivery Center",
     body: `
-      <p class="dr-summary">Enterprise React + ASP.NET Core web platform for pension and health benefits administration. Served 100+ global corporate clients over 6+ years of production. Proprietary — detailed architecture available in interviews.</p>
-      <div class="dr-section">
-        <div class="dr-section-title">Scale &amp; scope</div>
-        <div class="dr-stats-row">
-          <div class="dr-stat"><span class="dr-stat-num">100+</span><span class="dr-stat-lbl">Global clients</span></div>
-          <div class="dr-stat"><span class="dr-stat-num">135×</span><span class="dr-stat-lbl">Pipeline speedup</span></div>
-          <div class="dr-stat"><span class="dr-stat-num">6+</span><span class="dr-stat-lbl">Years production</span></div>
-        </div>
-      </div>
+      <p class="dr-summary">Enterprise React + ASP.NET Core web platform for pension and health benefits administration. Served 100+ global corporate clients over 6+ years of production. Proprietary - detailed architecture available in interviews.</p>
       <div class="dr-section">
         <div class="dr-section-title">What I contributed</div>
         <ul class="dr-list">
           <li>Full-stack feature development: React UI components, ASP.NET Core API endpoints, SQL Server data layer</li>
           <li>Diagnosed and resolved 135× pipeline bottleneck (N+1 + large-row SSIS query pattern)</li>
-          <li>Code review ownership as lead — set standards for the team's React and .NET patterns</li>
+          <li>Code review ownership as lead - set standards for the team's React and .NET patterns</li>
           <li>Onboarded and mentored 8 engineers; managed growth plans and performance reviews</li>
           <li>OAuth2 / OIDC integration for client SSO requirements across 100+ enterprise tenants</li>
         </ul>

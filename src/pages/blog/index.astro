@@ -515,19 +515,23 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
   @media (max-width: 900px) {
     .blog-layout {
       grid-template-columns: 1fr;
-      gap: 48px;
+      gap: 24px;
     }
 
     .sidebar {
       position: static;
-      /* show sidebar above posts on narrow screens */
-      order: -1;
       flex-direction: row;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 16px;
+      border-top: 1px solid var(--color-border);
+      padding-top: 24px;
+      margin-top: 8px;
     }
 
-    .sidebar-section { min-width: 200px; flex: 1; }
+    .sidebar-section { min-width: 180px; flex: 1; }
+
+    .topic-list { gap: 0; }
+    .topic-link { padding: 6px 8px; font-size: 0.8rem; }
   }
 
   @media (max-width: 600px) {
@@ -537,5 +541,6 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     .post-row-title { font-size: 1.1rem; }
 
     .sidebar { flex-direction: column; }
+    .sidebar-section { min-width: unset; }
   }
 </style>

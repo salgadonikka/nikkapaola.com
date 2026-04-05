@@ -1571,25 +1571,73 @@
 }
 
 @media (max-width: 1100px) and (min-width: 769px) {
+  /* Sidebar — stays visible, slightly narrower */
   .pf2-sidebar {
     width: 290px;
   }
   .si-inner {
     padding: 40px 28px 32px 40px;
   }
+
+  /* Tiles — keep snap, make inner scrollable for stacked content */
   .tile-inner {
-    padding: 44px 48px;
+    padding: 44px 40px;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ── Tile 01: stack columns vertically ── */
+  .t01-grid {
+    flex-direction: column;
+    flex: none;
+    min-height: auto;
   }
   .t01-left {
-    padding-right: 36px;
+    width: auto;
+    padding-right: 0;
+    padding-bottom: 28px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .t01-data-col {
+    margin-top: 16px;
   }
   .t01-skills {
-    padding-left: 36px;
+    padding-left: 0;
+    padding-top: 28px;
+    min-height: auto;
+  }
+  .t01-skill-groups {
+    flex: none;
+    min-height: auto;
+    overflow-y: visible;
+  }
+
+  /* ── Tile 02: stack columns vertically ── */
+  .t02-grid {
+    flex-direction: column;
+    flex: none;
+    min-height: auto;
   }
   .t02-left {
-    padding-right: 36px;
+    width: auto;
+    padding-right: 0;
+    padding-bottom: 28px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    min-height: auto;
   }
   .t02-right {
-    padding-left: 36px;
+    padding-left: 0;
+    padding-top: 28px;
+    overflow-y: visible;
+    min-height: auto;
+  }
+  .timeline {
+    flex: none;
+    overflow-y: visible;
+    min-height: auto;
+    max-height: none;
   }
 }
