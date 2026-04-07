@@ -1,17 +1,24 @@
 ---
+import { siteConfig } from '../site.config';
+
+const { logo, footerLinks, author } = siteConfig;
 const year = new Date().getFullYear();
 ---
 
 <footer>
-  <a href="/" class="footer-logo">nikka<span>paola</span>.com</a>
+  <a href="/" class="footer-logo">{logo.part1}<span>{logo.part2}</span>{logo.suffix}</a>
   <nav class="footer-links">
-    <a href="/now">Now</a>
-    <a href="https://linkedin.com/in/nikkasalgado" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://github.com/salgadonikka" target="_blank" rel="noopener">GitHub</a>
-    <a href="/rss.xml" target="_blank">RSS</a>
-    <a href="mailto:nikkapfs.com">Contact</a>
+    {footerLinks.map((link) => (
+      <a
+        href={link.href}
+        target={link.external ? '_blank' : undefined}
+        rel={link.external ? 'noopener' : undefined}
+      >
+        {link.label}
+      </a>
+    ))}
   </nav>
-  <p class="footer-copy">© {year} Nikka Paola</p>
+  <p class="footer-copy">© {year} {author.shortName}</p>
 </footer>
 
 <style>

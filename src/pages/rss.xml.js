@@ -1,12 +1,12 @@
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { siteConfig } from '../site.config';
 
 export async function GET(context) {
 	const posts = await getCollection('blog', ({ data }) => !data.draft);
 	return rss({
-		title: "Nikka  Paola",
-		description: "My little corner of the internet.",
+		title: siteConfig.author.shortName,
+		description: siteConfig.description,
 		site: context.site,
 		items: posts.map((post) => ({
 			title: post.data.title,

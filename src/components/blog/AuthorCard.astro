@@ -1,22 +1,22 @@
 ---
 import { Image } from 'astro:assets';
 import myPhoto from '../../assets/myphoto.jpg';
+import { siteConfig } from '../../site.config';
+
+const { author } = siteConfig;
 ---
 
 <div class="author-card">
   <Image
     src={myPhoto}
-    alt="Nikka Paola Salgado"
+    alt={author.name}
     width={52}
     height={52}
     class="author-avatar"
   />
   <div class="author-card-body">
-    <div class="author-card-name">Nikka Paola Salgado</div>
-    <p class="author-card-bio">
-      Developer, traveler, thyroid cancer survivor. Writing about life,
-      code, money, and the things in between.
-    </p>
+    <div class="author-card-name">{author.name}</div>
+    <p class="author-card-bio">{author.bio}</p>
     <a href="/about" class="author-card-link">About me →</a>
   </div>
 </div>

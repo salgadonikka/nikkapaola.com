@@ -9,6 +9,7 @@ import AuthorCard from '../components/blog/AuthorCard.astro';
 import NowSidebar from '../components/blog/NowSidebar.astro';
 import ReadingProgress from '../components/blog/ReadingProgress.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
+import { FEATURES } from '../site.config';
 
 type Props = CollectionEntry<'blog'>['data'] & { id?: string; showAuthorCard?: boolean };
 
@@ -51,7 +52,7 @@ const olderPost = currentIdx !== -1 && currentIdx < allPosts.length - 1 ? allPos
   </head>
   <body>
     <Header />
-    <ReadingProgress />
+    {FEATURES.readingProgress && <ReadingProgress />}
 
     <main>
       <!-- Hero cover -->
@@ -73,7 +74,7 @@ const olderPost = currentIdx !== -1 && currentIdx < allPosts.length - 1 ? allPos
 
         <!-- Left: table of contents (desktop only) -->
         <aside class="post-toc-col">
-          <TableOfContents />
+          {FEATURES.tableOfContents && <TableOfContents />}
         </aside>
 
         <!-- Center: article -->

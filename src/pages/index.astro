@@ -6,31 +6,22 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import NewsletterForm from '../components/NewsletterForm.tsx';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { siteConfig } from '../site.config';
 import myPhoto from '../assets/myphoto.jpg';
+
+const { hero, aboutStrip, topics } = siteConfig;
 
 const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 5);
 
 const [featuredPost, ...sidebarPosts] = recentPosts;
-
-const topics = [
-  { icon: '🌸', name: 'Life & Self', desc: 'Reflections, routines, and some life nuggets.', count: 'Personal · Journal', color: 'terracotta', cat: 'life' },
-  { icon: '🎗️', name: 'Health Journey', desc: 'Thyroid cancer, recovery, and what comes after.', count: 'Health · Survival', color: 'dusty-rose', cat: 'health' },
-  { icon: '🗺️', name: 'Travel', desc: 'Places I\'ve been, things I\'ve learned there.', count: 'Travel · Photography', color: 'gold', cat: 'travel' },
-  { icon: '🌙', name: 'A New Chapter', desc: 'Something is taking shape. I\'ll tell you when it\'s time.', count: 'Coming Soon · TBA', color: 'sage', cat: 'tba' },
-  { icon: '💻', name: 'Software Dev', desc: 'Building things, career lessons, and tech thoughts.', count: 'Tech · Career', color: 'terracotta', cat: 'work' },
-  { icon: '📊', name: 'Personal Finance', desc: 'Budgeting, saving, and making money less scary.', count: 'Finance · Org', color: 'blue', cat: 'finance' },
-  { icon: '✨', name: 'Hobbies & Misc', desc: 'Everything else that doesn\'t fit a neat box.', count: 'Lifestyle · Random', color: 'lavender', cat: 'misc' },
-  { icon: '📖', name: 'Learnings', desc: 'Books, courses, and things I\'m figuring out.', count: 'Growth · Notes', color: 'sage', cat: 'learnings' },
-];
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={siteConfig.title} description={siteConfig.description} />
   </head>
   <body>
     <Header />
@@ -43,18 +34,11 @@ const topics = [
           Nothing on pause.<br />
           <em>Everything on purpose.</em>
         </h1>
-        <p class="hero-tagline">A documentation of my life.</p>
-        {/* <p class="hero-bio">
-          Hi, I'm Nikka. A software developer, thyroid cancer survivor, a traveler.
-          I'm here to share the things I'm learning, the things I want to remember,
-          and everything else in between.
-        </p> */}
+        <p class="hero-tagline">{hero.tagline}</p>
         <div class="hero-tags">
-          <span class="tag tag-rose">Health</span>
-          <!--<span class="tag tag-sage">Moving to Poland</span>-->
-          <span class="tag tag-gold">Travel</span>
-          <span class="tag tag-blue">Software Development</span>
-          <span class="tag tag-lavender">Finance</span>
+          {hero.tags.map((tag) => (
+            <span class={`tag ${tag.style}`}>{tag.label}</span>
+          ))}
         </div>
         <div class="hero-cta">
           <a href="/blog" class="btn-primary">Read the blog</a>
@@ -66,7 +50,7 @@ const topics = [
         <div class="hero-image-area">
           <Image
             src={myPhoto}
-            alt="Nikka Paola"
+            alt={hero.photoAlt}
             class="hero-photo"
             widths={[800, 1200]}
             sizes="50vw"
@@ -74,13 +58,13 @@ const topics = [
           <div class="hero-photo-fade"></div>
 
           <div class="floating-card card-location">
-            <div class="card-label">📍 Currently in</div>
-            <div class="card-value">Philippines</div>
+            <div class="card-label">{hero.floatingCards[0].icon} {hero.floatingCards[0].label}</div>
+            <div class="card-value">{hero.floatingCards[0].value}</div>
           </div>
 
           <div class="floating-card card-season">
-            <div class="card-label">🌱 Next chapter</div>
-            <div class="card-value">Something exciting, TBA</div>
+            <div class="card-label">{hero.floatingCards[1].icon} {hero.floatingCards[1].label}</div>
+            <div class="card-value">{hero.floatingCards[1].value}</div>
           </div>
         </div>
       </div>
@@ -167,35 +151,17 @@ const topics = [
     <section class="about-strip" id="about">
       <div class="about-text">
         <h2>A little about <em>who I am</em></h2>
-        <p>
-          I'm Nikka, a Filipino software developer with a lot going on. This blog is where I write
-          about the things I want to remember and the things I think might help someone else. I'm
-          trying to live life intentionally and I want to put out something positive into the world. 
-          Cancer, code, money, travel, and the slow work of building a life that actually fits.
-        </p>
+        <p>{aboutStrip.bio}</p>
         <a href="/about" class="about-link">Read the full story</a>
       </div>
       <div class="about-facts">
-        <div class="fact">
-          <span class="fact-emoji">🇵🇭</span>
-          <div class="fact-label">Based in</div>
-          <div class="fact-value">Manila, Philippines</div>
-        </div>
-        <div class="fact">
-          <span class="fact-emoji">🌱</span>
-          <div class="fact-label">Next chapter</div>
-          <div class="fact-value">A big move, soon</div>
-        </div>
-        <div class="fact">
-          <span class="fact-emoji">💼</span>
-          <div class="fact-label">By day</div>
-          <div class="fact-value">Software Developer</div>
-        </div>
-        <div class="fact">
-          <span class="fact-emoji">✈️</span>
-          <div class="fact-label">Countries visited</div>
-          <div class="fact-value">Still counting...</div>
-        </div>
+        {aboutStrip.facts.map((fact) => (
+          <div class="fact">
+            <span class="fact-emoji">{fact.emoji}</span>
+            <div class="fact-label">{fact.label}</div>
+            <div class="fact-value">{fact.value}</div>
+          </div>
+        ))}
       </div>
     </section>
 

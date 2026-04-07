@@ -1,0 +1,26 @@
+---
+import { FEATURES } from '../site.config';
+
+if (!FEATURES.linksPage) {
+  return Astro.redirect('/');
+}
+
+// TODO: Build out the link-in-bio page.
+// Suggested layout:
+//   - Avatar + display name + one-line bio
+//   - Prominent link list (blog, newsletter, Ko-fi, latest post, etc.)
+//   - Social icons row at the bottom
+//   - Optionally embed latest Instagram/TikTok post
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Links</title>
+  </head>
+  <body>
+    <h1>Links — coming soon</h1>
+  </body>
+</html>

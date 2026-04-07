@@ -1,3 +1,2 @@
-export const SITE_TITLE = 'nikkapaola.com';
-export const SITE_DESCRIPTION =
-  'Personal blog by Nikka — software developer, thyroid cancer survivor, chronic traveler, and personal finance nerd.';
+// Compatibility shim — will be deleted after all importers switch to site.config.ts
+export { SITE_DESCRIPTION, SITE_TITLE } from './site.config';

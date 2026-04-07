@@ -1,18 +1,19 @@
 ---
 import DarkModeToggle from './DarkModeToggle.tsx';
 import MobileMenu from './MobileMenu.tsx';
+import { siteConfig } from '../site.config';
+
+const { logo, nav } = siteConfig;
 ---
 
 <header>
   <nav>
-    <a href="/" class="nav-logo">nikka<span>paola</span></a>
+    <a href="/" class="nav-logo">{logo.part1}<span>{logo.part2}</span></a>
 
     <ul class="nav-links">
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/now">Now</a></li>
-      <li><a href="/portfolio">Portfolio</a></li>
-      <li><a href="/projects">Projects</a></li>
-      <li><a href="/about">About</a></li>
+      {nav.map((link) => (
+        <li><a href={link.href}>{link.label}</a></li>
+      ))}
     </ul>
 
     <div class="nav-actions">
@@ -24,7 +25,7 @@ import MobileMenu from './MobileMenu.tsx';
       </a>
       <DarkModeToggle client:load />
       <div class="nav-mobile">
-        <MobileMenu client:load />
+        <MobileMenu navLinks={nav} client:load />
       </div>
     </div>
   </nav>

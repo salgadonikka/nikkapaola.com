@@ -1,0 +1,27 @@
+---
+import { FEATURES } from '../site.config';
+
+if (!FEATURES.speaking) {
+  return Astro.redirect('/');
+}
+
+// TODO: Build out the speaking page.
+// Suggested sections:
+//   - Hero: "I speak about X, Y, Z"
+//   - Past talks: event name, date, topic, link to recording/slides
+//   - Upcoming appearances
+//   - Topics available: list of talk titles/abstracts
+//   - Booking CTA: link to contact or Calendly
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Speaking</title>
+  </head>
+  <body>
+    <h1>Speaking — coming soon</h1>
+  </body>
+</html>

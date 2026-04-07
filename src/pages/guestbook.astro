@@ -1,0 +1,27 @@
+---
+import { FEATURES } from '../site.config';
+
+if (!FEATURES.guestbook) {
+  return Astro.redirect('/');
+}
+
+// TODO: Build out the guestbook page.
+// Options for the backend:
+//   - Supabase (free tier, easy REST API) — store name + message + timestamp
+//   - Turso (SQLite at the edge) — lightweight, free tier
+//   - Netlify Forms / Formspree — simplest, no custom backend needed
+// The form should POST to an API route (src/pages/api/guestbook.ts)
+// that validates and saves the entry, then redirects back here.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Guestbook</title>
+  </head>
+  <body>
+    <h1>Guestbook — coming soon</h1>
+  </body>
+</html>

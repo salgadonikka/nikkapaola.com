@@ -1,14 +1,10 @@
 import { useState } from 'react';
 
-const navLinks = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/now', label: 'Now' },
-  { href: '/portfolio', label: 'Portfolio' },
-  { href: '/apps', label: 'Apps' },
-  { href: '/about', label: 'About' },
-];
+interface Props {
+  navLinks: { href: string; label: string }[];
+}
 
-export default function MobileMenu() {
+export default function MobileMenu({ navLinks }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
