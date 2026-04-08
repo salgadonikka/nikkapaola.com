@@ -178,7 +178,7 @@ export const FEATURES = {
   /** /media-kit page */
   mediaKit: false,
   /** /links — Instagram-style link-in-bio hub */
-  linksPage: false,
+  linksPage: true,
   /** /speaking — past talks, upcoming events, booking CTA */
   speaking: false,
 

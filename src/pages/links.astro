@@ -1,26 +1,838 @@
 ---
-import { FEATURES } from '../site.config';
+import { FEATURES, siteConfig } from "../site.config";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import { getCollection } from "astro:content";
 
 if (!FEATURES.linksPage) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
-// TODO: Build out the link-in-bio page.
-// Suggested layout:
-//   - Avatar + display name + one-line bio
-//   - Prominent link list (blog, newsletter, Ko-fi, latest post, etc.)
-//   - Social icons row at the bottom
-//   - Optionally embed latest Instagram/TikTok post
+// ─── FEATURE 6: Latest blog post ─────────────────────────────────────────────
+// Uncomment to auto-pull the most recent post.
+// const allPosts = await getCollection('blog');
+// const latestPost = allPosts
+//   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())[0];
+// ─────────────────────────────────────────────────────────────────────────────
+
+const { author, social } = siteConfig;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Links</title>
+    <BaseHead title={`${author.name} · Links`} description={author.bio} />
   </head>
+
   <body>
-    <h1>Links — coming soon</h1>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- FEATURE: Site Header — comment out to hide the nav on this page.   -->
+    <!-- When removed, also remove the padding-top override in <style>.     -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <Header />
+
+    <div class="links-page">
+      <main>
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 1: Profile Header  (always shown)                      -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <div class="profile">
+          <!--
+            Avatar: swap src with your photo URL or a local asset.
+            Recommended: 200×200px square, hosted on Cloudinary or a CDN.
+          -->
+          <img
+            class="profile-avatar"
+            src="/../assets/portfolio-photo.jpg"
+            alt={author.name}
+            width="88"
+            height="88"
+          />
+          <h1 class="profile-name">{author.name}</h1>
+          <p class="profile-bio">{author.bio}</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 2: Featured / Pinned CTA Link                          -->
+        <!-- Uncomment to add one prominent call-to-action at the top.      -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <a href="https://your-link.com" class="link-btn featured" target="_blank" rel="noopener">
+          <span class="link-btn-icon">✨</span>
+          Your Big Announcement or Link
+        </a>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 3: Main Link List                                       -->
+        <!-- Add, remove, or reorder <a> tags. Each gets hover animation.  -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <a href="/blog" class="link-btn">
+          <span class="link-btn-icon">📝</span>
+          Read My Blog
+        </a>
+
+        <a href="/about" class="link-btn">
+          <span class="link-btn-icon">👋</span>
+          About Me
+        </a>
+
+        <!-- More link examples — uncomment and fill in your URLs:
+        <a href="https://your-shop.com" class="link-btn" target="_blank" rel="noopener">
+          <span class="link-btn-icon">🛍️</span>
+          Shop My Picks
+        </a>
+
+        <a href="https://your-course.com" class="link-btn" target="_blank" rel="noopener">
+          <span class="link-btn-icon">🎓</span>
+          Free Course / Workshop
+        </a>
+
+        <a href="https://your-podcast.com" class="link-btn" target="_blank" rel="noopener">
+          <span class="link-btn-icon">🎙️</span>
+          Listen to My Podcast
+        </a>
+
+        <a href="https://presets.your-site.com" class="link-btn" target="_blank" rel="noopener">
+          <span class="link-btn-icon">🎨</span>
+          Download My Lightroom Presets
+        </a>
+
+        <a href="/projects" class="link-btn">
+          <span class="link-btn-icon">🚀</span>
+          My Projects
+        </a>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 4: Section Dividers                                     -->
+        <!-- Uncomment to group links under labeled headings.               -->
+        <!-- Place a divider between any two links in Section 3.            -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <div class="section-label"><span>Content</span></div>
+        ... content links ...
+
+        <div class="section-label"><span>Shop</span></div>
+        ... shop links ...
+
+        <div class="section-label"><span>Connect</span></div>
+        ... social/collab links ...
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 6: Latest Blog Post (dynamic)                           -->
+        <!-- 1. Uncomment the getCollection block in the frontmatter above.  -->
+        <!-- 2. Uncomment this HTML block.                                   -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        {latestPost && (
+          <a href={`/blog/${latestPost.slug}`} class="latest-post-card">
+            <span class="latest-post-eyebrow">✦ Latest Post</span>
+            <span class="latest-post-title">{latestPost.data.title}</span>
+            {latestPost.data.description && (
+              <span class="latest-post-desc">{latestPost.data.description}</span>
+            )}
+          </a>
+        )}
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 7: Newsletter Sign-Up                                   -->
+        <!-- Requires: FEATURES.newsletter = true in site.config.ts         -->
+        <!-- Also wire up NewsletterForm.tsx to your actual provider.       -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        {FEATURES.newsletter && (
+          <div class="newsletter-block">
+            <h2>Join the Newsletter</h2>
+            <p>Honest thoughts on life, health, travel & code — no spam.</p>
+            <NewsletterForm client:load />
+          </div>
+        )}
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 8: Ko-fi Support Button                                 -->
+        <!-- Requires: FEATURES.kofi = true + siteConfig.kofi.username set  -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        {FEATURES.kofi && siteConfig.kofi && (
+          <a
+            href={`https://ko-fi.com/${siteConfig.kofi.username}`}
+            class="link-btn kofi-btn"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="link-btn-icon">☕</span>
+            Support Me on Ko-fi
+          </a>
+        )}
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 9: YouTube / Video Embed                                -->
+        <!-- Replace VIDEO_ID with your YouTube video ID.                   -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <div class="embed-container">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            height="230"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            title="Featured video"
+          ></iframe>
+        </div>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 10: Spotify Embed                                       -->
+        <!-- Replace TRACK_OR_PLAYLIST_ID with your Spotify embed URI.      -->
+        <!-- e.g. track/4uLU6hMCjMI75M1A2tKUQC                             -->
+        <!-- e.g. playlist/37i9dQZF1DXcBWIGoYBM5M                          -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <div class="embed-container">
+          <iframe
+            src="https://open.spotify.com/embed/TRACK_OR_PLAYLIST_ID"
+            height="152"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+            title="Spotify"
+          ></iframe>
+        </div>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 11: Social Post Embed (TikTok or Instagram)            -->
+        <!-- Paste the embed code from TikTok / Instagram below.           -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <div class="embed-container" style="padding: 16px; background: white;">
+          [Paste TikTok or Instagram embed blockquote + script here]
+        </div>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 13: Discount / Promo Codes                              -->
+        <!-- Duplicate .discount-card blocks for each brand code.           -->
+        <!-- The copy button reads its label text as the code to copy.      -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--
+        <div class="section-label"><span>Discount Codes</span></div>
+
+        <div class="discount-card">
+          <div class="discount-info">
+            <span class="discount-brand">Brand Name</span>
+            <span class="discount-desc">15% off sitewide</span>
+            <span class="discount-expiry">Expires Dec 31, 2026</span>
+          </div>
+          <button class="copy-btn" data-code="NIKKA15" onclick="copyCode(this)">
+            NIKKA15
+          </button>
+        </div>
+
+        <div class="discount-card">
+          <div class="discount-info">
+            <span class="discount-brand">Another Brand</span>
+            <span class="discount-desc">Free shipping on first order</span>
+            <span class="discount-expiry">No expiry</span>
+          </div>
+          <button class="copy-btn" data-code="NIKKASHIPS" onclick="copyCode(this)">
+            NIKKASHIPS
+          </button>
+        </div>
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- SECTION 5: Social Icons Row  (always shown)                    -->
+        <!-- Each icon auto-renders if the URL is set in siteConfig.social. -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <div class="social-row">
+          {
+            social.instagram && (
+              <a
+                href={social.instagram}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="Instagram"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.tiktok && (
+              <a
+                href={social.tiktok}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="TikTok"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.79 1.53V6.78a4.85 4.85 0 01-1.02-.09z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.youtube && (
+              <a
+                href={social.youtube}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="YouTube"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.twitter && (
+              <a
+                href={social.twitter}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="X / Twitter"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.linkedin && (
+              <a
+                href={social.linkedin}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="LinkedIn"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.github && (
+              <a
+                href={social.github}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="GitHub"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.threads && (
+              <a
+                href={social.threads}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="Threads"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.858 1.205 8.61.024 12.19 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 013.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.358-.89h-.044c-.799 0-1.895.235-2.56 1.123l-1.588-1.303c.87-1.16 2.244-1.799 3.992-1.849h.048c3.016 0 4.958 1.861 5.16 5.07.499.193.975.44 1.414.742.986.674 1.688 1.589 2.03 2.643.48 1.478.408 3.78-1.275 5.424-1.887 1.846-4.061 2.512-7.201 2.536h-.008z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.pinterest && (
+              <a
+                href={social.pinterest}
+                class="social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="Pinterest"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+                </svg>
+              </a>
+            )
+          }
+
+          {
+            social.email && (
+              <a
+                href={`mailto:${social.email}`}
+                class="social-icon"
+                aria-label="Email"
+              >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                </svg>
+              </a>
+            )
+          }
+        </div>
+
+        <p class="page-credit">
+          <a href="/">{siteConfig.title}</a>
+        </p>
+      </main>
+    </div>
+
+    <!-- ── Copy-to-clipboard for discount codes ── -->
+    <script>
+      function copyCode(btn: HTMLButtonElement) {
+        const code = btn.dataset.code;
+        if (!code) return;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.classList.add("copied");
+          const original = btn.textContent ?? "";
+          btn.textContent = "Copied!";
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.textContent = original;
+          }, 2000);
+        });
+      }
+      // Expose globally for inline onclick handlers on discount cards
+      (window as any).copyCode = copyCode;
+    </script>
   </body>
 </html>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════════════════════
+     STYLE OVERRIDES
+     By default this page inherits everything from src/styles/global.css:
+       • Colors  → var(--color-cream), var(--color-terracotta), etc.
+       • Fonts   → var(--font-serif) / var(--font-sans)
+       • Dark mode → automatic via global.css media query
+       • Base reset, body background, and typography
+
+     Uncomment any block below to override just that piece for this page.
+     All other pages are unaffected.
+  ═══════════════════════════════════════════════════════════════════════════ */
+
+  /*
+  OVERRIDE: Page background
+  Default: var(--color-cream) — inherits from body in global.css.
+  Tip: When Header is commented out, also remove padding-top from .links-page.
+
+  .links-page {
+    background: linear-gradient(135deg, #faf7f2 0%, #f5dde8 100%);
+  }
+  */
+
+  /*
+  OVERRIDE: Accent color (featured button, copy btn, social hover, eyebrow text)
+  Default: var(--color-terracotta) / var(--color-terracotta-dark)
+
+  .link-btn.featured,
+  .link-btn.featured:focus { background: var(--color-sage); border-color: var(--color-sage); }
+  .link-btn.featured:hover { background: #5a8069; border-color: #5a8069; }
+  .copy-btn { color: var(--color-sage); }
+  .copy-btn:hover { background: var(--color-sage); border-color: var(--color-sage); }
+  .latest-post-eyebrow { color: var(--color-sage); }
+  .social-icon:hover { color: var(--color-sage); border-color: var(--color-sage); }
+  */
+
+  /*
+  OVERRIDE: Link button shape — change to pill style
+  Default: border-radius 12px (rounded rectangle)
+
+  .link-btn { border-radius: 999px; }
+  .discount-card { border-radius: 999px; }
+  .copy-btn { border-radius: 999px; }
+  */
+
+  /*
+  OVERRIDE: Link button fill — solid tinted background instead of white
+  Default: white background with --color-border border
+
+  .link-btn {
+    background: var(--color-warm-white);
+    border-color: transparent;
+  }
+  */
+
+  /*
+  OVERRIDE: Profile name font
+  Default: var(--font-serif) (Playfair Display)
+
+  .profile-name { font-family: var(--font-sans); font-weight: 600; }
+  */
+
+  /*
+  OVERRIDE: Newsletter block background
+  Default: var(--color-blossom)
+
+  .newsletter-block { background: var(--color-sage-light); }
+  */
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     PAGE LAYOUT — adjust spacing / width here
+  ═══════════════════════════════════════════════════════════════════════════ */
+
+  .links-page {
+    min-height: 100dvh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px 80px;
+    /*
+      Header is fixed (~64px tall). This top padding clears it.
+      If you comment out <Header /> above, change this to: padding-top: 40px;
+    */
+    padding-top: 96px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ── Profile ── */
+  .profile {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .profile-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-border);
+    margin-bottom: 14px;
+    display: block;
+    margin-inline: auto;
+  }
+  .profile-name {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+  .profile-bio {
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 300px;
+    margin-inline: auto;
+  }
+
+  /* ── Link buttons ── */
+  .link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    background: white;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      background 0.18s ease;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    background: var(--color-warm-white);
+  }
+  .link-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+  .link-btn.featured {
+    background: var(--color-terracotta);
+    color: white;
+    border-color: var(--color-terracotta);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .link-btn.featured:hover {
+    background: var(--color-terracotta-dark);
+    border-color: var(--color-terracotta-dark);
+  }
+  .link-btn-icon {
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+
+  /* ── Section divider ── */
+  .section-label {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0;
+  }
+  .section-label span {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+  .section-label::before,
+  .section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* ── Discount code cards ── */
+  .discount-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: white;
+    border: 1.5px dashed var(--color-border);
+    box-sizing: border-box;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .discount-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+  .discount-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .discount-brand {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .discount-desc {
+    font-size: 0.875rem;
+    color: var(--color-ink);
+  }
+  .discount-expiry {
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    margin-top: 2px;
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-terracotta);
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      color 0.15s,
+      border-color 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover {
+    background: var(--color-terracotta);
+    color: white;
+    border-color: var(--color-terracotta);
+  }
+  .copy-btn.copied {
+    background: var(--color-sage-light);
+    color: var(--color-sage);
+    border-color: var(--color-sage-light);
+  }
+
+  /* ── Latest blog post card ── */
+  .latest-post-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+    box-sizing: border-box;
+  }
+  .latest-post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  }
+  .latest-post-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-terracotta);
+  }
+  .latest-post-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--color-ink);
+    line-height: 1.35;
+  }
+  .latest-post-desc {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    line-height: 1.45;
+  }
+
+  /* ── Newsletter block ── */
+  .newsletter-block {
+    width: 100%;
+    padding: 20px 18px;
+    border-radius: 12px;
+    background: var(--color-blossom);
+    border: 1px solid var(--color-border);
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .newsletter-block h2 {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 4px;
+  }
+  .newsletter-block p {
+    font-size: 0.82rem;
+    color: var(--color-ink-soft);
+    margin: 0 0 14px;
+  }
+
+  /* ── Ko-fi button ── */
+  .kofi-btn {
+    background: #ff5e5b;
+    border-color: #ff5e5b;
+    color: white;
+  }
+  .kofi-btn:hover {
+    background: #e54b48;
+    border-color: #e54b48;
+    color: white;
+  }
+
+  /* ── Embed containers ── */
+  .embed-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+  .embed-container iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+  /* ── Social icons ── */
+  .social-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: var(--color-ink-soft);
+    background: white;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .social-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: var(--color-terracotta);
+    border-color: var(--color-terracotta);
+  }
+  .social-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* ── Footer credit ── */
+  .page-credit {
+    margin-top: 16px;
+    font-size: 0.72rem;
+    color: var(--color-muted);
+    text-align: center;
+  }
+  .page-credit a {
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .page-credit a:hover {
+    color: var(--color-terracotta);
+  }
+</style>

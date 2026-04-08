@@ -1,8 +1,24 @@
 # nikkapaola.com
 
-Personal blog and portfolio of Nikka Salgado, a Filipino software developer, thyroid cancer survivor, and traveler writing about life, health, code, travel, finance, and the slow work of building a life with intention.
+Personal blog and portfolio of Nikka Salgado — live at **nikkapaola.com**.
 
-Live at: **nikkapaola.com**
+This repo also serves as the **base template for any new blog/portfolio site** I will make in the future. Features are toggled per client via `src/site.config.ts`. Design tokens in `src/styles/global.css` are the theming layer.
+
+---
+
+## Using this as a template
+
+To spin up a new client site:
+
+1. Clone this repo
+2. Edit **`src/site.config.ts`** — title, description, URL, logo, author, social links, nav, analytics IDs, hero content, topics
+3. Edit **`src/styles/global.css`** — swap `@theme {}` color and font tokens
+4. Replace **`src/assets/myphoto.jpg`** with the client's photo
+5. Update **`astro.config.mjs`** — set the `site:` URL
+6. Replace content in **`src/content/blog/`** and **`src/content/projects/`**
+7. Edit **`src/pages/about.astro`** and **`src/pages/now.astro`** directly (personal narrative pages)
+
+No component files need to be touched.
 
 ---
 
@@ -32,19 +48,26 @@ npm run astro      # run Astro CLI (e.g. astro check, astro add)
 
 ```
 src/
+  site.config.ts    # ← single file to edit per client (identity, nav, analytics, features)
+  consts.ts         # re-exports SITE_TITLE / SITE_DESCRIPTION from site.config.ts
   assets/           # images (processed by Astro's Image pipeline)
   components/
-    BaseHead.astro      # <head> with SEO, fonts, global styles
-    Header.astro        # site nav
-    Footer.astro        # site footer
+    BaseHead.astro      # <head>: SEO, fonts, conditional analytics (GA / Plausible / Clarity)
+    Header.astro        # site nav — driven by site.config nav[]
+    Footer.astro        # site footer — driven by site.config footerLinks[]
     DarkModeToggle.tsx  # light/dark toggle (React)
-    MobileMenu.tsx      # hamburger nav (React)
-    NewsletterForm.tsx  # email subscribe form (wire to Buttondown/ConvertKit)
+    MobileMenu.tsx      # hamburger nav (React) — accepts navLinks prop from Header
+    NewsletterForm.tsx  # email subscribe form (wire endpoint via site.config newsletter)
     PhotoGallery.tsx    # masonry grid + lightbox for album posts (React)
     Callout.astro       # MDX callout block (note / tip / warning / aside)
     Highlight.astro     # MDX editorial pull-quote
     Figure.astro        # MDX image with optional caption
     SEO.astro           # extended Open Graph / Twitter meta
+    blog/
+      AuthorCard.astro  # sidebar card — name/bio from site.config author
+      ReadingProgress.astro  # thin progress bar (FEATURES.readingProgress)
+      TableOfContents.astro  # auto-generated from post headings (FEATURES.tableOfContents)
+      NowSidebar.astro  # sidebar snippet pulled from /now content
   content/
     blog/               # all posts as .md or .mdx files
     projects/           # project entries as .md or .mdx files
@@ -52,18 +75,23 @@ src/
     BlogPost.astro      # layout wrapper for individual posts
   pages/
     index.astro         # homepage
-    about.astro         # about page
+    about.astro         # about page (personal narrative — edit directly)
+    now.astro           # /now page (living document — edit directly)
     portfolio.astro     # portfolio / work page
+    apps.astro          # /apps page
+    search.astro        # Pagefind search (FEATURES.search)
+    media-kit.astro     # /media-kit (FEATURES.mediaKit — redirects to / when off)
+    links.astro         # /links link-in-bio hub (FEATURES.linksPage)
+    speaking.astro      # /speaking (FEATURES.speaking)
+    guestbook.astro     # /guestbook (FEATURES.guestbook)
+    404.astro           # 404 page
+    rss.xml.js          # RSS feed (FEATURES.rss)
     blog/
       index.astro       # blog listing with category + tag filters
       [...slug].astro   # individual post route
     projects/
       index.astro       # projects listing
       [slug].astro      # individual project detail page
-    now.astro           # /now page
-    apps.astro          # /apps page
-    404.astro           # 404 page
-    rss.xml.js          # RSS feed
   styles/
     global.css          # design tokens (@theme {}), base styles, .prose
     projects.css        # styles for /projects index + detail pages
@@ -72,6 +100,48 @@ public/
   robots.txt
   favicon.ico
 ```
+
+---
+
+## Feature flags
+
+All feature toggles live in `src/site.config.ts` under `FEATURES`. When a flag is `false`, no route, no script tag, and no UI is emitted for that feature.
+
+| Flag              | Default | Notes                                                             |
+| ----------------- | ------- | ----------------------------------------------------------------- |
+| `blog`            | `true`  | Blog listing + post routes                                        |
+| `projects`        | `true`  | Projects grid + detail pages                                      |
+| `nowPage`         | `true`  | /now page                                                         |
+| `search`          | `true`  | Pagefind search (post-build)                                      |
+| `rss`             | `true`  | /rss.xml feed                                                     |
+| `newsletter`      | `false` | Email capture — set `siteConfig.newsletter.provider` + `endpoint` |
+| `comments`        | `false` | Giscus — set `siteConfig.comments.*` with repo IDs                |
+| `guestbook`       | `false` | /guestbook — requires a backend (Supabase / Turso)                |
+| `tableOfContents` | `true`  | Auto-generated sidebar ToC on blog posts                          |
+| `readingProgress` | `true`  | Thin progress bar on blog posts                                   |
+| `socialSharing`   | `false` | Twitter/X + copy-link at post footer                              |
+| `dynamicOgImages` | `false` | Satori-generated OG image per post                                |
+| `mediaKit`        | `false` | /media-kit page                                                   |
+| `linksPage`       | `false` | /links link-in-bio hub                                            |
+| `speaking`        | `false` | /speaking page                                                    |
+| `kofi`            | `false` | Floating Ko-fi button — set `siteConfig.kofi.username`            |
+| `cookieConsent`   | `false` | Cookie banner (enable when GA is active)                          |
+
+---
+
+## Analytics
+
+Set IDs in `siteConfig.analytics` in `src/site.config.ts`. Any field left `undefined` emits no script tag.
+
+```ts
+analytics: {
+  googleAnalyticsId: 'G-XXXXXXXX',   // or import.meta.env.PUBLIC_GA_ID
+  plausibleDomain: 'example.com',     // privacy-friendly alternative
+  microsoftClarityId: 'xxxxxxxxxx',   // session recording + heatmaps
+}
+```
+
+To read the GA ID from an environment variable at deploy time, set `PUBLIC_GA_ID` in your `.env` file or hosting dashboard. The hardcoded fallback in `site.config.ts` keeps local dev working without a `.env` file.
 
 ---
 
@@ -165,6 +235,32 @@ The body of the file is rendered as the **Overview** section on the detail page.
 
 ---
 
+## Links page (`/links`)
+
+A Linktree-style link-in-bio page at `src/pages/links.astro`. Enable it with `FEATURES.linksPage: true` in `site.config.ts`.
+
+The page uses the site's global styling (`BaseHead`, design tokens, dark mode) and includes the site `Header` by default. Both can be opted out via comments in the file.
+
+All optional sections are self-contained commented blocks — uncomment to enable:
+
+| Section | What it does |
+| ------- | ------------ |
+| Featured CTA link | One prominent call-to-action button above the link list |
+| Link list | Vertical stack of link buttons — add/remove `<a>` tags |
+| Section dividers | Labeled group headings between links (Content / Shop / Connect) |
+| Latest blog post | Auto-pulled from the content collection, sorted by date |
+| Newsletter form | Reuses `NewsletterForm.tsx`; requires `FEATURES.newsletter` |
+| Ko-fi button | Requires `FEATURES.kofi` + `siteConfig.kofi.username` |
+| YouTube embed | `<iframe>` — replace `VIDEO_ID` |
+| Spotify embed | `<iframe>` — replace `TRACK_OR_PLAYLIST_ID` |
+| Social post embed | TikTok / Instagram blockquote embed |
+| Custom background | Swap the `background:` value in `.links-page` CSS |
+| Discount codes | Copyable promo code cards with brand name, description, and expiry; click-to-copy via JS |
+
+Style overrides for this page (accent color, button shape, font, background) are documented as commented blocks at the top of the `<style>` tag in `links.astro`. All other pages are unaffected.
+
+---
+
 ## Photo album posts
 
 For posts that are primarily photos, set `isAlbum: true` in frontmatter and use `PhotoGallery` in MDX:
@@ -186,17 +282,22 @@ Do not commit large images to the repo. Use Cloudflare R2 (10 GB free, zero egre
 
 ## Pages
 
-| Route              | File                    | Notes                                                             |
-| ------------------ | ----------------------- | ----------------------------------------------------------------- |
-| `/`                | `index.astro`           | Hero, topics grid, about strip                                    |
-| `/blog`            | `blog/index.astro`      | Listing; `?cat=life` and `?tag=travel` filters                    |
-| `/blog/[slug]`     | `blog/[...slug].astro`  | Individual posts via BlogPost layout                              |
-| `/about`           | `about.astro`           | Personal about page                                               |
-| `/portfolio`       | `portfolio2.astro`      | Work / portfolio with scroll-snap tiles and drawer                |
-| `/projects`        | `projects/index.astro`  | Grid of all projects, sorted by featured + order                  |
-| `/projects/[slug]` | `projects/[slug].astro` | Project detail: hero, overview, screenshots, stack, related posts |
-| `/now`             | `now.astro`             | What I'm doing now                                                |
-| `/rss.xml`         | `rss.xml.js`            | RSS feed                                                          |
+| Route              | File                    | Feature flag | Notes                                                             |
+| ------------------ | ----------------------- | ------------ | ----------------------------------------------------------------- |
+| `/`                | `index.astro`           | —            | Hero, topics grid, about strip — content from `site.config.ts`    |
+| `/blog`            | `blog/index.astro`      | `blog`       | Listing; `?cat=life` and `?tag=travel` filters                    |
+| `/blog/[slug]`     | `blog/[...slug].astro`  | `blog`       | Individual posts via BlogPost layout                              |
+| `/about`           | `about.astro`           | —            | Personal narrative — edit directly                                |
+| `/now`             | `now.astro`             | `nowPage`    | Living document — edit directly                                   |
+| `/portfolio`       | `portfolio.astro`       | —            | Work / portfolio with scroll-snap tiles                           |
+| `/projects`        | `projects/index.astro`  | `projects`   | Grid of all projects, sorted by featured + order                  |
+| `/projects/[slug]` | `projects/[slug].astro` | `projects`   | Project detail: hero, overview, screenshots, stack, related posts |
+| `/search`          | `search.astro`          | `search`     | Pagefind full-text search (generated at build time)               |
+| `/media-kit`       | `media-kit.astro`       | `mediaKit`   | Audience stats, brand collabs, rate card — stub, TODO             |
+| `/links`           | `links.astro`           | `linksPage`  | Link-in-bio hub — fully built, all sections comment/uncomment     |
+| `/speaking`        | `speaking.astro`        | `speaking`   | Past talks, booking CTA — stub, TODO                              |
+| `/guestbook`       | `guestbook.astro`       | `guestbook`  | Visitor messages — stub, needs backend, TODO                      |
+| `/rss.xml`         | `rss.xml.js`            | `rss`        | RSS feed                                                          |
 
 ---
 
