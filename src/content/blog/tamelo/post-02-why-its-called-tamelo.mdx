@@ -2,13 +2,13 @@
 title: "Why It's Called Tamelo"
 subtitle: "The word search, the Japanese concepts, and the moment a made-up word clicked into place."
 description: "The word search, the Japanese concepts, and the moment a made-up word clicked into place."
-pubDate: "2026-04-11"
+pubDate: "2026-04-10"
 category: "Work"
 series: "Building Tamelo"
 seriesOrder: 2
 tags: ["tamelo", "naming", "design", "personal"]
 readingTime: "4 min read"
-draft: true
+draft: false
 ---
 
 import PostMeta from '../../../components/PostMeta.astro';
@@ -16,6 +16,7 @@ import Pullquote from '../../../components/Pullquote.astro';
 import Callout from '../../../components/Callout.astro';
 import Highlight from '../../../components/Highlight.astro';
 import Figure from '../../../components/Figure.astro';
+import wordBreakdown from './tamelo-word-breakdown.png';
 
 <PostMeta
   series="Building Tamelo"
@@ -78,7 +79,7 @@ If *tame* was the problem the app solved, all that accumulated mental weight, th
 
 **Tamelo.**
 
-<Figure
+<Figure src={wordBreakdown}
   caption="The anatomy of the name: tame (the pile) + lo (the release)."
   alt="Word breakdown graphic: 'tame' labeled as 'the accumulation, the pile, the build-up' and 'lo' labeled as 'to lessen it, to lay it down, to let it breathe', combined into 'Tamelo'"
 />
