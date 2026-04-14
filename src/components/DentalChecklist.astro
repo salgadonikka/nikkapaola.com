@@ -1,0 +1,93 @@
+---
+/**
+ * DentalChecklist.astro
+ * Renders the dental routine as icon + title + description cards.
+ * No props — content is hardcoded.
+ */
+
+const items = [
+  {
+    icon: '🪥',
+    title: 'Routine Cleaning & Check-up',
+    desc: 'Every 6 months. Includes professional scaling, polishing, and a visual exam for cavities, gum health, and early signs of oral cancer.',
+  },
+  {
+    icon: '📸',
+    title: 'Panoramic X-Ray',
+    desc: 'Annually or as recommended. Shows all your teeth, roots, jaw, and bone — catches decay, impacted wisdom teeth, cysts, and bone loss that are invisible to the naked eye. Around ₱1,000 at most Metro Manila clinics; prices vary by area. <strong>Important: always ask for a thyroid guard before the X-ray is taken.</strong> The thyroid is radiation-sensitive and isn\'t automatically shielded — you have to request it.',
+  },
+  {
+    icon: '🦷',
+    title: 'Periapical X-Ray',
+    desc: 'Targeted X-ray of one or a few specific teeth. Usually ordered when your dentist suspects a problem in a particular spot. Often done alongside routine cleaning.',
+  },
+  {
+    icon: '🔬',
+    title: 'Oral Cancer Screening',
+    desc: 'Typically part of your regular check-up — your dentist will examine the soft tissues in your mouth for unusual lesions or patches. Mention any sore that hasn\'t healed in two weeks.',
+  },
+  {
+    icon: '🩺',
+    title: 'Periodontal (Gum) Check',
+    desc: 'Gum disease is common and often painless in its early stages. Your dentist checks pocket depth around each tooth — deeper pockets mean more advanced disease. If flagged, you may be referred for scaling and root planing (a deeper clean).',
+  },
+];
+---
+
+<ul class="dental-list">
+  {items.map((item) => (
+    <li class="dental-item">
+      <span class="dental-item__icon" aria-hidden="true">{item.icon}</span>
+      <div class="dental-item__content">
+        <p class="dental-item__title">{item.title}</p>
+        <p class="dental-item__desc" set:html={item.desc} />
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .dental-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dental-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+
+  .dental-item__icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .dental-item__title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+    margin-bottom: 4px;
+  }
+
+  .dental-item__desc {
+    font-size: 0.84rem;
+    color: var(--color-muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .dental-item__desc :global(strong) {
+    color: var(--color-ink-soft);
+    font-weight: 500;
+  }
+</style>

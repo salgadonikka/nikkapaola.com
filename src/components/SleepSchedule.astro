@@ -1,0 +1,109 @@
+---
+/**
+ * SleepSchedule.astro
+ * Renders a dark-background evening wind-down schedule card.
+ * No props — content is hardcoded to Nikka's ideal routine.
+ */
+
+const schedule = [
+  { time: '7:00 PM',  activity: 'Dinner',            note: '' },
+  { time: '7:30 PM',  activity: 'Shower',             note: '' },
+  { time: '8:00 PM',  activity: 'Skincare routine',   note: '' },
+  { time: '8:30 PM',  activity: 'Duolingo',           note: 'light, low-stakes screen time' },
+  { time: '8:45 PM',  activity: 'End of screen time', note: '' },
+  { time: '9:00 PM',  activity: 'Journal',            note: '' },
+  { time: '9:30 PM',  activity: 'Read',               note: '' },
+  { time: '10:00 PM', activity: 'Sleep',              note: '' },
+  { time: '6:00 AM',  activity: 'Wake up — gym',      note: '8 full hours' },
+];
+---
+
+<div class="sleep-card">
+  <p class="sleep-card__title">My ideal evening wind-down</p>
+  <ul class="sleep-list">
+    {schedule.map((item) => (
+      <li class="sleep-item">
+        <span class="sleep-item__time">{item.time}</span>
+        <span class="sleep-item__activity">{item.activity}</span>
+        {item.note && <span class="sleep-item__note">{item.note}</span>}
+      </li>
+    ))}
+  </ul>
+  <p class="sleep-card__footer">
+    This was my routine when life allowed it. The bigger lesson: <em>good sleep is built before you get into bed.</em>
+  </p>
+</div>
+
+<style>
+  .sleep-card {
+    background: var(--color-ink);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 28px 0;
+    color: white;
+  }
+
+  .sleep-card__title {
+    font-family: var(--font-serif, 'Playfair Display', serif);
+    font-size: 0.95rem;
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 24px;
+  }
+
+  .sleep-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sleep-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .sleep-item:last-child {
+    border-bottom: none;
+  }
+
+  .sleep-item__time {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-terracotta, #c4694f);
+    width: 68px;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+  }
+
+  .sleep-item__activity {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    flex: 1;
+  }
+
+  .sleep-item__note {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    font-style: italic;
+  }
+
+  .sleep-card__footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+  }
+
+  .sleep-card__footer em {
+    color: rgba(255, 255, 255, 0.75);
+    font-style: italic;
+  }
+</style>

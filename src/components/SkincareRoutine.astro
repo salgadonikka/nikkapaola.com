@@ -1,0 +1,162 @@
+---
+/**
+ * SkincareRoutine.astro
+ * Renders the morning and evening skincare routine as two step-by-step cards.
+ * No props — content is hardcoded to Nikka's routine.
+ * To update the routine steps, edit the arrays below.
+ */
+
+const morning = [
+  { step: 'Gentle Cleanser', note: '' },
+  { step: 'Hydrating Toner', note: '' },
+  { step: 'Vitamin C Serum', note: 'antioxidant + brightening' },
+  { step: 'Azelaic Acid', note: 'hyperpigmentation & texture' },
+  { step: 'Eye Cream', note: '' },
+  { step: 'Sunscreen ☀️', note: 'always last — non-negotiable' },
+];
+
+const evening = [
+  { step: 'Oil Cleanser', note: 'removes sunscreen & makeup' },
+  { step: 'Gentle Cleanser', note: '' },
+  { step: 'Hydrating Toner', note: '' },
+  { step: 'Essence', note: '' },
+  { step: 'Serum', note: '' },
+  { step: 'Light Therapy', note: '3× a week' },
+  { step: 'Eye Cream', note: '' },
+  { step: 'Tretinoin', note: '3× a week — introduce very slowly' },
+  { step: 'Moisturizer', note: '' },
+];
+---
+
+<div class="skincare-grid">
+  <!-- Morning -->
+  <div class="skincare-card skincare-card--morning">
+    <div class="skincare-card__header">
+      <span class="skincare-card__dot" aria-hidden="true"></span>
+      <span class="skincare-card__label">Morning Routine</span>
+    </div>
+    <ol class="skincare-steps">
+      {morning.map((item) => (
+        <li class="skincare-step">
+          <span class="skincare-step__name">{item.step}</span>
+          {item.note && <span class="skincare-step__note">{item.note}</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <!-- Evening -->
+  <div class="skincare-card skincare-card--evening">
+    <div class="skincare-card__header">
+      <span class="skincare-card__dot" aria-hidden="true"></span>
+      <span class="skincare-card__label">Evening Routine</span>
+    </div>
+    <ol class="skincare-steps">
+      {evening.map((item) => (
+        <li class="skincare-step">
+          <span class="skincare-step__name">{item.step}</span>
+          {item.note && <span class="skincare-step__note">{item.note}</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</div>
+
+<style>
+  .skincare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 28px 0;
+  }
+
+  @media (max-width: 600px) {
+    .skincare-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .skincare-card {
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 22px;
+  }
+
+  .skincare-card__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .skincare-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .skincare-card--morning .skincare-card__dot {
+    background: var(--color-gold, #b8965a);
+  }
+
+  .skincare-card--evening .skincare-card__dot {
+    background: #d4a5a0;
+  }
+
+  .skincare-card__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .skincare-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .skincare-step {
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .skincare-step::before {
+    content: counter(step);
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    background: var(--color-border);
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .skincare-step__name {
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    line-height: 1.4;
+  }
+
+  .skincare-step__note {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    font-style: italic;
+    margin-top: 1px;
+  }
+</style>

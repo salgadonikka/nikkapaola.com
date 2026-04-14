@@ -1,0 +1,115 @@
+---
+/**
+ * SeriesNav.astro
+ * Shows the full Adulting Handbook series list with the current post highlighted.
+ *
+ * Props:
+ *   current: number  — 1-based index of the current post (0 = intro)
+ */
+
+interface Props {
+  current: number;
+}
+
+const { current } = Astro.props;
+
+const posts = [
+  { num: 0, emoji: "📖", title: "Introduction — Why I Started This Series" },
+  // { num: 1, emoji: '🩺', title: 'Part 1: Medical Tests & Screenings' },
+  // { num: 2, emoji: '💉', title: 'Part 2: Adult Vaccines' },
+  // { num: 3, emoji: '✨', title: 'Part 3: Head-to-Toe Wellness Routines' },
+  // { num: 4, emoji: '🏃', title: 'Part 4: Fitness — Finding Movement That Sticks' },
+  // { num: 5, emoji: '🍽️', title: 'Part 5: Healthy Eating & Nutrition' },
+  // { num: 6, emoji: '🧠', title: 'Part 6: Mental Wellness' },
+  // { num: 7, emoji: '💸', title: 'Part 7: Personal Finance Tools & Habits' },
+];
+---
+
+<div class="series-nav">
+  <p class="series-nav__label">The Adulting Handbook Series</p>
+  <ul class="series-nav__list">
+    {
+      posts.map((p) => (
+        <li
+          class:list={[
+            "series-nav__item",
+            { "series-nav__item--current": p.num === current },
+          ]}
+        >
+          <span class="series-nav__dot" aria-hidden="true" />
+          <span class="series-nav__emoji">{/*p.emoji*/}</span>
+          <span class="series-nav__title">{p.title}</span>
+          {p.num === current && (
+            <span class="series-nav__you">← you are here</span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .series-nav {
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 36px 0;
+  }
+
+  .series-nav__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 16px;
+  }
+
+  .series-nav__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .series-nav__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.4;
+  }
+
+  .series-nav__item--current {
+    color: var(--color-terracotta);
+    font-weight: 500;
+  }
+
+  .series-nav__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .series-nav__item--current .series-nav__dot {
+    background: var(--color-terracotta);
+  }
+
+  .series-nav__emoji {
+    flex-shrink: 0;
+  }
+
+  .series-nav__you {
+    font-size: 0.75rem;
+    color: var(--color-terracotta);
+    font-style: italic;
+    margin-left: 4px;
+    opacity: 0.8;
+  }
+</style>
