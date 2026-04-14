@@ -1,16 +1,18 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_TITLE } from '../consts';
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { FEATURES, siteConfig } from "../site.config";
+
+if (!FEATURES.appsPage) return Astro.redirect("/");
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <BaseHead
-      title={`Apps — ${SITE_TITLE}`}
-      description="Apps and business ventures by Nikka — tools, products, and projects in the wild."
+      title={`Apps - ${siteConfig.title}`}
+      description={`Apps and business ventures by ${siteConfig.author.name} — tools, products, and projects in the wild.`}
     />
   </head>
   <body>
@@ -21,14 +23,16 @@ import { SITE_TITLE } from '../consts';
         <div class="page-eyebrow">Products</div>
         <h1 class="page-title">Apps & <em>Ventures</em></h1>
         <p class="page-subtitle">
-          Apps I've published and business projects I'm working on.
-          More coming soon.
+          Apps I've published and business projects I'm working on. More coming
+          soon.
         </p>
       </div>
 
       <div class="coming-soon">
         <div class="coming-soon-icon">✦</div>
-        <p class="coming-soon-text">This page is being built. Check back soon.</p>
+        <p class="coming-soon-text">
+          This page is being built. Check back soon.
+        </p>
       </div>
     </main>
 
@@ -43,7 +47,9 @@ import { SITE_TITLE } from '../consts';
     padding: 120px 60px 100px;
   }
 
-  .page-header { margin-bottom: 64px; }
+  .page-header {
+    margin-bottom: 64px;
+  }
 
   .page-eyebrow {
     font-size: 0.72rem;
@@ -58,7 +64,7 @@ import { SITE_TITLE } from '../consts';
   }
 
   .page-eyebrow::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 20px;
     height: 1px;
@@ -74,7 +80,10 @@ import { SITE_TITLE } from '../consts';
     margin-bottom: 16px;
   }
 
-  .page-title em { font-style: italic; color: var(--color-terracotta); }
+  .page-title em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
 
   .page-subtitle {
     font-size: 0.9rem;
@@ -106,6 +115,8 @@ import { SITE_TITLE } from '../consts';
   }
 
   @media (max-width: 768px) {
-    main { padding: 100px 24px 80px; }
+    main {
+      padding: 100px 24px 80px;
+    }
   }
 </style>

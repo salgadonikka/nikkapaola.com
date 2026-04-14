@@ -55,4 +55,16 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog, projects };
+const fragments = defineCollection({
+  loader: glob({ base: './src/content/fragments', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      date: z.coerce.date(),
+      tag: z.enum(['life', 'tech', 'travel', 'finance', 'random']).optional(),
+      emoji: z.string().optional(),
+      /** Local image file relative to the fragment (e.g. ./photo.jpg) — gets converted to WebP at build time */
+      image: image().optional(),
+    }),
+});
+
+export const collections = { blog, projects, fragments };

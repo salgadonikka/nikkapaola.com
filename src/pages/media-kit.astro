@@ -1,8 +1,11 @@
 ---
-import { FEATURES } from '../site.config';
+import { FEATURES, siteConfig } from "../site.config";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 
 if (!FEATURES.mediaKit) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
 // TODO: Build out the media kit page.
@@ -18,11 +21,16 @@ if (!FEATURES.mediaKit) {
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Media Kit</title>
+    <BaseHead
+      title={`Media Kit - ${siteConfig.title}`}
+      description={`Press and collaboration info for ${siteConfig.author.name}.`}
+    />
   </head>
   <body>
-    <h1>Media Kit — coming soon</h1>
+    <Header />
+    <main>
+      <h1>Media Kit — coming soon</h1>
+    </main>
+    <Footer />
   </body>
 </html>

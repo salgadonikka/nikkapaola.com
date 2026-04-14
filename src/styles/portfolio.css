@@ -658,13 +658,33 @@
   color: var(--color-ink-soft);
 }
 .bl {
-  background: var(--color-blossom);
-  color: var(--color-terracotta);
+  background: var(--color-terracotta-light);
+  color: var(--color-terracotta-dark);
+}
+.skill-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 12px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+.legend-title {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-muted);
+  font-weight: 600;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1px;
 }
 
 .learning-callout {
-  background: var(--color-sage-light);
-  border-left: 2px solid var(--color-sage);
+  background: color-mix(in srgb, #b8965a 6%, transparent);
+  border-left: 2px solid #b8965a;
   padding: 10px 14px;
   border-radius: 0 4px 4px 0;
 }
@@ -672,7 +692,7 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-sage);
+  color: #b8965a;
   margin-bottom: 7px;
   font-weight: 500;
 }
@@ -683,10 +703,10 @@
 }
 .learning-tags span {
   font-size: 0.65rem;
-  border: 1px solid var(--color-sage);
-  color: var(--color-sage);
+  border: 1px solid rgba(184, 150, 90, 0.45);
+  color: var(--color-ink-soft);
   padding: 2px 7px;
-  border-radius: 20px;
+  border-radius: 2px;
 }
 
 /* ══ TILE 02 — EXPERIENCE + WORK ══ */

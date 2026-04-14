@@ -1,0 +1,886 @@
+---
+import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import { FEATURES } from "../site.config";
+
+if (!FEATURES.fragments) return Astro.redirect("/404");
+
+const allFragments = await getCollection("fragments");
+// Sort by id descending: filename format YYYY-MM-DD-NNN sorts date and
+// same-day sequence number together without needing separate comparisons.
+const fragments = allFragments.sort((a, b) => b.id.localeCompare(a.id));
+
+const tagColors: Record<string, { bg: string; color: string }> = {
+  life: { bg: "#f2e4e1", color: "#a0514a" },
+  tech: { bg: "#dfe8f0", color: "#3a5a78" },
+  travel: { bg: "#f0e8d8", color: "#7a5c2a" },
+  finance: { bg: "#e0f0f8", color: "#2a5a78" },
+  random: { bg: "#ece8f5", color: "#5a4a80" },
+};
+
+const rendered = await Promise.all(
+  fragments.map(async (fragment) => {
+    const { Content } = await render(fragment);
+    return { fragment, Content };
+  }),
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Fragments - nikkapaola.com"
+      description="Short thoughts, small moments, and everything in between. Not quite a post, not quite a note. Just fragments."
+    />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <div class="page-intro">
+        <div class="eyebrow">Fragments</div>
+        <h1>Small thoughts, <em>captured.</em></h1>
+        <p class="subtitle">
+          Not quite a post, not quite a note. Just moments worth keeping —
+          dropped here as they come, in no particular order of importance.
+        </p>
+      </div>
+
+      {
+        fragments.length === 0 ? (
+          <p class="empty-state">"Fragments are coming. Check back soon."</p>
+        ) : (
+          <div class="timeline">
+            <div class="timeline-line" aria-hidden="true" />
+
+            {rendered.map(({ fragment, Content }, index) => {
+              const side = index % 2 === 0 ? "left" : "right";
+              const tagInfo = fragment.data.tag
+                ? tagColors[fragment.data.tag]
+                : null;
+
+              return (
+                <div
+                  class={`timeline-row timeline-row--${side}`}
+                  id={`frag-${fragment.id}`}
+                >
+                  {side === "left" ? (
+                    <>
+                      <button
+                        class="fragment-card"
+                        data-id={fragment.id}
+                        data-tag={fragment.data.tag ?? ""}
+                        data-tag-bg={tagInfo?.bg ?? ""}
+                        data-tag-color={tagInfo?.color ?? ""}
+                        data-emoji={fragment.data.emoji ?? ""}
+                        aria-label="Open fragment"
+                      >
+                        {fragment.data.image && (
+                          <div class="card-image">
+                            <Image
+                              src={fragment.data.image}
+                              alt=""
+                              width={600}
+                              height={600}
+                              format="webp"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+                        <div class="card-body">
+                          <div class="card-meta card-meta--left">
+                            <FormattedDate date={fragment.data.date} />
+                            {fragment.data.tag && tagInfo && (
+                              <span
+                                class="tag-pill"
+                                style={`background: ${tagInfo.bg}; color: ${tagInfo.color};`}
+                              >
+                                {fragment.data.tag}
+                              </span>
+                            )}
+                            {fragment.data.emoji && (
+                              <span class="card-emoji">
+                                {fragment.data.emoji}
+                              </span>
+                            )}
+                          </div>
+                          <div class="card-text">
+                            <Content />
+                          </div>
+                        </div>
+                      </button>
+                      <div class="dot-col">
+                        <div class="dot" aria-hidden="true" />
+                      </div>
+                      <div class="spacer" />
+                    </>
+                  ) : (
+                    <>
+                      <div class="spacer" />
+                      <div class="dot-col">
+                        <div class="dot" aria-hidden="true" />
+                      </div>
+                      <button
+                        class="fragment-card"
+                        data-id={fragment.id}
+                        data-tag={fragment.data.tag ?? ""}
+                        data-tag-bg={tagInfo?.bg ?? ""}
+                        data-tag-color={tagInfo?.color ?? ""}
+                        data-emoji={fragment.data.emoji ?? ""}
+                        aria-label="Open fragment"
+                      >
+                        {fragment.data.image && (
+                          <div class="card-image">
+                            <Image
+                              src={fragment.data.image}
+                              alt=""
+                              width={600}
+                              height={600}
+                              format="webp"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+                        <div class="card-body">
+                          <div class="card-meta card-meta--right">
+                            <FormattedDate date={fragment.data.date} />
+                            {fragment.data.tag && tagInfo && (
+                              <span
+                                class="tag-pill"
+                                style={`background: ${tagInfo.bg}; color: ${tagInfo.color};`}
+                              >
+                                {fragment.data.tag}
+                              </span>
+                            )}
+                            {fragment.data.emoji && (
+                              <span class="card-emoji">
+                                {fragment.data.emoji}
+                              </span>
+                            )}
+                          </div>
+                          <div class="card-text">
+                            <Content />
+                          </div>
+                        </div>
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )
+      }
+    </main>
+
+    <!-- Hidden content store: full-res images + rendered text, cloned into modal on open -->
+    <div hidden aria-hidden="true">
+      {
+        rendered.map(({ fragment, Content }) => (
+          <div id={`store-${fragment.id}`}>
+            {fragment.data.image && (
+              <div class="store-image">
+                <Image
+                  src={fragment.data.image}
+                  alt=""
+                  width={900}
+                  height={900}
+                  format="webp"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div class="store-date">
+              <FormattedDate date={fragment.data.date} />
+            </div>
+            <div class="store-text">
+              <Content />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Fragment modal -->
+    <dialog id="fragment-modal" aria-label="Fragment detail" aria-modal="true">
+      <!-- Close sits outside the scroll area so it never scrolls away -->
+      <button class="modal-close" aria-label="Close">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+        >
+          <line
+            x1="2"
+            y1="2"
+            x2="14"
+            y2="14"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"></line>
+          <line
+            x1="14"
+            y1="2"
+            x2="2"
+            y2="14"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"></line>
+        </svg>
+      </button>
+
+      <!-- Scrollable content area -->
+      <div class="modal-scroll">
+        <div class="modal-image-wrap" hidden></div>
+
+        <div class="modal-body">
+          <div class="modal-meta">
+            <span class="modal-date"></span>
+            <span class="modal-tag" hidden></span>
+            <span class="modal-emoji" hidden></span>
+          </div>
+          <div class="modal-text"></div>
+          <div class="modal-actions">
+            <button class="modal-share">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="13"
+                  cy="3"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.4"></circle>
+                <circle
+                  cx="13"
+                  cy="13"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.4"></circle>
+                <circle
+                  cx="3"
+                  cy="8"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.4"></circle>
+                <line
+                  x1="4.9"
+                  y1="7.1"
+                  x2="11.1"
+                  y2="3.9"
+                  stroke="currentColor"
+                  stroke-width="1.4"></line>
+                <line
+                  x1="4.9"
+                  y1="8.9"
+                  x2="11.1"
+                  y2="12.1"
+                  stroke="currentColor"
+                  stroke-width="1.4"></line>
+              </svg>
+              <span class="share-label">Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <Footer />
+  </body>
+</html>
+
+<script>
+  const modal = document.getElementById("fragment-modal") as HTMLDialogElement;
+  const modalImageWrap = modal.querySelector(
+    ".modal-image-wrap",
+  ) as HTMLElement;
+  const modalDate = modal.querySelector(".modal-date") as HTMLElement;
+  const modalTag = modal.querySelector(".modal-tag") as HTMLElement;
+  const modalEmoji = modal.querySelector(".modal-emoji") as HTMLElement;
+  const modalText = modal.querySelector(".modal-text") as HTMLElement;
+  const modalShare = modal.querySelector(".modal-share") as HTMLButtonElement;
+  const modalScroll = modal.querySelector(".modal-scroll") as HTMLElement;
+  const modalClose = modal.querySelector(".modal-close") as HTMLButtonElement;
+  const shareLabel = modalShare.querySelector(".share-label") as HTMLElement;
+
+  let currentId = "";
+
+  function openModal(card: HTMLElement) {
+    const id = card.dataset.id!;
+    currentId = id;
+    // Capture scroll position before showModal() can move it
+    const scrollY = window.scrollY;
+
+    const store = document.getElementById(`store-${id}`)!;
+
+    // Image
+    const storedImage = store.querySelector(".store-image");
+    if (storedImage) {
+      modalImageWrap.innerHTML = "";
+      modalImageWrap.appendChild(storedImage.cloneNode(true));
+      modalImageWrap.hidden = false;
+    } else {
+      modalImageWrap.hidden = true;
+    }
+
+    // Date
+    const storedDate = store.querySelector(".store-date")!;
+    modalDate.innerHTML = storedDate.innerHTML;
+
+    // Tag
+    const tag = card.dataset.tag;
+    const tagBg = card.dataset.tagBg;
+    const tagColor = card.dataset.tagColor;
+    if (tag) {
+      modalTag.textContent = tag;
+      modalTag.setAttribute(
+        "style",
+        `background: ${tagBg}; color: ${tagColor};`,
+      );
+      modalTag.hidden = false;
+    } else {
+      modalTag.hidden = true;
+    }
+
+    // Emoji
+    const emoji = card.dataset.emoji;
+    if (emoji) {
+      modalEmoji.textContent = emoji;
+      modalEmoji.hidden = false;
+    } else {
+      modalEmoji.hidden = true;
+    }
+
+    // Text content
+    const storedText = store.querySelector(".store-text")!;
+    modalText.innerHTML = storedText.innerHTML;
+
+    // Reset share button
+    shareLabel.textContent = "Share";
+    modalShare.disabled = false;
+
+    modalScroll.scrollTop = 0;
+    // Lock page scroll so the background doesn't jump
+    document.documentElement.style.overflow = "hidden";
+    modal.showModal();
+    // Restore scroll position in case showModal() moved it
+    window.scrollTo(0, scrollY);
+  }
+
+  function closeModal() {
+    document.documentElement.style.overflow = "";
+    modal.close();
+  }
+
+  // Open on card click
+  document.querySelectorAll<HTMLElement>(".fragment-card").forEach((card) => {
+    card.addEventListener("click", () => openModal(card));
+  });
+
+  // Close on X button
+  modalClose.addEventListener("click", closeModal);
+
+  // Close on backdrop click (click outside modal-inner)
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Fires for both Escape key and closeModal() — always clean up overflow lock
+  modal.addEventListener("close", () => {
+    document.documentElement.style.overflow = "";
+    shareLabel.textContent = "Share";
+    modalShare.disabled = false;
+  });
+
+  // Share button
+  modalShare.addEventListener("click", async () => {
+    const url = `${window.location.origin}/fragments#frag-${currentId}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ url });
+      } catch {
+        // User cancelled — do nothing
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      shareLabel.textContent = "Copied!";
+      modalShare.disabled = true;
+      setTimeout(() => {
+        shareLabel.textContent = "Share";
+        modalShare.disabled = false;
+      }, 2000);
+    }
+  });
+</script>
+
+<style>
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 120px 60px 100px;
+  }
+
+  /* ── INTRO ── */
+  .page-intro {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-terracotta);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--color-terracotta);
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
+
+  .subtitle {
+    font-size: 0.92rem;
+    color: var(--color-muted);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    padding: 60px 0;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--color-border) 8%,
+      var(--color-border) 92%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    align-items: start;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  /* ── DOT ── */
+  .dot-col {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-terracotta);
+    border: 2px solid var(--color-cream);
+    box-shadow: 0 0 0 1px var(--color-terracotta);
+    flex-shrink: 0;
+  }
+
+  /* ── FRAGMENT CARD ── */
+  .fragment-card {
+    all: unset;
+    display: block;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .fragment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+  }
+
+  .fragment-card:focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 2px;
+  }
+
+  .card-image {
+    aspect-ratio: 1 / 1;
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .card-body {
+    padding: 18px 20px 20px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .card-meta--left {
+    justify-content: flex-end;
+  }
+  .card-meta--right {
+    justify-content: flex-start;
+  }
+
+  .tag-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .card-emoji {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .card-text {
+    font-size: 0.88rem;
+    color: var(--color-ink-soft);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .card-text p {
+    margin: 0;
+  }
+  .card-text p + p {
+    margin-top: 0.75em;
+  }
+
+  /* ── MODAL ── */
+  #fragment-modal {
+    /* Fix: position:fixed with inset:0 + margin:auto centers on the viewport,
+       not the document. This means the modal never causes the page to scroll
+       and is always centered regardless of where the user has scrolled to.
+       position:fixed also acts as the containing block for .modal-close (position:absolute). */
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    height: fit-content; /* don't stretch to fill viewport height */
+
+    padding: 0;
+    border: none;
+    border-radius: 14px;
+
+    /* Width: content-driven up to the desktop max */
+    width: min(68vw, 720px);
+
+    /* No max-height here: let .modal-scroll own that so overflow-y actually works */
+    overflow: hidden; /* clips children to border-radius */
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    background: #fff;
+  }
+
+  #fragment-modal::backdrop {
+    background: rgba(20, 16, 12, 0.48);
+    backdrop-filter: blur(4px);
+  }
+
+  #fragment-modal[open] {
+    animation: modal-in 0.2s ease both;
+  }
+
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  /* Close button — fixed to top-right corner, never scrolls away */
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-ink-soft);
+    transition:
+      color 0.15s,
+      background 0.15s;
+  }
+
+  .modal-close:hover {
+    color: var(--color-ink);
+    background: #fff;
+  }
+
+  /* Scrollable content — this is the only element that scrolls */
+  .modal-scroll {
+    overflow-y: auto;
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Image: height is driven by the image itself, capped so tall portraits don't overflow */
+  .modal-image-wrap {
+    flex-shrink: 0;
+    background: #f7f5f2;
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    /* Center the image if it's narrower than the modal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-image-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 52vh; /* cap tall portraits; landscape images will be shorter */
+    object-fit: contain;
+    background: #f7f5f2; /* letterbox color for contain */
+  }
+
+  .modal-body {
+    padding: 22px 24px 26px;
+  }
+
+  .modal-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    font-size: 0.74rem;
+    color: var(--color-muted);
+  }
+
+  .modal-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.67rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .modal-emoji {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .modal-text {
+    font-size: 0.93rem;
+    color: var(--color-ink-soft);
+    line-height: 1.85;
+    font-weight: 300;
+  }
+
+  .modal-text p {
+    margin: 0;
+  }
+  .modal-text p + p {
+    margin-top: 0.85em;
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .modal-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.77rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+  }
+
+  .modal-share:hover {
+    border-color: var(--color-terracotta);
+    color: var(--color-terracotta);
+  }
+
+  .modal-share:disabled {
+    border-color: #7a9e7e;
+    color: #7a9e7e;
+    cursor: default;
+  }
+
+  /* ── TABLET: narrower than desktop ── */
+  @media (max-width: 1024px) and (min-width: 641px) {
+    #fragment-modal {
+      width: min(82vw, 680px);
+    }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    main {
+      padding: 100px 20px 80px;
+    }
+
+    .timeline-line {
+      left: 16px;
+      transform: none;
+    }
+
+    .timeline-row {
+      grid-template-columns: 32px 1fr;
+    }
+
+    /* All cards go to column 2, row 1 */
+    .timeline-row--left .fragment-card,
+    .timeline-row--right .fragment-card {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    /* All dots go to column 1, row 1 */
+    .timeline-row--left .dot-col,
+    .timeline-row--right .dot-col {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    /* Hide spacers */
+    .spacer {
+      display: none;
+    }
+
+    /* Reset left-side layout that was reversed */
+    .timeline-row--left {
+      grid-template-columns: 32px 1fr;
+    }
+
+    /* All meta rows left-aligned */
+    .card-meta--left,
+    .card-meta--right {
+      justify-content: flex-start;
+    }
+
+    /* Reset text alignment */
+    .card-body {
+      text-align: left;
+    }
+
+    #fragment-modal {
+      width: calc(100% - 24px);
+    }
+
+    .modal-image-wrap img {
+      max-height: 40vh; /* shorter cap on mobile so text stays visible */
+    }
+
+    .modal-scroll {
+      max-height: 90vh;
+    }
+  }
+</style>

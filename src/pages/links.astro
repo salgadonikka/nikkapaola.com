@@ -1,6 +1,7 @@
 ---
 import { FEATURES, siteConfig } from "../site.config";
 import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { getCollection } from "astro:content";
 
@@ -26,7 +27,7 @@ const { author, social } = siteConfig;
 
   <body>
     <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- FEATURE: Site Header — comment out to hide the nav on this page.   -->
+    <!-- FEATURE: Site Header - comment out to hide the nav on this page.   -->
     <!-- When removed, also remove the padding-top override in <style>.     -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <Header />
@@ -417,6 +418,7 @@ const { author, social } = siteConfig;
       // Expose globally for inline onclick handlers on discount cards
       (window as any).copyCode = copyCode;
     </script>
+    <Footer />
   </body>
 </html>
 

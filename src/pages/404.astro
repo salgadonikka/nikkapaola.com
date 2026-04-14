@@ -1,14 +1,17 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_TITLE } from '../consts';
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { siteConfig } from "../site.config";
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={`404 — ${SITE_TITLE}`} description="This page doesn't exist." />
+    <BaseHead
+      title={`404 - ${siteConfig.title}`}
+      description="This page doesn't exist."
+    />
   </head>
   <body>
     <Header />
@@ -17,8 +20,8 @@ import { SITE_TITLE } from '../consts';
         <div class="eyebrow">404</div>
         <h1>Lost in the <em>archive</em></h1>
         <p>
-          This page doesn't exist — or maybe it used to and I moved things around.
-          Either way, let's get you somewhere good.
+          This page doesn't exist — or maybe it used to and I moved things
+          around. Either way, let's get you somewhere good.
         </p>
         <div class="actions">
           <a href="/" class="btn-primary">Go home</a>
@@ -93,7 +96,9 @@ import { SITE_TITLE } from '../consts';
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: background 0.2s, transform 0.2s;
+    transition:
+      background 0.2s,
+      transform 0.2s;
   }
 
   .btn-primary:hover {
@@ -113,7 +118,14 @@ import { SITE_TITLE } from '../consts';
     transition: color 0.2s;
   }
 
-  .btn-ghost::after { content: '→'; transition: transform 0.2s; }
-  .btn-ghost:hover { color: var(--color-terracotta); }
-  .btn-ghost:hover::after { transform: translateX(4px); }
+  .btn-ghost::after {
+    content: "→";
+    transition: transform 0.2s;
+  }
+  .btn-ghost:hover {
+    color: var(--color-terracotta);
+  }
+  .btn-ghost:hover::after {
+    transform: translateX(4px);
+  }
 </style>

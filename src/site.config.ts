@@ -173,8 +173,16 @@ export const FEATURES = {
   nowPage: true,
   search: true,
   rss: true,
+  /**
+   * Fragments: short-form posts on a timeline.
+   * When false: /fragments returns 404, nav link is hidden.
+   * When true: page is live and nav link appears.
+   */
+  fragments: true,
 
   // ── Special pages ────────────────────────────────
+  /** /apps — published apps and business ventures */
+  appsPage: true,
   /** /media-kit page */
   mediaKit: false,
   /** /links — Instagram-style link-in-bio hub */
