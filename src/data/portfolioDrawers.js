@@ -220,4 +220,33 @@ export const drawerData = {
       <a href="https://github.com/salgadonikka/mymedstory" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
     `,
   },
+
+  devutilityhub: {
+    eyebrow: "Project — Personal",
+    title: "DevUtilityHub",
+    github: "https://github.com/salgadonikka/DevUtilityHub",
+    body: `
+      <p class="dr-summary">A full-stack developer utility web application. All processing logic lives in an ASP.NET Core 10 Web API; React is a thin presentation layer that sends input and displays output only.</p>
+      <div class="dr-section">
+        <div class="dr-section-title">Tools</div>
+        <ul class="dr-list">
+          <li><strong>Universal Formatter</strong> — prettify, minify, and validate JSON and XML</li>
+          <li><strong>Base64 / URL / HTML Encoder</strong> — encode and decode all three formats</li>
+          <li><strong>Text Tools</strong> — case conversion, trim, sort, deduplicate, reverse, and more</li>
+          <li><strong>Diff Checker</strong> — side-by-side text diff with line-level change highlighting</li>
+          <li><strong>Timestamp Converter</strong> — Unix ↔ human-readable, seconds and milliseconds</li>
+        </ul>
+      </div>
+      <div class="dr-section">
+        <div class="dr-section-title">Architecture</div>
+        <p>Layered API design — Controllers handle HTTP routing only, Services orchestrate logic, and Core contains pure algorithm implementations with no dependencies. Auto-detection of input format. Centralised error handling via middleware. Unit tests target the Core layer directly with no HTTP or DI dependencies.</p>
+      </div>
+      <div class="dr-section">
+        <div class="dr-section-title">Why I built it</div>
+        <p>A clean sandbox for practising strict architectural separation: the backend is the product, and the frontend is just a display layer. Also a practical tool I actually use day-to-day.</p>
+      </div>
+      <div class="dr-stack">ASP.NET Core 10 · React 19 · TypeScript · Vite · Tailwind CSS v4 · OpenAPI / Swagger · Docker</div>
+      <a href="https://github.com/salgadonikka/DevUtilityHub" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
+    `,
+  },
 };
