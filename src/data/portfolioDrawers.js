@@ -40,7 +40,7 @@ export const drawerData = {
     eyebrow: "Experience",
     title: "Deltek Systems (Philippines)",
     period: "Jan 2016 - Jan 2019",
-    role: "Software Engineer — R&D & Automation",
+    role: "Software Engineer - R&D & Automation",
     body: `
       <p class="dr-summary">Three years on Deltek's internal R&D team, building automation tooling and developer productivity applications from the ground up. Two of the applications developed here were adopted company-wide.</p>
       <div class="dr-section">
@@ -73,7 +73,7 @@ export const drawerData = {
     period: "Jul 2012 - Jan 2016",
     role: "IT Management Trainee → Programmer-Analyst → Asst. Manager",
     body: `
-      <p class="dr-summary">First professional role, starting as part of EastWest's competitive IT management trainee program and progressing to Assistant Manager. Spent most of this time on the Core Banking Transformation project — one of the largest system migrations in the bank's history.</p>
+      <p class="dr-summary">First professional role, starting as part of EastWest's competitive IT management trainee program and progressing to Assistant Manager. Spent most of this time on the Core Banking Transformation project - one of the largest system migrations in the bank's history.</p>
       <div class="dr-section">
         <div class="dr-section-title">Career progression</div>
         <div class="dr-progression">
@@ -158,10 +158,8 @@ export const drawerData = {
         <div class="dr-section-title">What I contributed</div>
         <ul class="dr-list">
           <li>Full-stack feature development: React UI components, ASP.NET Core API endpoints, SQL Server data layer</li>
-          <li>Diagnosed and resolved 135× pipeline bottleneck (N+1 + large-row SSIS query pattern)</li>
           <li>Code review ownership as lead - set standards for the team's React and .NET patterns</li>
-          <li>Onboarded and mentored 8 engineers; managed growth plans and performance reviews</li>
-          <li>OAuth2 / OIDC integration for client SSO requirements across 100+ enterprise tenants</li>
+          <li>Onboarded and mentored 4 engineers; managed growth plans and performance reviews</li>
         </ul>
       </div>
       <div class="dr-section">
@@ -173,14 +171,14 @@ export const drawerData = {
   },
 
   tamelo: {
-    eyebrow: "Project — Personal",
+    eyebrow: "Project - Personal",
     title: "Tamelo App &amp; API",
     github: "https://github.com/salgadonikka/tamelo",
     body: `
       <p class="dr-summary">A weekly task planner built to explore modern .NET + React architecture outside of enterprise constraints. Tasks are assigned to days of the week using a circular state machine with four states.</p>
       <div class="dr-section">
         <div class="dr-section-title">Why I built it</div>
-        <p>I wanted a project where I make all architecture decisions myself — no legacy patterns, no inherited constraints. Tamelo is where I explore ASP.NET Core 10 preview features, Supabase, and React 18 concurrent features in a real deployment.</p>
+        <p>I wanted a project where I make all architecture decisions myself - no legacy patterns, no inherited constraints. Tamelo is where I explore ASP.NET Core 10 preview features, Supabase, and React 18 concurrent features in a real deployment.</p>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Technical decisions</div>
@@ -197,21 +195,21 @@ export const drawerData = {
   },
 
   mymedstory: {
-    eyebrow: "Project — Personal",
+    eyebrow: "Project - Personal",
     title: "MyMedStory",
     github: "https://github.com/salgadonikka/mymedstory",
     body: `
       <p class="dr-summary">A private cloud-hosted health intelligence platform for personal medical records. Transforms scattered documents and lab results into a unified, searchable timeline with AI-assisted summaries.</p>
       <div class="dr-section">
         <div class="dr-section-title">The problem it solves</div>
-        <p>Medical history is fragmented — PDFs from different hospitals, lab results in different formats, no single source of truth. MyMedStory ingests documents, extracts structured data, and presents a chronological health timeline with AI context.</p>
+        <p>Medical history is fragmented - PDFs from different hospitals, lab results in different formats, no single source of truth. MyMedStory ingests documents, extracts structured data, and presents a chronological health timeline with AI context.</p>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Architecture</div>
         <ul class="dr-list">
           <li>.NET 8 API with Hangfire for background document processing jobs</li>
           <li>Next.js 14 web app (App Router) + React Native mobile sharing a single API</li>
-          <li>Cloudflare R2 for document storage — zero egress cost vs S3</li>
+          <li>Cloudflare R2 for document storage - zero egress cost vs S3</li>
           <li>PostgreSQL via Supabase with full-text search over extracted medical data</li>
           <li>AI summarisation layer for lab result interpretation</li>
         </ul> 
@@ -222,7 +220,7 @@ export const drawerData = {
   },
 
   devutilityhub: {
-    eyebrow: "Project — Personal",
+    eyebrow: "Project - Personal",
     title: "DevUtilityHub",
     github: "https://github.com/salgadonikka/DevUtilityHub",
     body: `
@@ -230,16 +228,16 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">Tools</div>
         <ul class="dr-list">
-          <li><strong>Universal Formatter</strong> — prettify, minify, and validate JSON and XML</li>
-          <li><strong>Base64 / URL / HTML Encoder</strong> — encode and decode all three formats</li>
-          <li><strong>Text Tools</strong> — case conversion, trim, sort, deduplicate, reverse, and more</li>
-          <li><strong>Diff Checker</strong> — side-by-side text diff with line-level change highlighting</li>
-          <li><strong>Timestamp Converter</strong> — Unix ↔ human-readable, seconds and milliseconds</li>
+          <li><strong>Universal Formatter</strong> - prettify, minify, and validate JSON and XML</li>
+          <li><strong>Base64 / URL / HTML Encoder</strong> - encode and decode all three formats</li>
+          <li><strong>Text Tools</strong> - case conversion, trim, sort, deduplicate, reverse, and more</li>
+          <li><strong>Diff Checker</strong> - side-by-side text diff with line-level change highlighting</li>
+          <li><strong>Timestamp Converter</strong> - Unix ↔ human-readable, seconds and milliseconds</li>
         </ul>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Architecture</div>
-        <p>Layered API design — Controllers handle HTTP routing only, Services orchestrate logic, and Core contains pure algorithm implementations with no dependencies. Auto-detection of input format. Centralised error handling via middleware. Unit tests target the Core layer directly with no HTTP or DI dependencies.</p>
+        <p>Layered API design - Controllers handle HTTP routing only, Services orchestrate logic, and Core contains pure algorithm implementations with no dependencies. Auto-detection of input format. Centralised error handling via middleware. Unit tests target the Core layer directly with no HTTP or DI dependencies.</p>
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Why I built it</div>
