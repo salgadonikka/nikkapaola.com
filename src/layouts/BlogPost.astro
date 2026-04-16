@@ -9,7 +9,7 @@ import AuthorCard from '../components/blog/AuthorCard.astro';
 import NowSidebar from '../components/blog/NowSidebar.astro';
 import ReadingProgress from '../components/blog/ReadingProgress.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
-import { FEATURES } from '../site.config';
+import { FEATURES, siteConfig } from '../site.config';
 
 type Props = CollectionEntry<'blog'>['data'] & { id?: string; showAuthorCard?: boolean };
 
@@ -51,6 +51,16 @@ const olderPost = currentIdx !== -1 && currentIdx < allPosts.length - 1 ? allPos
     <BaseHead title={title} description={description} image={heroImage} />
   </head>
   <body>
+    {siteConfig.analytics.googleTagManagerId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${siteConfig.analytics.googleTagManagerId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+        ></iframe>
+      </noscript>
+    )}
     <Header />
     {FEATURES.readingProgress && <ReadingProgress />}
 

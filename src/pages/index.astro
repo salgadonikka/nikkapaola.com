@@ -1,17 +1,17 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-import NewsletterForm from '../components/NewsletterForm.tsx';
-import { siteConfig } from '../site.config';
-import myPhoto from '../assets/myphoto.jpg';
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import NewsletterForm from "../components/NewsletterForm.tsx";
+import { siteConfig } from "../site.config";
+import myPhoto from "../assets/myphoto.jpg";
 
 const { hero, aboutStrip, topics } = siteConfig;
 
-const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
+const recentPosts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 5);
 
@@ -25,20 +25,36 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   </head>
   <body>
     <Header />
+    <!-- Google Tag Manager (noscript fallback) -->
+    {siteConfig.analytics.googleTagManagerId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${siteConfig.analytics.googleTagManagerId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+        ></iframe>
+      </noscript>
+    )}
+    <!-- End Google Tag Manager (noscript) -->
 
     <!-- ── HERO ── -->
     <section class="hero">
       <div class="hero-left">
-        <div class="hero-eyebrow">Personal blog &amp; a little corner of the internet</div>
+        <div class="hero-eyebrow">
+          Personal blog &amp; a little corner of the internet
+        </div>
         <h1 class="hero-title">
           Nothing on pause.<br />
           <em>Everything on purpose.</em>
         </h1>
         <p class="hero-tagline">{hero.tagline}</p>
         <div class="hero-tags">
-          {hero.tags.map((tag) => (
-            <span class={`tag ${tag.style}`}>{tag.label}</span>
-          ))}
+          {
+            hero.tags.map((tag) => (
+              <span class={`tag ${tag.style}`}>{tag.label}</span>
+            ))
+          }
         </div>
         <div class="hero-cta">
           <a href="/blog" class="btn-primary">Read the blog</a>
@@ -58,12 +74,18 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
           <div class="hero-photo-fade"></div>
 
           <div class="floating-card card-location">
-            <div class="card-label">{hero.floatingCards[0].icon} {hero.floatingCards[0].label}</div>
+            <div class="card-label">
+              {hero.floatingCards[0].icon}
+              {hero.floatingCards[0].label}
+            </div>
             <div class="card-value">{hero.floatingCards[0].value}</div>
           </div>
 
           <div class="floating-card card-season">
-            <div class="card-label">{hero.floatingCards[1].icon} {hero.floatingCards[1].label}</div>
+            <div class="card-label">
+              {hero.floatingCards[1].icon}
+              {hero.floatingCards[1].label}
+            </div>
             <div class="card-value">{hero.floatingCards[1].value}</div>
           </div>
         </div>
@@ -77,14 +99,16 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
         <div class="section-line"></div>
       </div>
       <div class="topics-grid">
-        {topics.map((t) => (
-          <a href={`/blog?cat=${t.cat}`} class={`topic-card tc-${t.color}`}>
-            <span class="topic-icon">{t.icon}</span>
-            <div class="topic-name">{t.name}</div>
-            <div class="topic-desc">{t.desc}</div>
-            <span class="topic-count">{t.count}</span>
-          </a>
-        ))}
+        {
+          topics.map((t) => (
+            <a href={`/blog?cat=${t.cat}`} class={`topic-card tc-${t.color}`}>
+              <span class="topic-icon">{t.icon}</span>
+              <div class="topic-name">{t.name}</div>
+              <div class="topic-desc">{t.desc}</div>
+              <span class="topic-count">{t.count}</span>
+            </a>
+          ))
+        }
       </div>
     </section>
 
@@ -155,13 +179,15 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
         <a href="/about" class="about-link">Read the full story</a>
       </div>
       <div class="about-facts">
-        {aboutStrip.facts.map((fact) => (
-          <div class="fact">
-            <span class="fact-emoji">{fact.emoji}</span>
-            <div class="fact-label">{fact.label}</div>
-            <div class="fact-value">{fact.value}</div>
-          </div>
-        ))}
+        {
+          aboutStrip.facts.map((fact) => (
+            <div class="fact">
+              <span class="fact-emoji">{fact.emoji}</span>
+              <div class="fact-label">{fact.label}</div>
+              <div class="fact-value">{fact.value}</div>
+            </div>
+          ))
+        }
       </div>
     </section>
 
@@ -190,12 +216,20 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .hero::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background-image:
-      radial-gradient(ellipse at 80% 20%, rgba(245,221,232,0.35) 0%, transparent 55%),
-      radial-gradient(ellipse at 10% 80%, rgba(212,228,217,0.25) 0%, transparent 45%);
+      radial-gradient(
+        ellipse at 80% 20%,
+        rgba(245, 221, 232, 0.35) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 10% 80%,
+        rgba(212, 228, 217, 0.25) 0%,
+        transparent 45%
+      );
     pointer-events: none;
     z-index: 0;
   }
@@ -223,7 +257,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .hero-eyebrow::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 28px;
     height: 1px;
@@ -277,27 +311,77 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     text-transform: uppercase;
   }
 
-  .tag-rose     { background: #f2e4e1; color: #a0514a; }
-  .tag-sage     { background: var(--color-sage-light); color: #3d6b4f; }
-  .tag-gold     { background: #f0e8d8; color: #7a5c2a; }
-  .tag-blue     { background: #dfe8f0; color: #3a5a78; }
-  .tag-lavender { background: #ece8f5; color: #5a4a80; }
-  .tag-blossom  { background: var(--color-blossom); color: #9a4870; }
+  .tag-rose {
+    background: #f2e4e1;
+    color: #a0514a;
+  }
+  .tag-sage {
+    background: var(--color-sage-light);
+    color: #3d6b4f;
+  }
+  .tag-gold {
+    background: #f0e8d8;
+    color: #7a5c2a;
+  }
+  .tag-blue {
+    background: #dfe8f0;
+    color: #3a5a78;
+  }
+  .tag-lavender {
+    background: #ece8f5;
+    color: #5a4a80;
+  }
+  .tag-blossom {
+    background: var(--color-blossom);
+    color: #9a4870;
+  }
 
-  :global(html[data-theme="dark"]) .tag-rose     { background: #3d2220; color: #e8a090; }
-  :global(html[data-theme="dark"]) .tag-sage     { color: #7dba96; }
-  :global(html[data-theme="dark"]) .tag-gold     { background: #2e2416; color: #d4a85c; }
-  :global(html[data-theme="dark"]) .tag-blue     { background: #1a2535; color: #7aafd4; }
-  :global(html[data-theme="dark"]) .tag-lavender { background: #221a35; color: #a090d4; }
-  :global(html[data-theme="dark"]) .tag-blossom  { color: #d47aaa; }
+  :global(html[data-theme="dark"]) .tag-rose {
+    background: #3d2220;
+    color: #e8a090;
+  }
+  :global(html[data-theme="dark"]) .tag-sage {
+    color: #7dba96;
+  }
+  :global(html[data-theme="dark"]) .tag-gold {
+    background: #2e2416;
+    color: #d4a85c;
+  }
+  :global(html[data-theme="dark"]) .tag-blue {
+    background: #1a2535;
+    color: #7aafd4;
+  }
+  :global(html[data-theme="dark"]) .tag-lavender {
+    background: #221a35;
+    color: #a090d4;
+  }
+  :global(html[data-theme="dark"]) .tag-blossom {
+    color: #d47aaa;
+  }
 
   @media (prefers-color-scheme: dark) {
-    :global(html:not([data-theme="light"])) .tag-rose     { background: #3d2220; color: #e8a090; }
-    :global(html:not([data-theme="light"])) .tag-sage     { color: #7dba96; }
-    :global(html:not([data-theme="light"])) .tag-gold     { background: #2e2416; color: #d4a85c; }
-    :global(html:not([data-theme="light"])) .tag-blue     { background: #1a2535; color: #7aafd4; }
-    :global(html:not([data-theme="light"])) .tag-lavender { background: #221a35; color: #a090d4; }
-    :global(html:not([data-theme="light"])) .tag-blossom  { color: #d47aaa; }
+    :global(html:not([data-theme="light"])) .tag-rose {
+      background: #3d2220;
+      color: #e8a090;
+    }
+    :global(html:not([data-theme="light"])) .tag-sage {
+      color: #7dba96;
+    }
+    :global(html:not([data-theme="light"])) .tag-gold {
+      background: #2e2416;
+      color: #d4a85c;
+    }
+    :global(html:not([data-theme="light"])) .tag-blue {
+      background: #1a2535;
+      color: #7aafd4;
+    }
+    :global(html:not([data-theme="light"])) .tag-lavender {
+      background: #221a35;
+      color: #a090d4;
+    }
+    :global(html:not([data-theme="light"])) .tag-blossom {
+      color: #d47aaa;
+    }
   }
 
   .hero-cta {
@@ -316,7 +400,9 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: background 0.2s, transform 0.2s;
+    transition:
+      background 0.2s,
+      transform 0.2s;
     display: inline-block;
   }
 
@@ -337,9 +423,16 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     transition: color 0.2s;
   }
 
-  .btn-ghost:hover { color: var(--color-terracotta); }
-  .btn-ghost::after { content: '→'; transition: transform 0.2s; }
-  .btn-ghost:hover::after { transform: translateX(4px); }
+  .btn-ghost:hover {
+    color: var(--color-terracotta);
+  }
+  .btn-ghost::after {
+    content: "→";
+    transition: transform 0.2s;
+  }
+  .btn-ghost:hover::after {
+    transform: translateX(4px);
+  }
 
   /* ── HERO RIGHT ── */
   .hero-right {
@@ -361,12 +454,18 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .hero-image-area::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: -10%; right: -10%;
-    width: 70%; height: 70%;
+    top: -10%;
+    right: -10%;
+    width: 70%;
+    height: 70%;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,221,232,0.6) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(245, 221, 232, 0.6) 0%,
+      transparent 70%
+    );
     z-index: 1;
   }
 
@@ -383,9 +482,15 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
 
   .hero-photo-fade {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 140px;
-    background: linear-gradient(to top, var(--color-cream) 0%, transparent 100%);
+    background: linear-gradient(
+      to top,
+      var(--color-cream) 0%,
+      transparent 100%
+    );
     z-index: 3;
     pointer-events: none;
   }
@@ -399,7 +504,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     padding: 12px 16px;
     font-size: 0.78rem;
     z-index: 5;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.09);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09);
   }
 
   .card-location {
@@ -481,26 +586,44 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     display: block;
   }
 
-  .topic-card:hover { background: var(--color-warm-white); }
+  .topic-card:hover {
+    background: var(--color-warm-white);
+  }
 
   .topic-card::before {
-    content: '';
+    content: "";
     position: absolute;
-    bottom: 0; left: 0; right: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 3px;
     transform: scaleX(0);
     transition: transform 0.3s ease;
     transform-origin: left;
   }
 
-  .topic-card:hover::before { transform: scaleX(1); }
+  .topic-card:hover::before {
+    transform: scaleX(1);
+  }
 
-  .tc-terracotta::before { background: var(--color-terracotta); }
-  .tc-sage::before        { background: var(--color-sage); }
-  .tc-gold::before        { background: var(--color-gold); }
-  .tc-dusty-rose::before  { background: var(--color-dusty-rose); }
-  .tc-blue::before        { background: #7a9ec4; }
-  .tc-lavender::before    { background: #b4a8d4; }
+  .tc-terracotta::before {
+    background: var(--color-terracotta);
+  }
+  .tc-sage::before {
+    background: var(--color-sage);
+  }
+  .tc-gold::before {
+    background: var(--color-gold);
+  }
+  .tc-dusty-rose::before {
+    background: var(--color-dusty-rose);
+  }
+  .tc-blue::before {
+    background: #7a9ec4;
+  }
+  .tc-lavender::before {
+    background: #b4a8d4;
+  }
 
   .topic-icon {
     font-size: 1.8rem;
@@ -580,7 +703,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .featured-image-text {
-    color: rgba(80,60,50,0.4);
+    color: rgba(80, 60, 50, 0.4);
     font-size: 2rem;
   }
 
@@ -603,7 +726,9 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     transition: color 0.2s;
   }
 
-  .featured-post:hover .featured-title { color: var(--color-terracotta); }
+  .featured-post:hover .featured-title {
+    color: var(--color-terracotta);
+  }
 
   .featured-excerpt {
     font-size: 0.9rem;
@@ -642,7 +767,9 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     text-decoration: none;
   }
 
-  .post-list-item:hover { opacity: 0.7; }
+  .post-list-item:hover {
+    opacity: 0.7;
+  }
 
   .post-list-cat {
     font-size: 0.68rem;
@@ -700,7 +827,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   .about-text p {
     font-size: 0.9rem;
     line-height: 1.85;
-    color: rgba(250,247,242,0.7);
+    color: rgba(250, 247, 242, 0.7);
     font-weight: 300;
     margin-bottom: 28px;
   }
@@ -717,8 +844,12 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     transition: gap 0.2s;
   }
 
-  .about-link::after { content: '→'; }
-  .about-link:hover { gap: 14px; }
+  .about-link::after {
+    content: "→";
+  }
+  .about-link:hover {
+    gap: 14px;
+  }
 
   .about-facts {
     display: grid;
@@ -727,20 +858,28 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .fact {
-    border-top: 1px solid rgba(250,247,242,0.15);
+    border-top: 1px solid rgba(250, 247, 242, 0.15);
     padding-top: 20px;
   }
 
-  .fact-emoji { font-size: 1.4rem; margin-bottom: 8px; display: block; }
+  .fact-emoji {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    display: block;
+  }
   .fact-label {
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(250,247,242,0.4);
+    color: rgba(250, 247, 242, 0.4);
     margin-bottom: 4px;
   }
 
-  .fact-value { font-size: 0.88rem; color: rgba(250,247,242,0.85); font-weight: 300; }
+  .fact-value {
+    font-size: 0.88rem;
+    color: rgba(250, 247, 242, 0.85);
+    font-weight: 300;
+  }
 
   /* ── NEWSLETTER ── */
   .newsletter-section {
@@ -772,7 +911,9 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
-    .topics-grid { grid-template-columns: repeat(2, 1fr); }
+    .topics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media (max-width: 768px) {
@@ -791,11 +932,18 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
 
     .topics-section,
     .posts-section,
-    .newsletter-section { padding: 60px 24px; }
+    .newsletter-section {
+      padding: 60px 24px;
+    }
 
-    .topics-grid { grid-template-columns: 1fr 1fr; }
+    .topics-grid {
+      grid-template-columns: 1fr 1fr;
+    }
 
-    .posts-layout { grid-template-columns: 1fr; gap: 40px; }
+    .posts-layout {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
 
     .about-strip {
       grid-template-columns: 1fr;
@@ -803,13 +951,21 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
       gap: 48px;
     }
 
-    .about-facts { gap: 20px; }
+    .about-facts {
+      gap: 20px;
+    }
 
-    .section-line { display: none; }
+    .section-line {
+      display: none;
+    }
   }
 
   @media (max-width: 480px) {
-    .topics-grid { grid-template-columns: 1fr; }
-    .hero-tags { gap: 6px; }
+    .topics-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-tags {
+      gap: 6px;
+    }
   }
 </style>

@@ -9,6 +9,59 @@
 //   5. Replace content in src/content/blog/ and src/content/projects/
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ── Feature Flags ─────────────────────────────────────────────────────────────
+// When false: no route, no script tag, no UI is emitted for that feature.
+// Change these to true once the corresponding feature is ready for this client.
+
+export const FEATURES = {
+  // ── Core content ────────────────────────────────
+  blog: true,
+  projects: true,
+  nowPage: true,
+  search: true,
+  rss: true,
+  /**
+   * Fragments: short-form posts on a timeline.
+   * When false: /fragments returns 404, nav link is hidden.
+   * When true: page is live and nav link appears.
+   */
+  fragments: true,
+
+  // ── Special pages ────────────────────────────────
+  /** /apps — published apps and business ventures */
+  appsPage: true,
+  /** /media-kit page */
+  mediaKit: false,
+  /** /links — Instagram-style link-in-bio hub */
+  linksPage: false,
+  /** /speaking — past talks, upcoming events, booking CTA */
+  speaking: false,
+
+  // ── Engagement ──────────────────────────────────
+  /** Email capture form wired to a newsletter provider */
+  newsletter: false,
+  /** Giscus comment threads on blog posts */
+  comments: false,
+  /** /guestbook page */
+  guestbook: false,
+
+  // ── Blog post UX ────────────────────────────────
+  tableOfContents: true,
+  readingProgress: true,
+  /** Twitter/X + copy-link buttons at post footer */
+  socialSharing: false,
+  /** Auto-generated Open Graph image per post (Satori) */
+  dynamicOgImages: false,
+
+  // ── Monetization ────────────────────────────────
+  /** Floating Ko-fi button on all pages */
+  kofi: false,
+
+  // ── Privacy ─────────────────────────────────────
+  /** Cookie consent banner — enable whenever analytics are active */
+  cookieConsent: false,
+} as const;
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface LogoConfig {
@@ -23,6 +76,8 @@ export interface LogoConfig {
 export interface NavLink {
   href: string;
   label: string;
+  /** When set, this link is hidden unless the named feature flag is true. */
+  feature?: keyof typeof FEATURES;
 }
 
 export interface FooterLink {
@@ -60,6 +115,8 @@ export interface AnalyticsConfig {
   plausibleDomain?: string;
   /** Microsoft Clarity project ID */
   microsoftClarityId?: string;
+  /** Google Tag Manager container ID, e.g. "GTM-XXXXXXX". Set to undefined to disable. */
+  googleTagManagerId?: string;
 }
 
 export interface NewsletterConfig {
@@ -162,59 +219,6 @@ export interface SiteConfig {
   topics: Topic[];
 }
 
-// ── Feature Flags ─────────────────────────────────────────────────────────────
-// When false: no route, no script tag, no UI is emitted for that feature.
-// Change these to true once the corresponding feature is ready for this client.
-
-export const FEATURES = {
-  // ── Core content ────────────────────────────────
-  blog: true,
-  projects: true,
-  nowPage: true,
-  search: true,
-  rss: true,
-  /**
-   * Fragments: short-form posts on a timeline.
-   * When false: /fragments returns 404, nav link is hidden.
-   * When true: page is live and nav link appears.
-   */
-  fragments: true,
-
-  // ── Special pages ────────────────────────────────
-  /** /apps — published apps and business ventures */
-  appsPage: true,
-  /** /media-kit page */
-  mediaKit: false,
-  /** /links — Instagram-style link-in-bio hub */
-  linksPage: false,
-  /** /speaking — past talks, upcoming events, booking CTA */
-  speaking: false,
-
-  // ── Engagement ──────────────────────────────────
-  /** Email capture form wired to a newsletter provider */
-  newsletter: false,
-  /** Giscus comment threads on blog posts */
-  comments: false,
-  /** /guestbook page */
-  guestbook: false,
-
-  // ── Blog post UX ────────────────────────────────
-  tableOfContents: true,
-  readingProgress: true,
-  /** Twitter/X + copy-link buttons at post footer */
-  socialSharing: false,
-  /** Auto-generated Open Graph image per post (Satori) */
-  dynamicOgImages: false,
-
-  // ── Monetization ────────────────────────────────
-  /** Floating Ko-fi button on all pages */
-  kofi: false,
-
-  // ── Privacy ─────────────────────────────────────
-  /** Cookie consent banner — enable whenever analytics are active */
-  cookieConsent: false,
-} as const;
-
 // ── Config ────────────────────────────────────────────────────────────────────
 
 export const siteConfig = {
@@ -242,11 +246,12 @@ export const siteConfig = {
   },
 
   nav: [
-    { href: '/blog',      label: 'Blog' },
-    { href: '/now',       label: 'Now' },
-    { href: '/portfolio', label: 'Portfolio' },
-    { href: '/projects',  label: 'Projects' },
-    { href: '/about',     label: 'About' },
+    { href: '/blog',       label: 'Blog'      },
+    { href: '/fragments',  label: 'Fragments', feature: 'fragments' },
+    { href: '/now',        label: 'Now'       },
+    { href: '/portfolio',  label: 'Portfolio' },
+    { href: '/projects',   label: 'Projects'  },
+    { href: '/about',      label: 'About'     },
   ],
 
   footerLinks: [
@@ -261,6 +266,7 @@ export const siteConfig = {
     // Reads from env var at deploy time; falls back to hardcoded ID.
     // Set to undefined to disable GA entirely for a client.
     googleAnalyticsId: (import.meta.env.PUBLIC_GA_ID as string | undefined) ?? 'G-8C1XB9DFDG',
+    googleTagManagerId: (import.meta.env.PUBLIC_GTM_ID as string | undefined) ?? 'GTM-NFVRWVMQ',
   },
 
   // newsletter: {
@@ -320,3 +326,8 @@ export const siteConfig = {
 // ── Backwards-compat exports (replaces src/consts.ts) ─────────────────────────
 export const SITE_TITLE = siteConfig.title;
 export const SITE_DESCRIPTION = siteConfig.description;
+
+/** Nav links with feature-gated entries already filtered out. Use this in Header/MobileMenu. */
+export const visibleNav = siteConfig.nav.filter(
+  link => link.feature === undefined || FEATURES[link.feature]
+);

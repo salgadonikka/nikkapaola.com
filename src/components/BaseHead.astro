@@ -1,8 +1,8 @@
 ---
-import '../styles/global.css';
-import type { ImageMetadata } from 'astro';
-import { SITE_TITLE } from '../consts';
-import { siteConfig } from '../site.config';
+import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import { SITE_TITLE } from "../consts";
+import { siteConfig } from "../site.config";
 
 const { analytics } = siteConfig;
 
@@ -19,8 +19,9 @@ const { title, description, image } = Astro.props;
 <!-- Theme: set before paint to prevent flash. Default is light; only switch to dark if user explicitly chose it. -->
 <script is:inline>
   (function () {
-    const stored = localStorage.getItem('theme');
-    document.documentElement.dataset.theme = stored === 'dark' ? 'dark' : 'light';
+    const stored = localStorage.getItem("theme");
+    document.documentElement.dataset.theme =
+      stored === "dark" ? "dark" : "light";
   })();
 </script>
 
@@ -33,22 +34,52 @@ const { title, description, image } = Astro.props;
   rel="alternate"
   type="application/rss+xml"
   title={SITE_TITLE}
-  href={new URL('rss.xml', Astro.site)}
+  href={new URL("rss.xml", Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
 
-{analytics.googleAnalyticsId && (
-  <>
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analytics.googleAnalyticsId}`}></script>
-    <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${analytics.googleAnalyticsId}');`}></script>
-  </>
-)}
-{analytics.plausibleDomain && (
-  <script is:inline defer data-domain={analytics.plausibleDomain} src="https://plausible.io/js/script.js"></script>
-)}
-{analytics.microsoftClarityId && (
-  <script is:inline set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${analytics.microsoftClarityId}");`}></script>
-)}
+{
+  analytics.googleAnalyticsId && (
+    <>
+      <script
+        is:inline
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${analytics.googleAnalyticsId}`}
+      />
+      <script
+        is:inline
+        set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${analytics.googleAnalyticsId}');`}
+      />
+    </>
+  )
+}
+{
+  analytics.plausibleDomain && (
+    <script
+      is:inline
+      defer
+      data-domain={analytics.plausibleDomain}
+      src="https://plausible.io/js/script.js"
+    />
+  )
+}
+{
+  analytics.microsoftClarityId && (
+    <script
+      is:inline
+      set:html={`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${analytics.microsoftClarityId}");`}
+    />
+  )
+}
+
+{
+  analytics.googleTagManagerId && (
+    <script
+      is:inline
+      set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${analytics.googleTagManagerId}');`}
+    />
+  )
+}
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -78,4 +109,8 @@ const { title, description, image } = Astro.props;
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-{image && <meta property="twitter:image" content={new URL(image.src, Astro.url)} />}
+{
+  image && (
+    <meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+  )
+}
