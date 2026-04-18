@@ -1,5 +1,6 @@
 ---
 // Tile 01 — Introduction + Skills & Stack
+import { identity, bio, skillGroups } from "../../data/portfolioData.js";
 ---
 
 <section class="tile" id="tile-01" data-section="01" aria-label="Introduction">
@@ -7,70 +8,31 @@
     <div class="t01-grid">
       <!-- Left column: role, prose, highlights -->
       <div class="t01-left">
-        <h1 class="t01-role">
-          Full-Stack Software Engineer<br />&amp; People Manager
-        </h1>
-        <!--
-        <p class="t01-location">
-          Philippines → Poland &amp; Europe<br />Remote-friendly · Hybrid
-        </p>
-        -->
+        <h1 class="t01-role" set:html={identity.role} />
         <div class="t01-prose">
-          <p>
-            I am a full-stack software engineer with 11+ years of experience
-            delivering production software across enterprise, fintech, and SaaS
-            domains, primarily in .NET and React. Most of my career has been
-            spent as a core contributor to a large-scale enterprise Benefits
-            Administration platform, working across backend systems, REST APIs,
-            React frontends, SQL Server, and ETL pipelines for 100+ global
-            organisations.
-          </p>
-          <p>Looking for a mid-level engineering role in Poland or Europe.</p>
+          {bio.paragraphs.map((p) => <p set:html={p} />)}
         </div>
         <div class="t01-data-col">
           <div class="t01-data-row">
             <span class="t01-data-num">What I bring</span>
             <span class="t01-data-label"></span>
           </div>
-          <div class="t01-data-row">
-            <span class="t01-data-label"
-              >End-to-end system ownership (architecture, APIs, frontend, cloud
-              deployment)</span
-            >
-          </div>
-          <div class="t01-data-row">
-            <span class="t01-data-label"
-              >Strong backend architecture and API design, and thorough testing</span
-            >
-          </div>
-          <div class="t01-data-row">
-            <span class="t01-data-label"
-              >Modern frontend development (React, Next.js)</span
-            >
-          </div>
-          <div class="t01-data-row">
-            <span class="t01-data-label"
-              >People leadership (mentoring engineers, code reviews,
-              cross-timezone delivery)</span
-            >
-          </div>
+          {bio.whatIBring.map((item) => (
+            <div class="t01-data-row">
+              <span class="t01-data-label">{item}</span>
+            </div>
+          ))}
         </div>
         <div class="learning-callout">
           <div class="learning-lbl">Industries</div>
           <div class="learning-tags">
-            <span>Financial Services</span>
-            <span>Banking</span>
-            <span>Insurance &amp; Benefits</span>
-            <span>Enterprise SaaS</span>
+            {bio.industries.map((tag) => <span>{tag}</span>)}
           </div>
         </div>
         <div class="learning-callout">
           <div class="learning-lbl">Languages</div>
           <div class="learning-tags">
-            <span>English (Fluent)</span>
-            <span>Filipino / Tagalog (Native)</span>
-            <span>Spanish (A2)</span>
-            <span>Polish (A1 — learning)</span>
+            {bio.languages.map((tag) => <span>{tag}</span>)}
           </div>
         </div>
       </div>
@@ -87,94 +49,21 @@
           </div>
         </div>
         <div class="t01-skill-groups">
-          <div class="skill-group">
-            <div class="sg-label">Backend &amp; API</div>
-            <div class="badge-row">
-              <span class="bp">C#</span>
-              <span class="bp">.NET</span>
-              <span class="bp">.NET Framework</span>
-              <span class="bp">ASP.NET Core</span>
-              <span class="bp">Web API</span>
-              <span class="bp">RESTful APIs</span>
-              <span class="bp">Entity Framework</span>
-              <span class="bp">LINQ</span>
-              <span class="bs">NUnit / xUnit</span>
-              <span class="bs">Selenium</span>
+          {skillGroups.map((group) => (
+            <div class="skill-group">
+              <div class="sg-label" set:html={group.label} />
+              <div class="badge-row">
+                {group.skills.map((skill) => (
+                  <span class={skill.variant} set:html={skill.name} />
+                ))}
+              </div>
             </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">Frontend</div>
-            <div class="badge-row">
-              <span class="bp">React</span>
-              <span class="bp">ASP.NET MVC</span>
-              <span class="bp">ASP.NET WebForms</span>
-              <span class="bp">TypeScript</span>
-              <span class="bp">JavaScript</span>
-              <span class="bp">HTML</span>
-              <span class="bp">CSS</span>
-              <span class="bs">Next.js</span>
-              <span class="bs">Astro</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">Data &amp; Cloud</div>
-            <div class="badge-row">
-              <span class="bp">Azure</span>
-              <span class="bp">SQL Server</span>
-              <span class="bp">PostgreSQL</span>
-              <span class="bs">SSIS / SSRS</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">DevOps &amp; Tooling</div>
-            <div class="badge-row">
-              <span class="bp">Git / GitHub</span>
-              <span class="bp">Azure DevOps</span>
-              <span class="bp">CI/CD</span>
-              <span class="bs">Docker</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">Practices</div>
-            <div class="badge-row">
-              <span class="bp">Clean Architecture</span>
-              <span class="bp">Domain-Driven Design</span>
-              <span class="bp">N-Tier Architecture</span>
-              <span class="bp">Design Patterns</span>
-              <span class="bp">Code Reviews</span>
-              <span class="bp">Unit &amp; Integration Testing</span>
-              <span class="bp">Technical Documentation</span>
-              <span class="bp">Agile / Scrum</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">Security</div>
-            <div class="badge-row">
-              <span class="bp">OAuth2 / OIDC</span>
-              <span class="bp">JWT</span>
-              <span class="bs">Microsoft Entra ID</span>
-              <span class="bs">OWASP</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <div class="sg-label">Leadership</div>
-            <div class="badge-row">
-              <span class="bl">People Management</span>
-              <span class="bl">Mentoring</span>
-              <span class="bl">Remote Team Coordination</span>
-              <span class="bl">Stakeholder Communication</span>
-              <span class="bl">Cross-functional Collaboration</span>
-            </div>
-          </div>
+          ))}
         </div>
         <div class="learning-callout">
           <div class="learning-lbl">Actively Exploring</div>
           <div class="learning-tags">
-            <span>Azure OpenAI Service</span>
-            <span>Semantic Kernel</span>
-            <span>AZ-204</span>
-            <span>Azure Container Apps</span>
-            <span>Blazor</span>
+            {bio.activelyExploring.map((tag) => <span>{tag}</span>)}
           </div>
         </div>
       </div>

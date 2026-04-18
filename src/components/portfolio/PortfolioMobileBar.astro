@@ -1,4 +1,6 @@
 ---
+import { identity, status, contactLinks } from "../../data/portfolioData.js";
+
 interface Props {
   sections: { num: string; label: string; id: string }[];
 }
@@ -7,7 +9,7 @@ const { sections } = Astro.props;
 
 <!-- ── MOBILE TOP BAR ── -->
 <div class="mob-bar" id="mob-bar">
-  <a href="/" class="mob-monogram">NPS</a>
+  <a href="/" class="mob-monogram">{identity.monogram}</a>
   <button
     class="mob-hamburger"
     id="mob-hamburger"
@@ -32,12 +34,18 @@ const { sections } = Astro.props;
   <div class="mob-overlay-foot">
     <div class="mob-avail">
       <span class="pulse-dot"></span>
-      Open to work · Poland &amp; Europe
+      {status.availability} · {status.location}
     </div>
     <div class="mob-contact-links">
-      <a href="mailto:nikkapfs@gmail.com">nikkapfs@gmail.com</a>
-      <a href="https://linkedin.com/in/nikkasalgado" target="_blank" rel="noopener">linkedin.com/in/nikkasalgado</a>
-      <a href="https://github.com/salgadonikka" target="_blank" rel="noopener">github.com/salgadonikka</a>
+      {contactLinks.filter((l) => l.showInMobile).map((link) => (
+        <a
+          href={link.href}
+          target={link.external ? "_blank" : undefined}
+          rel={link.external ? "noopener" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
     </div>
     <a href="/" class="mob-site-back">← Back to nikkapaola.com</a>
   </div>
@@ -45,6 +53,6 @@ const { sections } = Astro.props;
 
 <!-- ── MOBILE IDENTITY STRIP (hidden on desktop) ── -->
 <div class="mob-identity" aria-hidden="true">
-  <div class="mob-identity-name">Nikka Paola Salgado</div>
-  <div class="mob-identity-role">Full-Stack Software Engineer &amp; People Manager</div>
+  <div class="mob-identity-name">{identity.name}</div>
+  <div class="mob-identity-role" set:html={identity.role} />
 </div>

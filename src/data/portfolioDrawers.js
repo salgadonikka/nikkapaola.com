@@ -8,9 +8,9 @@ export const drawerData = {
     eyebrow: "Experience",
     title: "WTW Manila Global Delivery Center",
     period: "Feb 2019 - Present",
-    role: "Associate Software Engineer → Lead Associate Software Engineer (+ People Manager)",
+    role: "Associate Software Engineer → + People Manager → Lead Associate Software Engineer",
     body: `
-      <p class="dr-summary">6+ years at Willis Towers Watson's Manila delivery center, contributing across the full stack of a multi-tier enterprise benefits administration platform serving pension and health clients across 100+ global organisations.</p>
+      <p class="dr-summary">6+ years at Willis Towers Watson's Manila delivery center, contributing across the full stack of a multi-tier enterprise benefits administration platform serving pension and health clients across 100+ global organizations.</p>
       <div class="dr-section">
         <div class="dr-section-title">Career progression</div>
         <div class="dr-progression">
@@ -31,6 +31,20 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">As a manager (from Mar 2022)</div>
         <p>Led an APAC shift development team - conducting 1:1s, performance evaluations, goal-setting, and coaching. Also stepped in as acting Scrum Master, SDET, and Technical Writer during transition periods to maintain delivery continuity.</p>
+      </div>
+      <div class="dr-section">
+        <div class="dr-section-title">What this taught me</div>
+        <p>Six years on the same complex system teaches you things you can't 
+          learn from switching companies every two years. You learn what 
+          "maintainable" actually means when you're the one maintaining it. 
+          You learn to make changes in a system you didn't design, around 
+          constraints you didn't choose, without breaking what you didn't 
+          touch. You learn that the most important engineering decisions are 
+          the ones that don't seem like engineering decisions at the time.
+
+          It also gave me perspective on what I want next. A team where I 
+          can go wider, not just deeper, and engineers I can genuinely learn 
+          from.</p>
       </div>
       <div class="dr-stack">.NET Framework 4.8 · ASP.NET WebForms · ASP.NET MVC · ASP.NET Web API · React · TypeScript · SQL Server · SSIS · SSRS · Azure · NUnit · Selenium · Azure DevOps</div>
     `,
@@ -101,7 +115,7 @@ export const drawerData = {
         </ul>
       </div>
       <div class="dr-section">
-        <div class="dr-section-title">What this gave me</div>
+        <div class="dr-section-title">What this taught me</div>
         <p>Banking sets a high bar for correctness - production issues in a core banking system affect real accounts. Working under those constraints shaped how I think about data integrity, change management, and what "done" really means in a regulated environment.</p>
       </div>
       <div class="dr-stack">C# · .NET Framework · SQL Server · Temenos T24 · jBase · SSRS</div>
@@ -153,7 +167,7 @@ export const drawerData = {
     title: "Benefits Outsourcing Platform",
     subtitle: "WTW Manila Global Delivery Center",
     body: `
-      <p class="dr-summary">Enterprise React + ASP.NET Core web platform for pension and health benefits administration. Served 100+ global corporate clients over 6+ years of production. Proprietary - detailed architecture available in interviews.</p>
+      <p class="dr-summary">Enterprise React + ASP.NET Core web platform for pension and health benefits administration. Served 100+ global corporate clients for 6+ years of production. Proprietary - detailed architecture available in interviews.</p>
       <div class="dr-section">
         <div class="dr-section-title">What I contributed</div>
         <ul class="dr-list">
@@ -164,7 +178,7 @@ export const drawerData = {
       </div>
       <div class="dr-section">
         <div class="dr-section-title">Architecture (non-proprietary)</div>
-        <p>Multi-tenant SPA (React) consuming a .NET Core REST API backed by SQL Server. Azure DevOps CI/CD with NUnit test coverage. SSIS pipelines for scheduled bulk data loads. SSRS for client-facing benefit statements.</p>
+        <p>Multi-tier platform: ASP.NET WebForms admin, ASP.NET MVC (ESS portals), and React (ESSNext) consuming a .NET Web API layer, backed by SQL Server. Azure DevOps CI/CD, NUnit test coverage, SSIS bulk data pipelines, SSRS reporting.</p>
       </div>
       <div class="dr-stack">ASP.NET Core · React · TypeScript · SQL Server · Azure DevOps · NUnit · SSIS · SSRS · OAuth2</div>
     `,
@@ -190,7 +204,7 @@ export const drawerData = {
         </ul>
       </div>
       <div class="dr-stack">React 18 · TypeScript · ASP.NET Core 10 · Supabase · PostgreSQL · Zustand</div>
-      <a href="https://github.com/salgadonikka/tameloapp" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
+      <a href="https://github.com/salgadonikka/tamelo" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
     `,
   },
 
@@ -214,7 +228,7 @@ export const drawerData = {
           <li>AI summarisation layer for lab result interpretation</li>
         </ul> 
       </div>
-      <div class="dr-stack">.NET 8 · Next.js 14 · React Native · PostgreSQL · Cloudflare R2 · Hangfire</div>
+      <div class="dr-stack">.NET 10 · Next.js 14 · React Native · PostgreSQL · Cloudflare R2 · Hangfire</div>
       <a href="https://github.com/salgadonikka/mymedstory" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
     `,
   },

@@ -41,7 +41,8 @@ import { SITE_TITLE } from '../consts';
             excerptLength: 20,
             resetStyles: false,
           });
-        } catch {
+        } catch (err) {
+          console.error('[pagefind] failed to load:', err);
           var notice = document.getElementById('search-dev-notice');
           if (notice) notice.style.display = 'block';
           var el = document.getElementById('search');
