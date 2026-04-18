@@ -144,11 +144,8 @@ export const skillGroups = [
       { name: ".NET Framework", variant: "bp" },
       { name: "ASP.NET Core", variant: "bp" },
       { name: "Web API", variant: "bp" },
-      { name: "RESTful APIs", variant: "bp" },
       { name: "Entity Framework", variant: "bp" },
-      { name: "LINQ", variant: "bp" },
-      { name: "NUnit / xUnit", variant: "bs" },
-      { name: "Selenium", variant: "bs" },
+      { name: "LINQ", variant: "bp" }
     ],
   },
   {
@@ -190,10 +187,10 @@ export const skillGroups = [
       { name: "Domain-Driven Design", variant: "bp" },
       { name: "N-Tier Architecture", variant: "bp" },
       { name: "Design Patterns", variant: "bp" },
+      { name: "Testing (NUnit / xUnit, Selenium)", variant: "bp" },
       { name: "Code Reviews", variant: "bp" },
-      { name: "Unit &amp; Integration Testing", variant: "bp" },
       { name: "Technical Documentation", variant: "bp" },
-      { name: "Agile / Scrum", variant: "bp" },
+      { name: "Agile / Scrum", variant: "bp" }
     ],
   },
   {
@@ -201,8 +198,7 @@ export const skillGroups = [
     skills: [
       { name: "OAuth2 / OIDC", variant: "bp" },
       { name: "JWT", variant: "bp" },
-      { name: "Microsoft Entra ID", variant: "bs" },
-      { name: "OWASP", variant: "bs" },
+      { name: "Microsoft Entra ID", variant: "bs" }
     ],
   },
   {

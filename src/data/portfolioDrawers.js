@@ -22,10 +22,41 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">What I worked on</div>
         <ul class="dr-list">
-          <li><strong>Pension payment workflow</strong> - contributed across backend, admin, and self-service portal surfaces for multiple phases of a fully redesigned pension payment feature. Received significant praise from client teams at launch.</li>
-          <li><strong>Death processing enhancements</strong> - major design enhancement and frontend update to the death processing workflow; received team recognition for this work.</li>
-          <li><strong>Audit data export</strong> - diagnosed and redesigned a critically slow export pipeline. Runtime dropped from 45 minutes to 20 seconds (135× improvement), with significant reductions in I/O and CPU usage.</li>
-          <li>Sustained contributions across the broader platform: communications, batch processes, case management, document generation, data exports, and reports.</li>
+          <li><strong>Pension payment workflow</strong> - contributed across backend, admin 
+            (ASP.NET WebForms), and self-service portal (React) for multiple 
+            phases of a fully redesigned pension payment workflow. Features 
+            included retirement counseling (created from scratch), election 
+            summary (a summary screen spanning dozens of subplan, payment method, 
+            marital status, and beneficiary combinations, where correctness is 
+            non-negotiable — these are irrevocable financial elections), and 
+            payment in arrears. Delivery involved sustained cross-timezone 
+            coordination with US-based team members. Received significant client 
+            team recognition at launch.</li>
+          <li><strong>Death processing enhancements</strong> - extended a core administrative 
+            feature to cover a previously unsupported user class: Alternate Payee 
+            Beneficiaries. Introduced a new screen and flow, with the feature 
+            spanning multiple steps across multiple sprints; received team recognition for this work.</li>
+          <li><strong>Trust Authorization Case Workflow</strong> - redesigned a cross-module case 
+            creation architecture to support pension-specific document upload 
+            behaviour. The existing event handler approach could not support the 
+            new requirements, so I introduced a pension-specific case provider 
+            that extends the core provider, respecting module boundaries and 
+            enabling pre-, during-, and post-case-creation logic. This fixed 
+            multiple unreported defects - incorrect case linking, hardcoded 
+            document type logic, and an ESSNext workaround that existed because 
+            the correct logic wasn't in place. The solution was adopted as a 
+            baseline for other teams. I proactively flagged the exposed defects 
+            to the product owner and helped triage which were in scope vs. 
+            separate work.</li>
+          <li><strong>Audit data export</strong> - diagnosed and redesigned a critically slow 
+            pipeline. Root causes: non-SARGable string filtering, a monolithic 
+            query loading 400K+ rows without prefiltering, correlated subqueries, 
+            and parameter sniffing instability. Fix: indexed intermediate tables, 
+            staged datasets, OUTER APPLY, restructured execution plan. Runtime: 
+            45 minutes → 20 seconds (135× improvement).</li>
+          <li>Sustained contributions across the broader platform: communications dashboard, batch processes, 
+            case management enhancements, document generation pipelines, data 
+            exports, SSRS reports across pension and integrated segments.</li>
         </ul>
       </div>
       <div class="dr-section">
@@ -35,16 +66,25 @@ export const drawerData = {
       <div class="dr-section">
         <div class="dr-section-title">What this taught me</div>
         <p>Six years on the same complex system teaches you things you can't 
-          learn from switching companies every two years. You learn what 
-          "maintainable" actually means when you're the one maintaining it. 
-          You learn to make changes in a system you didn't design, around 
-          constraints you didn't choose, without breaking what you didn't 
-          touch. You learn that the most important engineering decisions are 
-          the ones that don't seem like engineering decisions at the time.
+        learn from switching companies every two years. You learn what 
+        "maintainable" actually means when you're the one maintaining it. 
+        You learn to make changes in a system you didn't design, around 
+        constraints you didn't choose, without breaking what you didn't 
+        touch. The features I'm most proud of are the ones where I delivered 
+        the requirement and left the codebase better than I found it. 
+        Defects fixed, workarounds removed, a cleaner baseline for the 
+        next developer.
 
-          It also gave me perspective on what I want next. A team where I 
-          can go wider, not just deeper, and engineers I can genuinely learn 
-          from.</p>
+        I also learned what it actually means to advocate for people. 
+        Work doesn't only have to revolve around the contributions you make 
+        to your company. It can also have a deeply personal impact on 
+        someone else's life. And some of the most important decisions 
+        you make at work are the ones that don't seem like work decisions 
+        at the time.
+
+        It also gave me perspective on what I want next. A team where I 
+        can go wider, not just deeper, and engineers I can genuinely learn 
+        from.</p>
       </div>
       <div class="dr-stack">.NET Framework 4.8 · ASP.NET WebForms · ASP.NET MVC · ASP.NET Web API · React · TypeScript · SQL Server · SSIS · SSRS · Azure · NUnit · Selenium · Azure DevOps</div>
     `,
