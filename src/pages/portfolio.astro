@@ -13,6 +13,14 @@ const sections = [
   { num: "02", label: "Experience", id: "tile-02" },
   { num: "03", label: "Contact", id: "tile-03" },
 ];
+
+const tabletSections = [
+  { num: "01", label: "Introduction" },
+  { num: "—",  label: "Skills & Stack" },
+  { num: "02", label: "Career Timeline" },
+  { num: "—",  label: "Featured Work" },
+  { num: "03", label: "Contact" },
+];
 ---
 
 <!doctype html>
@@ -33,7 +41,7 @@ const sections = [
 
     <!-- ══ MAIN LAYOUT ══ -->
     <div class="pf2-layout">
-      <PortfolioSidebar sections={sections} />
+      <PortfolioSidebar sections={sections} tabletSections={tabletSections} />
 
       <!-- ══════ RIGHT PANEL ══════ -->
       <main class="pf2-right" id="pf2-right" tabindex="-1">
@@ -59,7 +67,7 @@ const sections = [
       <div class="drawer-content" id="drawer-content"></div>
     </aside>
 
-    <!-- ── PROGRESS DOTS ── -->
+    <!-- ── PROGRESS DOTS (desktop: 3) ── -->
     <div
       class="progress-dots"
       id="progress-dots"
@@ -72,6 +80,29 @@ const sections = [
             class={`pdot${i === 0 ? " pdot--active" : ""}`}
             data-tile={`tile-0${i + 1}`}
             aria-label={`Section ${i + 1} of ${sections.length}: ${s.label}`}
+          />
+        ))
+      }
+    </div>
+
+    <!-- ── PROGRESS DOTS (tablet: 5) ── -->
+    <div
+      class="progress-dots progress-dots--tablet"
+      id="progress-dots-tablet"
+      role="navigation"
+      aria-label="Section navigation"
+    >
+      {
+        [
+          "Introduction",
+          "Skills & Stack",
+          "Career Timeline",
+          "Featured Work",
+          "Contact",
+        ].map((label, i) => (
+          <button
+            class={`pdot${i === 0 ? " pdot--active" : ""}`}
+            aria-label={`Section ${i + 1} of 5: ${label}`}
           />
         ))
       }

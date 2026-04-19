@@ -13,12 +13,26 @@ import { drawerData } from '../data/portfolioDrawers.js';
 const rightPanel   = document.getElementById('pf2-right');
 const sidebarEl    = document.getElementById('pf2-sidebar');
 const tiles        = Array.from(document.querySelectorAll('.tile'));
-const sidebarLinks = Array.from(document.querySelectorAll('.si-link'));
-const dots         = Array.from(document.querySelectorAll('.pdot'));
+const sidebarLinks       = Array.from(document.querySelectorAll('.si-nav--desktop .si-link'));
+const sidebarLinksTablet = Array.from(document.querySelectorAll('.si-nav--tablet .si-link'));
+const dots         = Array.from(document.querySelectorAll('#progress-dots .pdot'));
+const dotsTablet   = Array.from(document.querySelectorAll('#progress-dots-tablet .pdot'));
 const mobHamburger = document.getElementById('mob-hamburger');
 const mobClose     = document.getElementById('mob-close');
 const mobOverlay   = document.getElementById('mob-overlay');
 const mobNavLinks  = Array.from(document.querySelectorAll('.mob-nav-link'));
+
+// Tablet snap sections (the 5 scroll targets in tablet mode)
+const tabletSnapSections = [
+  document.querySelector('#tile-01 .t01-left'),
+  document.querySelector('#tile-01 .t01-skills'),
+  document.querySelector('#tile-02 .t02-left'),
+  document.querySelector('#tile-02 .t02-right'),
+  document.querySelector('#tile-03'),
+].filter(Boolean);
+
+// Maps tablet section index → tile index (used for sidebar hide/show logic)
+const tabletSectionToTile = [0, 0, 1, 1, 2];
 
 // Tile 03 contact hero elements
 const heroPhotoWrapEl = document.getElementById('t03c-photo-wrap');
@@ -30,6 +44,7 @@ const heroLinksEl     = document.getElementById('t03c-links');
 let currentIndex = 0;
 let heroAnimated = false;
 const isMobile   = () => window.innerWidth <= 768;
+const isTablet   = () => window.innerWidth > 768 && window.innerWidth <= 1100;
 const LAST_TILE  = tiles.length - 1;
 const COLLAPSE_MS = 500; // must match CSS width transition duration
 
@@ -131,20 +146,46 @@ function setActive(index) {
 // Initialise hero as invisible
 resetHero();
 
-// ── IntersectionObserver (desktop scroll snapping) ──
+// ── IntersectionObserver (desktop + tablet scroll snapping) ──
 if (rightPanel && !isMobile()) {
-  const obs = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const idx = tiles.indexOf(e.target);
-          if (idx !== -1) setActive(idx);
-        }
-      });
-    },
-    { root: rightPanel, threshold: 0.5 },
-  );
-  tiles.forEach((t) => obs.observe(t));
+  if (isTablet()) {
+    // Tablet: observe 5 sub-sections, update 5-dot and 5-link sets
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const si = tabletSnapSections.indexOf(e.target);
+            if (si === -1) return;
+            currentIndex = tabletSectionToTile[si];
+            dotsTablet.forEach((d, i) => d.classList.toggle('pdot--active', i === si));
+            sidebarLinksTablet.forEach((l, i) => {
+              const on = i === si;
+              l.classList.toggle('si-link--active', on);
+              l.setAttribute('aria-current', on ? 'true' : 'false');
+            });
+            if (currentIndex === LAST_TILE) hideSidebarAndAnimate();
+            else showSidebar();
+          }
+        });
+      },
+      { root: rightPanel, threshold: 0.5 },
+    );
+    tabletSnapSections.forEach((s) => obs.observe(s));
+  } else {
+    // Desktop: observe 3 tiles, update 3-dot set
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const idx = tiles.indexOf(e.target);
+            if (idx !== -1) setActive(idx);
+          }
+        });
+      },
+      { root: rightPanel, threshold: 0.5 },
+    );
+    tiles.forEach((t) => obs.observe(t));
+  }
 }
 
 // ── Keyboard arrow navigation ────────────────────────
@@ -167,17 +208,34 @@ document.addEventListener('keydown', (e) => {
 // ── Sidebar nav clicks ───────────────────────────────
 sidebarLinks.forEach((link, i) => {
   link.addEventListener('click', (e) => {
-    if (isMobile()) return;
+    if (isMobile() || isTablet()) return;
     e.preventDefault();
     tiles[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+sidebarLinksTablet.forEach((link, i) => {
+  link.addEventListener('click', (e) => {
+    if (!isTablet()) return;
+    e.preventDefault();
+    const target = tabletSnapSections[i];
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
 
 // ── Progress dot clicks ──────────────────────────────
 dots.forEach((dot, i) => {
   dot.addEventListener('click', () => {
-    if (isMobile()) return;
+    if (isMobile() || isTablet()) return;
     tiles[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+dotsTablet.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    if (!isTablet()) return;
+    const target = tabletSnapSections[i];
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
 
