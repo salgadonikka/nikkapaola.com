@@ -4,7 +4,6 @@ import { Image } from "astro:assets";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import FormattedDate from "../components/FormattedDate.astro";
 import { FEATURES } from "../site.config";
 
 if (!FEATURES.fragments) return Astro.redirect("/404");
@@ -13,6 +12,17 @@ const allFragments = await getCollection("fragments");
 // Sort by id descending: filename format YYYY-MM-DD-NNN sorts date and
 // same-day sequence number together without needing separate comparisons.
 const fragments = allFragments.sort((a, b) => b.id.localeCompare(a.id));
+
+function parseSpotifyEmbed(url: string): string | null {
+  const m = url.match(/open\.spotify\.com\/(track|album|playlist)\/([A-Za-z0-9]+)/);
+  if (!m) return null;
+  return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
+}
+
+function parseYoutubeId(url: string): string | null {
+  const m = url.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
 
 const tagColors: Record<string, { bg: string; color: string }> = {
   life: { bg: "#f2e4e1", color: "#a0514a" },
@@ -25,7 +35,9 @@ const tagColors: Record<string, { bg: string; color: string }> = {
 const rendered = await Promise.all(
   fragments.map(async (fragment) => {
     const { Content } = await render(fragment);
-    return { fragment, Content };
+    const spotifyEmbed = fragment.data.spotify ? parseSpotifyEmbed(fragment.data.spotify) : null;
+    const youtubeId = fragment.data.youtube ? parseYoutubeId(fragment.data.youtube) : null;
+    return { fragment, Content, spotifyEmbed, youtubeId };
   }),
 );
 ---
@@ -55,122 +67,85 @@ const rendered = await Promise.all(
         fragments.length === 0 ? (
           <p class="empty-state">"Fragments are coming. Check back soon."</p>
         ) : (
-          <div class="timeline">
-            <div class="timeline-line" aria-hidden="true" />
-
-            {rendered.map(({ fragment, Content }, index) => {
-              const side = index % 2 === 0 ? "left" : "right";
+          <div class="fragment-wall">
+            {rendered.map(({ fragment, Content, spotifyEmbed, youtubeId }) => {
               const tagInfo = fragment.data.tag
                 ? tagColors[fragment.data.tag]
                 : null;
 
-              return (
-                <div
-                  class={`timeline-row timeline-row--${side}`}
-                  id={`frag-${fragment.id}`}
-                >
-                  {side === "left" ? (
-                    <>
-                      <button
-                        class="fragment-card"
-                        data-id={fragment.id}
-                        data-tag={fragment.data.tag ?? ""}
-                        data-tag-bg={tagInfo?.bg ?? ""}
-                        data-tag-color={tagInfo?.color ?? ""}
-                        data-emoji={fragment.data.emoji ?? ""}
-                        aria-label="Open fragment"
-                      >
-                        {fragment.data.image && (
-                          <div class="card-image">
-                            <Image
-                              src={fragment.data.image}
-                              alt=""
-                              width={600}
-                              height={600}
-                              format="webp"
-                              loading="lazy"
-                            />
-                          </div>
-                        )}
-                        <div class="card-body">
-                          <div class="card-meta card-meta--left">
-                            <FormattedDate date={fragment.data.date} />
-                            {fragment.data.tag && tagInfo && (
-                              <span
-                                class="tag-pill"
-                                style={`background: ${tagInfo.bg}; color: ${tagInfo.color};`}
-                              >
-                                {fragment.data.tag}
-                              </span>
-                            )}
-                            {fragment.data.emoji && (
-                              <span class="card-emoji">
-                                {fragment.data.emoji}
-                              </span>
-                            )}
-                          </div>
-                          <div class="card-text">
-                            <Content />
-                          </div>
-                        </div>
-                      </button>
-                      <div class="dot-col">
-                        <div class="dot" aria-hidden="true" />
-                      </div>
-                      <div class="spacer" />
-                    </>
-                  ) : (
-                    <>
-                      <div class="spacer" />
-                      <div class="dot-col">
-                        <div class="dot" aria-hidden="true" />
-                      </div>
-                      <button
-                        class="fragment-card"
-                        data-id={fragment.id}
-                        data-tag={fragment.data.tag ?? ""}
-                        data-tag-bg={tagInfo?.bg ?? ""}
-                        data-tag-color={tagInfo?.color ?? ""}
-                        data-emoji={fragment.data.emoji ?? ""}
-                        aria-label="Open fragment"
-                      >
-                        {fragment.data.image && (
-                          <div class="card-image">
-                            <Image
-                              src={fragment.data.image}
-                              alt=""
-                              width={600}
-                              height={600}
-                              format="webp"
-                              loading="lazy"
-                            />
-                          </div>
-                        )}
-                        <div class="card-body">
-                          <div class="card-meta card-meta--right">
-                            <FormattedDate date={fragment.data.date} />
-                            {fragment.data.tag && tagInfo && (
-                              <span
-                                class="tag-pill"
-                                style={`background: ${tagInfo.bg}; color: ${tagInfo.color};`}
-                              >
-                                {fragment.data.tag}
-                              </span>
-                            )}
-                            {fragment.data.emoji && (
-                              <span class="card-emoji">
-                                {fragment.data.emoji}
-                              </span>
-                            )}
-                          </div>
-                          <div class="card-text">
-                            <Content />
-                          </div>
-                        </div>
-                      </button>
-                    </>
-                  )}
+              const cardMedia = spotifyEmbed ? (
+                <div class="card-media card-media--spotify">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.516 17.314a.748.748 0 0 1-1.031.25c-2.824-1.725-6.376-2.115-10.564-1.158a.748.748 0 1 1-.334-1.458c4.583-1.049 8.517-.597 11.68 1.335a.748.748 0 0 1 .249 1.031zm1.472-3.27a.937.937 0 0 1-1.288.308c-3.231-1.985-8.157-2.56-11.977-1.401a.937.937 0 0 1-.545-1.793c4.363-1.325 9.786-.683 13.502 1.598a.937.937 0 0 1 .308 1.288zm.127-3.405C15.37 8.39 9.394 8.19 5.82 9.274a1.124 1.124 0 1 1-.653-2.151c4.114-1.249 10.952-1.008 15.265 1.574a1.124 1.124 0 1 1-1.317 1.942z"/>
+                  </svg>
+                  <span class="card-media-label">Listening ♫</span>
                 </div>
+              ) : youtubeId ? (
+                <div class="card-media card-media--youtube">
+                  <img
+                    src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div class="play-btn" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+              ) : null;
+
+              return (
+                <button
+                  class="fragment-card"
+                  id={`frag-${fragment.id}`}
+                  data-id={fragment.id}
+                  data-tag={fragment.data.tag ?? ""}
+                  data-tag-bg={tagInfo?.bg ?? ""}
+                  data-tag-color={tagInfo?.color ?? ""}
+                  data-emoji={fragment.data.emoji ?? ""}
+                  aria-label="Open fragment"
+                >
+                  {fragment.data.image && (
+                    <div class="card-image">
+                      <Image
+                        src={fragment.data.image}
+                        alt=""
+                        width={600}
+                        height={600}
+                        format="webp"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  {cardMedia}
+                  <div class="card-body">
+                    <div class="card-meta">
+                      <time
+                        datetime={fragment.data.date.toISOString()}
+                        data-timestamp={fragment.data.date.toISOString()}
+                      >
+                        {fragment.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </time>
+                      {fragment.data.tag && tagInfo && (
+                        <span
+                          class="tag-pill"
+                          style={`background: ${tagInfo.bg}; color: ${tagInfo.color};`}
+                        >
+                          {fragment.data.tag}
+                        </span>
+                      )}
+                      {fragment.data.emoji && (
+                        <span class="card-emoji">
+                          {fragment.data.emoji}
+                        </span>
+                      )}
+                    </div>
+                    <div class="card-text">
+                      <Content />
+                    </div>
+                  </div>
+                </button>
               );
             })}
           </div>
@@ -181,8 +156,12 @@ const rendered = await Promise.all(
     <!-- Hidden content store: full-res images + rendered text, cloned into modal on open -->
     <div hidden aria-hidden="true">
       {
-        rendered.map(({ fragment, Content }) => (
-          <div id={`store-${fragment.id}`}>
+        rendered.map(({ fragment, Content, spotifyEmbed, youtubeId }) => (
+          <div
+            id={`store-${fragment.id}`}
+            data-spotify-embed={spotifyEmbed ?? ""}
+            data-youtube-id={youtubeId ?? ""}
+          >
             {fragment.data.image && (
               <div class="store-image">
                 <Image
@@ -196,7 +175,12 @@ const rendered = await Promise.all(
               </div>
             )}
             <div class="store-date">
-              <FormattedDate date={fragment.data.date} />
+              <time
+                datetime={fragment.data.date.toISOString()}
+                data-timestamp={fragment.data.date.toISOString()}
+              >
+                {fragment.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+              </time>
             </div>
             <div class="store-text">
               <Content />
@@ -239,6 +223,7 @@ const rendered = await Promise.all(
       <!-- Scrollable content area -->
       <div class="modal-scroll">
         <div class="modal-image-wrap" hidden></div>
+        <div class="modal-media-wrap" hidden></div>
 
         <div class="modal-body">
           <div class="modal-meta">
@@ -301,9 +286,58 @@ const rendered = await Promise.all(
 </html>
 
 <script>
+  // ── Relative time ──────────────────────────────────────────────────────────
+  function relativeTime(isoString: string): string {
+    const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
+    if (diff < 60) return "just now";
+    if (diff < 3600) {
+      const m = Math.floor(diff / 60);
+      return `${m} ${m === 1 ? "min" : "mins"} ago`;
+    }
+    if (diff < 86400) {
+      const h = Math.floor(diff / 3600);
+      return `${h} ${h === 1 ? "hour" : "hours"} ago`;
+    }
+    if (diff < 172800) return "yesterday";
+    if (diff < 604800) {
+      const d = Math.floor(diff / 86400);
+      return `${d} days ago`;
+    }
+    // Older: show the actual date
+    const date = new Date(isoString);
+    const sameYear = date.getFullYear() === new Date().getFullYear();
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      ...(sameYear ? {} : { year: "numeric" }),
+    });
+  }
+
+  function updateAllTimestamps() {
+    document.querySelectorAll<HTMLTimeElement>("time[data-timestamp]").forEach((el) => {
+      const ts = el.dataset.timestamp!;
+      el.textContent = relativeTime(ts);
+      // Tooltip shows the exact datetime on hover
+      el.title = new Date(ts).toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    });
+  }
+
+  updateAllTimestamps();
+  setInterval(updateAllTimestamps, 60_000);
+
+  // ── Modal ──────────────────────────────────────────────────────────────────
   const modal = document.getElementById("fragment-modal") as HTMLDialogElement;
   const modalImageWrap = modal.querySelector(
     ".modal-image-wrap",
+  ) as HTMLElement;
+  const modalMediaWrap = modal.querySelector(
+    ".modal-media-wrap",
   ) as HTMLElement;
   const modalDate = modal.querySelector(".modal-date") as HTMLElement;
   const modalTag = modal.querySelector(".modal-tag") as HTMLElement;
@@ -334,9 +368,54 @@ const rendered = await Promise.all(
       modalImageWrap.hidden = true;
     }
 
+    // Spotify / YouTube embed
+    const spotifyEmbed = (store as HTMLElement).dataset.spotifyEmbed;
+    const youtubeId = (store as HTMLElement).dataset.youtubeId;
+    if (spotifyEmbed) {
+      const iframe = document.createElement("iframe");
+      iframe.src = spotifyEmbed;
+      iframe.width = "100%";
+      iframe.height = "152";
+      iframe.allow =
+        "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+      iframe.setAttribute("loading", "lazy");
+      iframe.style.display = "block";
+      iframe.style.border = "none";
+      modalMediaWrap.innerHTML = "";
+      modalMediaWrap.appendChild(iframe);
+      modalMediaWrap.hidden = false;
+    } else if (youtubeId) {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+      iframe.width = "100%";
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.setAttribute("loading", "lazy");
+      iframe.style.display = "block";
+      iframe.style.border = "none";
+      iframe.style.aspectRatio = "16/9";
+      modalMediaWrap.innerHTML = "";
+      modalMediaWrap.appendChild(iframe);
+      modalMediaWrap.hidden = false;
+    } else {
+      modalMediaWrap.innerHTML = "";
+      modalMediaWrap.hidden = true;
+    }
+
     // Date
     const storedDate = store.querySelector(".store-date")!;
     modalDate.innerHTML = storedDate.innerHTML;
+    // Refresh relative time on the freshly cloned <time> element
+    const modalTimeEl = modalDate.querySelector<HTMLTimeElement>("time[data-timestamp]");
+    if (modalTimeEl) {
+      const ts = modalTimeEl.dataset.timestamp!;
+      modalTimeEl.textContent = relativeTime(ts);
+      modalTimeEl.title = new Date(ts).toLocaleString("en-US", {
+        month: "long", day: "numeric", year: "numeric",
+        hour: "numeric", minute: "2-digit",
+      });
+    }
 
     // Tag
     const tag = card.dataset.tag;
@@ -380,6 +459,9 @@ const rendered = await Promise.all(
 
   function closeModal() {
     document.documentElement.style.overflow = "";
+    // Clear media iframes so audio/video stops
+    modalMediaWrap.innerHTML = "";
+    modalMediaWrap.hidden = true;
     modal.close();
   }
 
@@ -427,7 +509,7 @@ const rendered = await Promise.all(
 
 <style>
   main {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 120px 60px 100px;
   }
@@ -492,73 +574,40 @@ const rendered = await Promise.all(
     padding: 60px 0;
   }
 
-  /* ── TIMELINE ── */
-  .timeline {
-    position: relative;
-  }
-
-  .timeline-line {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      var(--color-border) 8%,
-      var(--color-border) 92%,
-      transparent 100%
-    );
-    pointer-events: none;
-  }
-
-  .timeline-row {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr;
-    align-items: start;
-    margin-bottom: 40px;
-    position: relative;
-  }
-
-  /* ── DOT ── */
-  .dot-col {
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-  }
-
-  .dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--color-terracotta);
-    border: 2px solid var(--color-cream);
-    box-shadow: 0 0 0 1px var(--color-terracotta);
-    flex-shrink: 0;
+  /* ── MASONRY WALL ── */
+  .fragment-wall {
+    columns: 3;
+    column-gap: 20px;
   }
 
   /* ── FRAGMENT CARD ── */
   .fragment-card {
     all: unset;
     display: block;
+    position: relative;
     background: #fff;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
     transition:
       transform 0.2s ease,
-      box-shadow 0.2s ease;
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
     text-align: left;
     width: 100%;
     box-sizing: border-box;
+    /* Masonry: keep each card in one column, space below */
+    break-inside: avoid;
+    margin-bottom: 20px;
   }
 
   .fragment-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+    transform: translateY(-3px);
+    border-color: var(--color-terracotta);
+    box-shadow:
+      0 0 0 1px var(--color-terracotta),
+      0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
   .fragment-card:focus-visible {
@@ -566,10 +615,35 @@ const rendered = await Promise.all(
     outline-offset: 2px;
   }
 
+  /* Shine sweep — light catches the glass on hover */
+  .fragment-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 65%
+    );
+    transform: translateX(-100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .fragment-card:hover::before {
+    animation: glass-shine 0.55s ease forwards;
+  }
+
+  @keyframes glass-shine {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(200%); }
+  }
+
   .card-image {
     aspect-ratio: 1 / 1;
-    background: #fff;
-    border-bottom: 1px solid var(--color-border);
+    background: rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -595,13 +669,6 @@ const rendered = await Promise.all(
     flex-wrap: wrap;
     font-size: 0.75rem;
     color: var(--color-muted);
-  }
-
-  .card-meta--left {
-    justify-content: flex-end;
-  }
-  .card-meta--right {
-    justify-content: flex-start;
   }
 
   .tag-pill {
@@ -631,6 +698,66 @@ const rendered = await Promise.all(
   }
   .card-text p + p {
     margin-top: 0.75em;
+  }
+
+  /* ── CARD MEDIA (Spotify / YouTube) ── */
+  .card-media {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  /* Spotify preview */
+  .card-media--spotify {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: #121212;
+    color: #1db954;
+  }
+
+  .card-media-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #1db954;
+  }
+
+  /* YouTube thumbnail preview */
+  .card-media--youtube {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .card-media--youtube img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play-btn svg {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    padding: 10px;
+    color: #fff;
+    transition: background 0.15s;
+  }
+
+  .fragment-card:hover .play-btn svg {
+    background: rgba(0, 0, 0, 0.75);
   }
 
   /* ── MODAL ── */
@@ -733,6 +860,21 @@ const rendered = await Promise.all(
     background: #f7f5f2; /* letterbox color for contain */
   }
 
+  /* Spotify / YouTube embed container */
+  .modal-media-wrap {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border);
+    background: #000;
+    overflow: hidden;
+  }
+
+  /* Spotify iframe height is fixed at 152px; YouTube uses aspect-ratio set inline */
+  .modal-media-wrap iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
   .modal-body {
     padding: 22px 24px 26px;
   }
@@ -814,8 +956,12 @@ const rendered = await Promise.all(
     cursor: default;
   }
 
-  /* ── TABLET: narrower than desktop ── */
+  /* ── TABLET ── */
   @media (max-width: 1024px) and (min-width: 641px) {
+    .fragment-wall {
+      columns: 2;
+    }
+
     #fragment-modal {
       width: min(82vw, 680px);
     }
@@ -827,48 +973,8 @@ const rendered = await Promise.all(
       padding: 100px 20px 80px;
     }
 
-    .timeline-line {
-      left: 16px;
-      transform: none;
-    }
-
-    .timeline-row {
-      grid-template-columns: 32px 1fr;
-    }
-
-    /* All cards go to column 2, row 1 */
-    .timeline-row--left .fragment-card,
-    .timeline-row--right .fragment-card {
-      grid-column: 2;
-      grid-row: 1;
-    }
-
-    /* All dots go to column 1, row 1 */
-    .timeline-row--left .dot-col,
-    .timeline-row--right .dot-col {
-      grid-column: 1;
-      grid-row: 1;
-    }
-
-    /* Hide spacers */
-    .spacer {
-      display: none;
-    }
-
-    /* Reset left-side layout that was reversed */
-    .timeline-row--left {
-      grid-template-columns: 32px 1fr;
-    }
-
-    /* All meta rows left-aligned */
-    .card-meta--left,
-    .card-meta--right {
-      justify-content: flex-start;
-    }
-
-    /* Reset text alignment */
-    .card-body {
-      text-align: left;
+    .fragment-wall {
+      columns: 1;
     }
 
     #fragment-modal {
@@ -876,7 +982,7 @@ const rendered = await Promise.all(
     }
 
     .modal-image-wrap img {
-      max-height: 40vh; /* shorter cap on mobile so text stays visible */
+      max-height: 40vh;
     }
 
     .modal-scroll {

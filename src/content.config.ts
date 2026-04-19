@@ -64,6 +64,10 @@ const fragments = defineCollection({
       emoji: z.string().optional(),
       /** Local image file relative to the fragment (e.g. ./photo.jpg) — gets converted to WebP at build time */
       image: image().optional(),
+      /** Spotify track, album, or playlist URL — renders embedded player in modal */
+      spotify: z.string().url().optional(),
+      /** YouTube video URL — renders thumbnail on card, embedded player in modal */
+      youtube: z.string().url().optional(),
     }),
 });
 
