@@ -227,7 +227,7 @@ export const drawerData = {
   tamelo: {
     eyebrow: "Project - Personal",
     title: "Tamelo App &amp; API",
-    github: "https://github.com/salgadonikka/tamelo",
+    github: "https://github.com/salgadonikka/tamelo-app",
     body: `
       <p class="dr-summary">A weekly task planner built to explore modern .NET + React architecture outside of enterprise constraints. Tasks are assigned to days of the week using a circular state machine with four states.</p>
       <div class="dr-section">
@@ -244,7 +244,8 @@ export const drawerData = {
         </ul>
       </div>
       <div class="dr-stack">React 18 · TypeScript · ASP.NET Core 10 · Supabase · PostgreSQL · Zustand</div>
-      <a href="https://github.com/salgadonikka/tamelo" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
+      <a href="/projects/tamelo" class="dr-github">View full project →</a>
+      <a href="https://github.com/salgadonikka/tamelo-app" target="_blank" rel="noopener" class="dr-github">View on GitHub →</a>
     `,
   },
 

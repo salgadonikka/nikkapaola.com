@@ -20,6 +20,8 @@ const projects = defineCollection({
     draft: z.boolean().optional(),
     /** Screenshot URLs (CDN or absolute paths). First one is the hero. */
     screenshots: z.array(z.string()).optional(),
+    /** Optional captions for each screenshot, matched by index. */
+    screenshotCaptions: z.array(z.string()).optional(),
     /** Lower number = higher on index page */
     order: z.number().default(99),
   }),

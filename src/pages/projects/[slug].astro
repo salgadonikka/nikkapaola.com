@@ -5,6 +5,7 @@ import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import { SITE_TITLE } from "../../consts";
+import PhotoGallery from "../../components/PhotoGallery";
 import "../../styles/projects.css";
 
 export async function getStaticPaths() {
@@ -27,6 +28,7 @@ const {
   url,
   githubUrl,
   screenshots,
+  screenshotCaptions,
 } = project.data;
 
 const statusSlug = status.toLowerCase().replace(" ", "-");
@@ -106,16 +108,7 @@ const relatedPosts = tags?.length
           <div class="proj-section-content">
             {
               screenshots && screenshots.length > 0 ? (
-                <div class="proj-screenshots">
-                  {screenshots.map((src, i) => (
-                    <img
-                      src={src}
-                      alt={`${name} screenshot ${i + 1}`}
-                      class="screenshot-img"
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
+                <PhotoGallery client:load variant="screenshots" maxVisible={2} images={screenshots} name={name} captions={screenshotCaptions} />
               ) : (
                 <div class="proj-screenshots">
                   <div class="screenshot-placeholder">

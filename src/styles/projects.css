@@ -364,15 +364,43 @@
   gap: 8px;
 }
 
+.screenshot-btn {
+  display: block;
+  position: relative;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: zoom-in;
+  width: 100%;
+}
+
+.screenshot-btn:first-child { grid-column: 1 / -1; }
+
 .screenshot-img {
   width: 100%;
   height: auto;
   display: block;
   border-radius: 4px;
   border: 1px solid var(--color-border);
+  transition: opacity 0.2s;
 }
 
-.screenshot-img:first-child { grid-column: 1 / -1; }
+.screenshot-btn:hover .screenshot-img { opacity: 0.88; }
+
+.screenshot-more-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 26, 23, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: rgba(250, 247, 242, 0.92);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
 
 .screenshot-placeholder {
   border: 1px dashed var(--color-border);
