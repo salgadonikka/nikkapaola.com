@@ -445,14 +445,26 @@
 }
 
 .si-back {
-  font-size: 0.74rem;
-  color: #6b6760;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: rgba(250, 247, 242, 0.80);
   text-decoration: none;
-  transition: color 0.2s;
-  margin-top: 4px;
+  margin-top: 12px;
+  padding: 9px 14px;
+  border: 1px solid rgba(250, 247, 242, 0.25);
+  border-radius: 3px;
+  background: rgba(250, 247, 242, 0.10);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 .si-back:hover {
-  color: #a8a49c;
+  color: rgba(250, 247, 242, 0.95);
+  border-color: rgba(250, 247, 242, 0.40);
+  background: rgba(250, 247, 242, 0.18);
 }
 
 /* pulse dot */
@@ -1218,14 +1230,25 @@
 .t03c-link--resume svg { opacity: 0.9; }
 
 .t03c-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 24px;
-  font-size: 0.68rem;
-  color: #3a3830;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: rgba(250, 247, 242, 0.80);
   text-decoration: none;
-  transition: color 0.2s;
-  letter-spacing: 0.04em;
+  padding: 9px 14px;
+  border: 1px solid rgba(250, 247, 242, 0.25);
+  border-radius: 3px;
+  background: rgba(250, 247, 242, 0.10);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.t03c-back:hover { color: #7a7670; }
+.t03c-back:hover {
+  color: rgba(250, 247, 242, 0.95);
+  border-color: rgba(250, 247, 242, 0.40);
+  background: rgba(250, 247, 242, 0.18);
+}
 
 /* ══════════════════════════════════════════════════
    PROGRESS DOTS
@@ -1399,10 +1422,25 @@
   text-decoration: none;
 }
 .mob-site-back {
-  font-size: 0.68rem;
-  color: #3a3830;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: rgba(250, 247, 242, 0.80);
   text-decoration: none;
   margin-top: 4px;
+  padding: 9px 14px;
+  border: 1px solid rgba(250, 247, 242, 0.25);
+  border-radius: 3px;
+  background: rgba(250, 247, 242, 0.10);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  align-self: flex-start;
+}
+.mob-site-back:hover {
+  color: rgba(250, 247, 242, 0.95);
+  border-color: rgba(250, 247, 242, 0.40);
+  background: rgba(250, 247, 242, 0.18);
 }
 
 /* ══════════════════════════════════════════════════

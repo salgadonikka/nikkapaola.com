@@ -224,7 +224,7 @@ export interface SiteConfig {
 export const siteConfig = {
   title: 'nikkapaola.com',
   description:
-    'Personal blog by Nikka — software developer, thyroid cancer survivor, chronic traveler, and personal finance nerd.',
+    'Nikka Salgado, a Full-Stack Software Developer writing about tech, life, travel, and the things worth remembering.',
   url: 'https://nikkapaola.com',
 
   logo: {
@@ -295,7 +295,7 @@ export const siteConfig = {
       { label: 'Finance',              style: 'tag-lavender' },
     ],
     floatingCards: [
-      { icon: '📍', label: 'Currently in', value: 'Philippines'          },
+      { icon: '👩🏻‍💻', label: 'Currently in', value: 'Focus mode'             },
       { icon: '🌱', label: 'Next chapter',  value: 'Something exciting, TBA' },
     ],
     photoAlt: 'Nikka Paola',

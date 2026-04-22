@@ -15,7 +15,7 @@ const lastUpdated = new Date("2026-04-04");
   <head>
     <BaseHead
       title={`Now - ${siteConfig.title}`}
-      description={`What ${siteConfig.author.shortName} is up to right now — updated regularly.`}
+      description={`What ${siteConfig.author.shortName} is up to right now, updated regularly.`}
     />
   </head>
   <body>
@@ -42,7 +42,7 @@ const lastUpdated = new Date("2026-04-04");
       </div>
 
       <div class="now-sections">
-        <section class="now-block">
+        <!-- <section class="now-block">
           <div class="now-icon">📍</div>
           <div class="now-content">
             <h2>Where I am</h2>
@@ -52,7 +52,7 @@ const lastUpdated = new Date("2026-04-04");
               coming up.
             </p>
           </div>
-        </section>
+        </section>-->
 
         <section class="now-block">
           <div class="now-icon">💼</div>
@@ -85,9 +85,9 @@ const lastUpdated = new Date("2026-04-04");
             <h2>Reading</h2>
             <ul>
               <li>
-                <em>The Courage to be disliked</em> — Ichiro Kishimi, Fumitake Koga
+                <em>The Courage to be disliked</em> - Ichiro Kishimi, Fumitake Koga
               </li>
-              <li><em>Atomic Habits</em> — James Clear</li>
+              <li><em>Atomic Habits</em> - James Clear</li>
             </ul>
           </div>
         </section>
@@ -98,7 +98,7 @@ const lastUpdated = new Date("2026-04-04");
             <h2>Health</h2>
             <p>
               Post-thyroid cancer, doing well. Regular check-ups, TSH levels
-              stable. Focusing on building sustainable routines — sleep,
+              stable. Focusing on building sustainable routines: sleep,
               movement, less doom-scrolling.
             </p>
           </div>
@@ -134,14 +134,16 @@ const lastUpdated = new Date("2026-04-04");
                     >My personal system for getting out of the procrastination
                     sinkhole. Started as a notebook task system, now building it
                     as an app to allow better organization.</span
-                  ></span>
+                  ></span
+                >
               </li>
               <li>
                 <span class="now-li-body"
                   ><strong>My sister's portfolio site</strong><span
                     >She's a content creator and influencer, and I am building
                     her a proper online home.</span
-                  ></span>
+                  ></span
+                >
               </li>
               <li>This blog, obviously.</li>
             </ul>
@@ -158,14 +160,16 @@ const lastUpdated = new Date("2026-04-04");
                   ><strong>Polish</strong><span
                     >Very, very early beginner. The kind of beginner where every
                     lesson feels like a small miracle.</span
-                  ></span>
+                  ></span
+                >
               </li>
               <li>
                 <span class="now-li-body"
                   ><strong>Spanish</strong><span
                     >A2, 800+ day Duolingo streak and counting. At this point
                     it's part of my identity.</span
-                  ></span>
+                  ></span
+                >
               </li>
             </ul>
           </div>
@@ -331,7 +335,7 @@ const lastUpdated = new Date("2026-04-04");
   }
 
   .now-content li::before {
-    content: "—";
+    content: "-";
     color: var(--color-terracotta);
     flex-shrink: 0;
     font-size: 0.8rem;

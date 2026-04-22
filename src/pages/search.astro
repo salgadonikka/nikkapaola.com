@@ -1,14 +1,17 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_TITLE } from '../consts';
+import BaseHead from "../components/BaseHead.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { SITE_TITLE } from "../consts";
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={`Search — ${SITE_TITLE}`} description="Search all posts on nikkapaola.com" />
+    <BaseHead
+      title={`Search - ${SITE_TITLE}`}
+      description="Search all posts on nikkapaola.com"
+    />
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
   </head>
   <body>
@@ -23,8 +26,8 @@ import { SITE_TITLE } from '../consts';
       <div id="search-wrap">
         <div id="search"></div>
         <p id="search-dev-notice" class="dev-notice" style="display:none">
-          Search is only available after running <code>npm run build</code>.
-          In dev mode, use <a href="/blog">the blog listing</a> to browse posts.
+          Search is only available after running <code>npm run build</code>. In
+          dev mode, use <a href="/blog">the blog listing</a> to browse posts.
         </p>
       </div>
     </main>
@@ -34,20 +37,20 @@ import { SITE_TITLE } from '../consts';
     <script is:inline>
       (async function () {
         try {
-          await import('/pagefind/pagefind-ui.js');
+          await import("/pagefind/pagefind-ui.js");
           const PagefindUI = window.PagefindUI;
           new PagefindUI({
-            element: '#search',
+            element: "#search",
             showImages: true,
             excerptLength: 20,
             resetStyles: false,
           });
         } catch (err) {
-          console.error('[pagefind] failed to load:', err);
-          var notice = document.getElementById('search-dev-notice');
-          if (notice) notice.style.display = 'block';
-          var el = document.getElementById('search');
-          if (el) el.style.display = 'none';
+          console.error("[pagefind] failed to load:", err);
+          var notice = document.getElementById("search-dev-notice");
+          if (notice) notice.style.display = "block";
+          var el = document.getElementById("search");
+          if (el) el.style.display = "none";
         }
       })();
     </script>
@@ -61,7 +64,9 @@ import { SITE_TITLE } from '../consts';
     padding: 120px 60px 100px;
   }
 
-  .page-header { margin-bottom: 48px; }
+  .page-header {
+    margin-bottom: 48px;
+  }
 
   .page-eyebrow {
     font-size: 0.72rem;
@@ -76,7 +81,7 @@ import { SITE_TITLE } from '../consts';
   }
 
   .page-eyebrow::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 20px;
     height: 1px;
@@ -91,7 +96,10 @@ import { SITE_TITLE } from '../consts';
     line-height: 1.1;
   }
 
-  .page-title em { font-style: italic; color: var(--color-terracotta); }
+  .page-title em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
 
   /* ── PAGEFIND UI OVERRIDES ── */
   :global(.pagefind-ui) {
@@ -124,9 +132,14 @@ import { SITE_TITLE } from '../consts';
     border-radius: 3px;
   }
 
-  .dev-notice a { color: var(--color-terracotta); text-decoration: underline; }
+  .dev-notice a {
+    color: var(--color-terracotta);
+    text-decoration: underline;
+  }
 
   @media (max-width: 768px) {
-    main { padding: 100px 24px 80px; }
+    main {
+      padding: 100px 24px 80px;
+    }
   }
 </style>

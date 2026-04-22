@@ -14,7 +14,9 @@ const allFragments = await getCollection("fragments");
 const fragments = allFragments.sort((a, b) => b.id.localeCompare(a.id));
 
 function parseSpotifyEmbed(url: string): string | null {
-  const m = url.match(/open\.spotify\.com\/(track|album|playlist)\/([A-Za-z0-9]+)/);
+  const m = url.match(
+    /open\.spotify\.com\/(track|album|playlist)\/([A-Za-z0-9]+)/,
+  );
   if (!m) return null;
   return `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
 }
@@ -35,8 +37,12 @@ const tagColors: Record<string, { bg: string; color: string }> = {
 const rendered = await Promise.all(
   fragments.map(async (fragment) => {
     const { Content } = await render(fragment);
-    const spotifyEmbed = fragment.data.spotify ? parseSpotifyEmbed(fragment.data.spotify) : null;
-    const youtubeId = fragment.data.youtube ? parseYoutubeId(fragment.data.youtube) : null;
+    const spotifyEmbed = fragment.data.spotify
+      ? parseSpotifyEmbed(fragment.data.spotify)
+      : null;
+    const youtubeId = fragment.data.youtube
+      ? parseYoutubeId(fragment.data.youtube)
+      : null;
     return { fragment, Content, spotifyEmbed, youtubeId };
   }),
 );
@@ -75,8 +81,14 @@ const rendered = await Promise.all(
 
               const cardMedia = spotifyEmbed ? (
                 <div class="card-media card-media--spotify">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.516 17.314a.748.748 0 0 1-1.031.25c-2.824-1.725-6.376-2.115-10.564-1.158a.748.748 0 1 1-.334-1.458c4.583-1.049 8.517-.597 11.68 1.335a.748.748 0 0 1 .249 1.031zm1.472-3.27a.937.937 0 0 1-1.288.308c-3.231-1.985-8.157-2.56-11.977-1.401a.937.937 0 0 1-.545-1.793c4.363-1.325 9.786-.683 13.502 1.598a.937.937 0 0 1 .308 1.288zm.127-3.405C15.37 8.39 9.394 8.19 5.82 9.274a1.124 1.124 0 1 1-.653-2.151c4.114-1.249 10.952-1.008 15.265 1.574a1.124 1.124 0 1 1-1.317 1.942z"/>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.516 17.314a.748.748 0 0 1-1.031.25c-2.824-1.725-6.376-2.115-10.564-1.158a.748.748 0 1 1-.334-1.458c4.583-1.049 8.517-.597 11.68 1.335a.748.748 0 0 1 .249 1.031zm1.472-3.27a.937.937 0 0 1-1.288.308c-3.231-1.985-8.157-2.56-11.977-1.401a.937.937 0 0 1-.545-1.793c4.363-1.325 9.786-.683 13.502 1.598a.937.937 0 0 1 .308 1.288zm.127-3.405C15.37 8.39 9.394 8.19 5.82 9.274a1.124 1.124 0 1 1-.653-2.151c4.114-1.249 10.952-1.008 15.265 1.574a1.124 1.124 0 1 1-1.317 1.942z" />
                   </svg>
                   <span class="card-media-label">Listening ♫</span>
                 </div>
@@ -88,8 +100,13 @@ const rendered = await Promise.all(
                     loading="lazy"
                   />
                   <div class="play-btn" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z"/>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
                 </div>
@@ -125,7 +142,11 @@ const rendered = await Promise.all(
                         datetime={fragment.data.date.toISOString()}
                         data-timestamp={fragment.data.date.toISOString()}
                       >
-                        {fragment.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        {fragment.data.date.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </time>
                       {fragment.data.tag && tagInfo && (
                         <span
@@ -136,9 +157,7 @@ const rendered = await Promise.all(
                         </span>
                       )}
                       {fragment.data.emoji && (
-                        <span class="card-emoji">
-                          {fragment.data.emoji}
-                        </span>
+                        <span class="card-emoji">{fragment.data.emoji}</span>
                       )}
                     </div>
                     <div class="card-text">
@@ -179,7 +198,11 @@ const rendered = await Promise.all(
                 datetime={fragment.data.date.toISOString()}
                 data-timestamp={fragment.data.date.toISOString()}
               >
-                {fragment.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                {fragment.data.date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </time>
             </div>
             <div class="store-text">
@@ -288,7 +311,9 @@ const rendered = await Promise.all(
 <script>
   // ── Relative time ──────────────────────────────────────────────────────────
   function relativeTime(isoString: string): string {
-    const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
+    const diff = Math.floor(
+      (Date.now() - new Date(isoString).getTime()) / 1000,
+    );
     if (diff < 60) return "just now";
     if (diff < 3600) {
       const m = Math.floor(diff / 60);
@@ -314,18 +339,20 @@ const rendered = await Promise.all(
   }
 
   function updateAllTimestamps() {
-    document.querySelectorAll<HTMLTimeElement>("time[data-timestamp]").forEach((el) => {
-      const ts = el.dataset.timestamp!;
-      el.textContent = relativeTime(ts);
-      // Tooltip shows the exact datetime on hover
-      el.title = new Date(ts).toLocaleString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
+    document
+      .querySelectorAll<HTMLTimeElement>("time[data-timestamp]")
+      .forEach((el) => {
+        const ts = el.dataset.timestamp!;
+        el.textContent = relativeTime(ts);
+        // Tooltip shows the exact datetime on hover
+        el.title = new Date(ts).toLocaleString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        });
       });
-    });
   }
 
   updateAllTimestamps();
@@ -407,13 +434,18 @@ const rendered = await Promise.all(
     const storedDate = store.querySelector(".store-date")!;
     modalDate.innerHTML = storedDate.innerHTML;
     // Refresh relative time on the freshly cloned <time> element
-    const modalTimeEl = modalDate.querySelector<HTMLTimeElement>("time[data-timestamp]");
+    const modalTimeEl = modalDate.querySelector<HTMLTimeElement>(
+      "time[data-timestamp]",
+    );
     if (modalTimeEl) {
       const ts = modalTimeEl.dataset.timestamp!;
       modalTimeEl.textContent = relativeTime(ts);
       modalTimeEl.title = new Date(ts).toLocaleString("en-US", {
-        month: "long", day: "numeric", year: "numeric",
-        hour: "numeric", minute: "2-digit",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
       });
     }
 
@@ -478,7 +510,7 @@ const rendered = await Promise.all(
     if (e.target === modal) closeModal();
   });
 
-  // Fires for both Escape key and closeModal() — always clean up overflow lock
+  // Fires for both Escape key and closeModal() - always clean up overflow lock
   modal.addEventListener("close", () => {
     document.documentElement.style.overflow = "";
     shareLabel.textContent = "Share";
@@ -493,7 +525,7 @@ const rendered = await Promise.all(
       try {
         await navigator.share({ url });
       } catch {
-        // User cancelled — do nothing
+        // User cancelled - do nothing
       }
     } else {
       await navigator.clipboard.writeText(url);
@@ -615,7 +647,7 @@ const rendered = await Promise.all(
     outline-offset: 2px;
   }
 
-  /* Shine sweep — light catches the glass on hover */
+  /* Shine sweep - light catches the glass on hover */
   .fragment-card::before {
     content: "";
     position: absolute;
@@ -636,8 +668,12 @@ const rendered = await Promise.all(
   }
 
   @keyframes glass-shine {
-    from { transform: translateX(-100%); }
-    to   { transform: translateX(200%); }
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(200%);
+    }
   }
 
   .card-image {
@@ -805,7 +841,7 @@ const rendered = await Promise.all(
     }
   }
 
-  /* Close button — fixed to top-right corner, never scrolls away */
+  /* Close button - fixed to top-right corner, never scrolls away */
   .modal-close {
     position: absolute;
     top: 12px;
@@ -831,7 +867,7 @@ const rendered = await Promise.all(
     background: #fff;
   }
 
-  /* Scrollable content — this is the only element that scrolls */
+  /* Scrollable content - this is the only element that scrolls */
   .modal-scroll {
     overflow-y: auto;
     max-height: 82vh;

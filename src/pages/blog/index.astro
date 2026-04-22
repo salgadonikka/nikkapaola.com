@@ -1,29 +1,29 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE_TITLE } from '../../consts';
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Footer from "../../components/Footer.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import Header from "../../components/Header.astro";
+import { SITE_TITLE } from "../../consts";
 
 // Static site: query params are not available at build time.
 // All filtering is handled client-side via the <script> block below.
-const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+const allPosts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const pageTitle = `Blog — ${SITE_TITLE}`;
+const pageTitle = `Blog - ${SITE_TITLE}`;
 
 const topics = [
-  { icon: '🌸', name: 'Life & Self',       cat: 'life'      },
-  { icon: '🎗️', name: 'Health Journey',    cat: 'health'    },
-  { icon: '🗺️', name: 'Travel',            cat: 'travel'    },
-  { icon: '🌙', name: 'A New Chapter',       cat: 'tba'       },
-  { icon: '💻', name: 'Software Dev',      cat: 'work'      },
-  { icon: '📊', name: 'Personal Finance',  cat: 'finance'   },
-  { icon: '✨', name: 'Hobbies & Misc',    cat: 'misc'      },
-  { icon: '📖', name: 'Learnings',         cat: 'learnings' },
+  { icon: "🌸", name: "Life & Self", cat: "life" },
+  { icon: "🎗️", name: "Health Journey", cat: "health" },
+  { icon: "🗺️", name: "Travel", cat: "travel" },
+  { icon: "🌙", name: "A New Chapter", cat: "tba" },
+  { icon: "💻", name: "Software Dev", cat: "work" },
+  { icon: "📊", name: "Personal Finance", cat: "finance" },
+  { icon: "✨", name: "Hobbies & Misc", cat: "misc" },
+  { icon: "📖", name: "Learnings", cat: "learnings" },
 ];
 
 // Collect all tags across all posts for the tag cloud
@@ -40,7 +40,6 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
 
     <main>
       <div class="blog-layout">
-
         <!-- ── LEFT: POST LIST ── -->
         <div class="post-list-col">
           <div class="page-header">
@@ -52,123 +51,151 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
               <span class="filter-label">Filtering by</span>
               <span class="filter-chip">
                 <span id="filter-chip-value"></span>
-                <a href="/blog" class="filter-chip-remove" aria-label="Remove filter">✕</a>
+                <a
+                  href="/blog"
+                  class="filter-chip-remove"
+                  aria-label="Remove filter">✕</a
+                >
               </span>
               <span id="filter-count" class="filter-count"></span>
             </div>
           </div>
 
           <div id="empty-state" class="empty-state" style="display:none">
-            <p>No posts match that filter. <a href="/blog" style="color:var(--color-terracotta)">Clear filter</a></p>
+            <p>
+              No posts match that filter. <a
+                href="/blog"
+                style="color:var(--color-terracotta)">Clear filter</a>
+            </p>
           </div>
 
-          {allPosts.length === 0 ? (
-            <div class="empty-state">
-              <p>No posts here yet. Check back soon ✦</p>
-            </div>
-          ) : (
-            <ul class="post-list">
-              {allPosts.map((post) => (
-                <li
-                  class="post-row"
-                  data-cat={post.data.category?.toLowerCase() ?? ''}
-                  data-tags={(post.data.tags ?? []).join(',')}
-                >
-                  <a href={`/blog/${post.id}/`} class="post-row-link">
-                    <div class="post-row-body">
-                      <div class="post-row-meta-top">
-                        {post.data.category && (
-                          <span class="post-row-cat">{post.data.category}</span>
-                        )}
-                        {post.data.isAlbum && (
-                          <span class="post-row-album">📷 Album</span>
-                        )}
-                      </div>
+          {
+            allPosts.length === 0 ? (
+              <div class="empty-state">
+                <p>No posts here yet. Check back soon ✦</p>
+              </div>
+            ) : (
+              <ul class="post-list">
+                {allPosts.map((post) => (
+                  <li
+                    class="post-row"
+                    data-cat={post.data.category?.toLowerCase() ?? ""}
+                    data-tags={(post.data.tags ?? []).join(",")}
+                  >
+                    <a href={`/blog/${post.id}/`} class="post-row-link">
+                      <div class="post-row-body">
+                        <div class="post-row-meta-top">
+                          {post.data.category && (
+                            <span class="post-row-cat">
+                              {post.data.category}
+                            </span>
+                          )}
+                          {post.data.isAlbum && (
+                            <span class="post-row-album">📷 Album</span>
+                          )}
+                        </div>
 
-                      <h2 class="post-row-title">{post.data.title}</h2>
-                      <p class="post-row-desc">{post.data.description}</p>
+                        <h2 class="post-row-title">{post.data.title}</h2>
+                        <p class="post-row-desc">{post.data.description}</p>
 
-                      <div class="post-row-meta-bottom">
-                        <span class="post-row-date">
-                          <FormattedDate date={post.data.pubDate} />
-                        </span>
-                        {post.data.readingTime && (
-                          <span class="post-row-reading">· {post.data.readingTime}</span>
-                        )}
-                        {post.data.tags && post.data.tags.length > 0 && (
-                          <span class="post-row-tags">
-                            {post.data.tags.slice(0, 3).map((tag) => (
-                              <span class="post-row-tag">#{tag}</span>
-                            ))}
+                        <div class="post-row-meta-bottom">
+                          <span class="post-row-date">
+                            <FormattedDate date={post.data.pubDate} />
                           </span>
-                        )}
+                          {post.data.readingTime && (
+                            <span class="post-row-reading">
+                              · {post.data.readingTime}
+                            </span>
+                          )}
+                          {post.data.tags && post.data.tags.length > 0 && (
+                            <span class="post-row-tags">
+                              {post.data.tags.slice(0, 3).map((tag) => (
+                                <span class="post-row-tag">#{tag}</span>
+                              ))}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {post.data.heroImage && (
-                      <div class="post-row-thumb">
-                        <Image
-                          src={post.data.heroImage}
-                          alt={post.data.title}
-                          width={160}
-                          height={120}
-                          class="post-row-thumb-img"
-                        />
-                      </div>
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+                      {post.data.heroImage && (
+                        <div class="post-row-thumb">
+                          <Image
+                            src={post.data.heroImage}
+                            alt={post.data.title}
+                            width={160}
+                            height={120}
+                            class="post-row-thumb-img"
+                          />
+                        </div>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
         </div>
 
         <!-- ── RIGHT: SIDEBAR ── -->
         <aside class="sidebar">
-
           <div class="sidebar-section">
             <h3 class="sidebar-heading">Browse by topic</h3>
             <ul class="topic-list">
-              {topics.map((t) => (
-                <li>
-                  <a
-                    href={`/blog?cat=${t.cat}`}
-                    class="topic-link"
-                  >
-                    <span class="topic-icon">{t.icon}</span>
-                    <span class="topic-name">{t.name}</span>
-                  </a>
-                </li>
-              ))}
+              {
+                topics.map((t) => (
+                  <li>
+                    <a href={`/blog?cat=${t.cat}`} class="topic-link">
+                      <span class="topic-icon">{t.icon}</span>
+                      <span class="topic-name">{t.name}</span>
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
 
-          {allTags.length > 0 && (
-            <div class="sidebar-section">
-              <h3 class="sidebar-heading">Tags</h3>
-              <div class="tag-cloud">
-                {allTags.map((tag) => (
-                  <a
-                    href={`/blog?tag=${tag}`}
-                    class="tag-pill"
-                  >
-                    #{tag}
-                  </a>
-                ))}
+          {
+            allTags.length > 0 && (
+              <div class="sidebar-section">
+                <h3 class="sidebar-heading">Tags</h3>
+                <div class="tag-cloud">
+                  {allTags.map((tag) => (
+                    <a href={`/blog?tag=${tag}`} class="tag-pill">
+                      #{tag}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           <div class="sidebar-section">
             <a href="/search" class="sidebar-search">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/>
-                <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="6.5"
+                  cy="6.5"
+                  r="5"
+                  stroke="currentColor"
+                  stroke-width="1.4"></circle>
+                <line
+                  x1="10.5"
+                  y1="10.5"
+                  x2="14.5"
+                  y2="14.5"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"></line>
               </svg>
               Search all posts
             </a>
           </div>
-
         </aside>
       </div>
     </main>
@@ -193,7 +220,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
   }
 
   /* ── PAGE HEADER ── */
-  .page-header { margin-bottom: 48px; }
+  .page-header {
+    margin-bottom: 48px;
+  }
 
   .page-eyebrow {
     font-size: 0.72rem;
@@ -208,7 +237,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
   }
 
   .page-eyebrow::before {
-    content: '';
+    content: "";
     display: inline-block;
     width: 20px;
     height: 1px;
@@ -223,7 +252,10 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     line-height: 1.1;
   }
 
-  .page-title em { font-style: italic; color: var(--color-terracotta); }
+  .page-title em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
 
   /* ── ACTIVE FILTER BAR ── */
   .filter-bar {
@@ -263,7 +295,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     line-height: 1;
   }
 
-  .filter-chip-remove:hover { opacity: 1; }
+  .filter-chip-remove:hover {
+    opacity: 1;
+  }
 
   .filter-count {
     font-size: 0.72rem;
@@ -358,7 +392,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     color: var(--color-muted);
   }
 
-  .post-row-reading { color: var(--color-muted); }
+  .post-row-reading {
+    color: var(--color-muted);
+  }
 
   .post-row-tags {
     display: flex;
@@ -393,11 +429,22 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     transition: transform 0.4s ease;
   }
 
-  .post-row-link:hover .post-row-thumb-img { transform: scale(1.05); }
+  .post-row-link:hover .post-row-thumb-img {
+    transform: scale(1.05);
+  }
 
   /* ── EMPTY STATE ── */
-  .empty-state { padding: 80px 0; text-align: center; border-top: 1px solid var(--color-border); }
-  .empty-state p { font-family: var(--font-serif); font-style: italic; font-size: 1.1rem; color: var(--color-muted); }
+  .empty-state {
+    padding: 80px 0;
+    text-align: center;
+    border-top: 1px solid var(--color-border);
+  }
+  .empty-state p {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--color-muted);
+  }
 
   /* ── SIDEBAR ── */
   .sidebar {
@@ -441,7 +488,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     color: var(--color-ink-soft);
     font-size: 0.84rem;
     font-weight: 300;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
 
   .topic-link:hover {
@@ -455,8 +504,13 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     font-weight: 400;
   }
 
-  .topic-icon { font-size: 1rem; flex-shrink: 0; }
-  .topic-name { flex: 1; }
+  .topic-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .topic-name {
+    flex: 1;
+  }
 
   /* tag cloud */
   .tag-cloud {
@@ -473,7 +527,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     padding: 4px 10px;
     border-radius: 20px;
     text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
+    transition:
+      border-color 0.2s,
+      color 0.2s;
   }
 
   .tag-pill:hover {
@@ -498,7 +554,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
     padding: 8px 10px;
     border-radius: 6px;
     border: 1px solid var(--color-border);
-    transition: color 0.2s, border-color 0.2s;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
   }
 
   .sidebar-search:hover {
@@ -523,72 +581,100 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags ?? []))].sort();
       margin-top: 8px;
     }
 
-    .sidebar-section { min-width: 180px; flex: 1; }
+    .sidebar-section {
+      min-width: 180px;
+      flex: 1;
+    }
 
-    .topic-list { gap: 0; }
-    .topic-link { padding: 6px 8px; font-size: 0.8rem; }
+    .topic-list {
+      gap: 0;
+    }
+    .topic-link {
+      padding: 6px 8px;
+      font-size: 0.8rem;
+    }
   }
 
   @media (max-width: 600px) {
-    main { padding: 100px 24px 80px; }
+    main {
+      padding: 100px 24px 80px;
+    }
 
-    .post-row-thumb { width: 88px; height: 66px; }
-    .post-row-title { font-size: 1.1rem; }
+    .post-row-thumb {
+      width: 88px;
+      height: 66px;
+    }
+    .post-row-title {
+      font-size: 1.1rem;
+    }
 
-    .sidebar { flex-direction: column; }
-    .sidebar-section { min-width: unset; }
+    .sidebar {
+      flex-direction: column;
+    }
+    .sidebar-section {
+      min-width: unset;
+    }
   }
 </style>
 
 <script>
   (function () {
     const params = new URLSearchParams(window.location.search);
-    const cat = params.get('cat') || '';
-    const tag = params.get('tag') || '';
+    const cat = params.get("cat") || "";
+    const tag = params.get("tag") || "";
     if (!cat && !tag) return;
 
     // --- filter post rows ---
-    const rows = document.querySelectorAll<HTMLElement>('.post-row');
+    const rows = document.querySelectorAll<HTMLElement>(".post-row");
     let visible = 0;
     rows.forEach((row) => {
-      const rowCat = row.dataset.cat || '';
-      const rowTags = row.dataset.tags ? row.dataset.tags.split(',') : [];
-      const match = cat
-        ? rowCat === cat.toLowerCase()
-        : rowTags.includes(tag);
+      const rowCat = row.dataset.cat || "";
+      const rowTags = row.dataset.tags ? row.dataset.tags.split(",") : [];
+      const match = cat ? rowCat === cat.toLowerCase() : rowTags.includes(tag);
       if (match) {
         visible++;
       } else {
-        row.style.display = 'none';
+        row.style.display = "none";
       }
     });
 
     // --- filter bar ---
-    const bar = document.getElementById('filter-bar');
-    const chipValue = document.getElementById('filter-chip-value');
-    const countEl = document.getElementById('filter-count');
-    if (bar) bar.style.display = 'flex';
+    const bar = document.getElementById("filter-bar");
+    const chipValue = document.getElementById("filter-chip-value");
+    const countEl = document.getElementById("filter-count");
+    if (bar) bar.style.display = "flex";
     if (chipValue) chipValue.textContent = cat ? cat : `#${tag}`;
-    if (countEl) countEl.textContent = `${visible} post${visible !== 1 ? 's' : ''}`;
+    if (countEl)
+      countEl.textContent = `${visible} post${visible !== 1 ? "s" : ""}`;
 
     // --- empty state ---
     if (visible === 0) {
-      const list = document.querySelector<HTMLElement>('.post-list');
-      const empty = document.getElementById('empty-state');
-      if (list) list.style.display = 'none';
-      if (empty) empty.style.display = 'block';
+      const list = document.querySelector<HTMLElement>(".post-list");
+      const empty = document.getElementById("empty-state");
+      if (list) list.style.display = "none";
+      if (empty) empty.style.display = "block";
     }
 
     // --- active topic link ---
-    document.querySelectorAll<HTMLAnchorElement>('.topic-link').forEach((link) => {
-      const lp = new URLSearchParams((link.getAttribute('href') || '').split('?')[1] || '');
-      if (cat && lp.get('cat') === cat) link.classList.add('topic-link--active');
-    });
+    document
+      .querySelectorAll<HTMLAnchorElement>(".topic-link")
+      .forEach((link) => {
+        const lp = new URLSearchParams(
+          (link.getAttribute("href") || "").split("?")[1] || "",
+        );
+        if (cat && lp.get("cat") === cat)
+          link.classList.add("topic-link--active");
+      });
 
     // --- active tag pill ---
-    document.querySelectorAll<HTMLAnchorElement>('.tag-pill').forEach((pill) => {
-      const lp = new URLSearchParams((pill.getAttribute('href') || '').split('?')[1] || '');
-      if (tag && lp.get('tag') === tag) pill.classList.add('tag-pill--active');
-    });
+    document
+      .querySelectorAll<HTMLAnchorElement>(".tag-pill")
+      .forEach((pill) => {
+        const lp = new URLSearchParams(
+          (pill.getAttribute("href") || "").split("?")[1] || "",
+        );
+        if (tag && lp.get("tag") === tag)
+          pill.classList.add("tag-pill--active");
+      });
   })();
 </script>
