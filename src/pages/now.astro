@@ -2,6 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import Icon from "../components/Icon.astro";
 import { FEATURES, siteConfig } from "../site.config";
 
 if (!FEATURES.nowPage) return Astro.redirect("/");
@@ -43,7 +44,7 @@ const lastUpdated = new Date("2026-04-04");
 
       <div class="now-sections">
         <!-- <section class="now-block">
-          <div class="now-icon">📍</div>
+          <div class="now-icon"><Icon name="MapPin" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Where I am</h2>
             <p>
@@ -55,7 +56,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>-->
 
         <section class="now-block">
-          <div class="now-icon">💼</div>
+          <div class="now-icon"><Icon name="Briefcase" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Work</h2>
             <p>
@@ -67,7 +68,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">🌱</div>
+          <div class="now-icon"><Icon name="Leaf" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>The big thing</h2>
             <p>
@@ -80,7 +81,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">📚</div>
+          <div class="now-icon"><Icon name="BookOpen" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Reading</h2>
             <ul>
@@ -93,7 +94,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">🎗️</div>
+          <div class="now-icon"><Icon name="HeartStraight" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Health</h2>
             <p>
@@ -105,7 +106,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">✍️</div>
+          <div class="now-icon"><Icon name="NotePencil" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Writing</h2>
             <p>
@@ -124,7 +125,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">🛠️</div>
+          <div class="now-icon"><Icon name="Wrench" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Building</h2>
             <ul>
@@ -151,7 +152,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">🗣️</div>
+          <div class="now-icon"><Icon name="Translate" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Learning</h2>
             <ul>
@@ -176,7 +177,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">🎵</div>
+          <div class="now-icon"><Icon name="MusicNotes" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Listening to</h2>
             <p>
@@ -187,7 +188,7 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon">⏸️</div>
+          <div class="now-icon"><Icon name="Pause" size={22} weight="duotone" /></div>
           <div class="now-content">
             <h2>Not doing right now</h2>
             <p>
@@ -294,8 +295,9 @@ const lastUpdated = new Date("2026-04-04");
   }
 
   .now-icon {
-    font-size: 1.4rem;
-    padding-top: 4px;
+    display: flex;
+    padding-top: 3px;
+    color: var(--color-terracotta);
   }
 
   .now-content h2 {

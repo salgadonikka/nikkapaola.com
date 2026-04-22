@@ -11,9 +11,6 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nikkapaola.com',
-  redirects: {
-    '/': { destination: '/portfolio', status: 302 },
-  },
   integrations: [mdx(), sitemap(), react()],
   markdown: {
     syntaxHighlight: 'shiki',

@@ -8,14 +8,16 @@ const { logo } = siteConfig;
 
 <header>
   <nav>
-    <a href="/" class="nav-logo">{logo.part1}<span>{logo.part2}</span></a>
+    <a href="/home" class="nav-logo">{logo.part1}<span>{logo.part2}</span></a>
 
     <ul class="nav-links">
-      {visibleNav.map((link) => (
-        <li>
-          <a href={link.href}>{link.label}</a>
-        </li>
-      ))}
+      {
+        visibleNav.map((link) => (
+          <li>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))
+      }
     </ul>
 
     <div class="nav-actions">

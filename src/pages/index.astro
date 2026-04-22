@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
+import Icon from "../components/Icon.astro";
 import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
@@ -24,6 +25,19 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     <BaseHead title={siteConfig.title} description={siteConfig.description} />
   </head>
   <body>
+    <!-- ── PORTFOLIO SPLASH ── -->
+    <div class="splash-overlay" id="splash">
+      <div class="splash-card">
+        <div class="splash-eyebrow">One moment</div>
+        <p class="splash-text">Taking you to my portfolio<span class="splash-dots"></span></p>
+      </div>
+    </div>
+    <script is:inline>
+      setTimeout(function () {
+        window.location.replace('/portfolio');
+      }, 1800);
+    </script>
+
     <Header />
     <!-- Google Tag Manager (noscript fallback) -->
     {
@@ -77,7 +91,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
 
           <div class="floating-card card-location">
             <div class="card-label">
-              {hero.floatingCards[0].icon}
+              <Icon name={hero.floatingCards[0].icon} size={12} weight="duotone" class="floating-card-icon" />
               {hero.floatingCards[0].label}
             </div>
             <div class="card-value">{hero.floatingCards[0].value}</div>
@@ -85,7 +99,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
 
           <div class="floating-card card-season">
             <div class="card-label">
-              {hero.floatingCards[1].icon}
+              <Icon name={hero.floatingCards[1].icon} size={12} weight="duotone" class="floating-card-icon" />
               {hero.floatingCards[1].label}
             </div>
             <div class="card-value">{hero.floatingCards[1].value}</div>
@@ -104,7 +118,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
         {
           topics.map((t) => (
             <a href={`/blog?cat=${t.cat}`} class={`topic-card tc-${t.color}`}>
-              <span class="topic-icon">{t.icon}</span>
+              <span class="topic-icon"><Icon name={t.icon} size={28} weight="duotone" /></span>
               <div class="topic-name">{t.name}</div>
               <div class="topic-desc">{t.desc}</div>
               <span class="topic-count">{t.count}</span>
@@ -184,7 +198,7 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
         {
           aboutStrip.facts.map((fact) => (
             <div class="fact">
-              <span class="fact-emoji">{fact.emoji}</span>
+              <span class="fact-icon"><Icon name={fact.icon} size={22} weight="duotone" /></span>
               <div class="fact-label">{fact.label}</div>
               <div class="fact-value">{fact.value}</div>
             </div>
@@ -205,6 +219,60 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     <Footer />
   </body>
 </html>
+
+<style>
+  .splash-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 26, 23, 0.70);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: splashIn 0.45s ease both;
+  }
+
+  @keyframes splashIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .splash-card {
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .splash-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(184, 150, 90, 0.85);
+    margin-bottom: 14px;
+  }
+
+  .splash-text {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(250, 247, 242, 0.92);
+    margin: 0;
+  }
+
+  .splash-dots::after {
+    content: '';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%,  19% { content: '';   }
+    20%, 39% { content: '.';  }
+    40%, 59% { content: '..'; }
+    60%, 100%{ content: '...'; }
+  }
+</style>
 
 <style>
   /* ── HERO ── */
@@ -509,6 +577,10 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09);
   }
 
+  .floating-card-icon {
+    color: var(--color-terracotta);
+  }
+
   .card-location {
     bottom: 14%;
     right: 8%;
@@ -628,9 +700,9 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   }
 
   .topic-icon {
-    font-size: 1.8rem;
+    display: flex;
     margin-bottom: 14px;
-    display: block;
+    color: var(--color-terracotta);
   }
 
   .topic-name {
@@ -864,10 +936,10 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     padding-top: 20px;
   }
 
-  .fact-emoji {
-    font-size: 1.4rem;
+  .fact-icon {
+    display: flex;
     margin-bottom: 8px;
-    display: block;
+    color: var(--color-terracotta-light);
   }
   .fact-label {
     font-size: 0.72rem;

@@ -1,3 +1,7 @@
+---
+import Icon from "../Icon.astro";
+---
+
 <div class="now-card">
   <div class="now-card-header">
     <span class="now-card-label">Right now</span>
@@ -5,23 +9,23 @@
   </div>
   <ul class="now-card-list">
     <!--<li>
-      <span class="now-card-icon">📍</span>
+      <span class="now-card-icon"><Icon name="MapPin" size={13} weight="regular" /></span>
       <span>Cavite, Philippines - working remotely</span>
     </li>-->
     <li>
-      <span class="now-card-icon">🌱</span>
+      <span class="now-card-icon"><Icon name="Leaf" size={13} weight="duotone" /></span>
       <span>Planning a big (exciting) life change</span>
     </li>
     <li>
-      <span class="now-card-icon">🛠️</span>
+      <span class="now-card-icon"><Icon name="Wrench" size={13} weight="duotone" /></span>
       <span>Building Tamelo + my sister's portfolio site</span>
     </li>
     <li>
-      <span class="now-card-icon">🗣️</span>
+      <span class="now-card-icon"><Icon name="Translate" size={13} weight="duotone" /></span>
       <span>Learning Polish & 800+ days of Spanish on Duolingo</span>
     </li>
     <li>
-      <span class="now-card-icon">🎵</span>
+      <span class="now-card-icon"><Icon name="MusicNotes" size={13} weight="duotone" /></span>
       <span>Still Taylor Swift. No notes.</span>
     </li>
   </ul>
@@ -82,9 +86,10 @@
   }
 
   .now-card-icon {
-    font-size: 0.82rem;
+    display: flex;
     flex-shrink: 0;
-    margin-top: 1px;
+    margin-top: 2px;
+    color: var(--color-terracotta);
   }
 
   .now-card-list em {
