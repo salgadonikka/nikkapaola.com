@@ -517,6 +517,59 @@ const rendered = await Promise.all(
     modalShare.disabled = false;
   });
 
+  // ── Round-robin masonry columns ──────────────────────────────────────────
+  // CSS `columns` fills top-to-bottom then wraps (column-major order).
+  // We want left-to-right then down (row-major), so we redistribute cards
+  // into column divs in round-robin order via JS.
+  const masonryWall = document.querySelector<HTMLElement>(".fragment-wall");
+  const masonryCards = masonryWall
+    ? Array.from(
+        masonryWall.querySelectorAll<HTMLElement>(".fragment-card"),
+      )
+    : [];
+
+  function buildMasonryCols(): void {
+    if (!masonryWall || masonryCards.length === 0) return;
+    const n =
+      window.innerWidth > 1024 ? 3 : window.innerWidth >= 641 ? 2 : 1;
+
+    masonryWall.innerHTML = "";
+
+    if (n === 1) {
+      masonryWall.style.cssText =
+        "display:flex;flex-direction:column;gap:20px;";
+      masonryCards.forEach((card) => {
+        card.style.marginBottom = "0";
+        masonryWall.appendChild(card);
+      });
+      return;
+    }
+
+    masonryWall.style.cssText =
+      "display:flex;align-items:flex-start;gap:20px;";
+
+    const colEls = Array.from({ length: n }, () => {
+      const col = document.createElement("div");
+      col.style.cssText =
+        "flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:20px;";
+      masonryWall.appendChild(col);
+      return col;
+    });
+
+    masonryCards.forEach((card, i) => {
+      card.style.marginBottom = "0";
+      colEls[i % n].appendChild(card);
+    });
+  }
+
+  buildMasonryCols();
+
+  let _colResizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener("resize", () => {
+    clearTimeout(_colResizeTimer);
+    _colResizeTimer = setTimeout(buildMasonryCols, 120);
+  });
+
   // Share button
   modalShare.addEventListener("click", async () => {
     const url = `${window.location.origin}/fragments#frag-${currentId}`;
