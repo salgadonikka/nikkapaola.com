@@ -537,7 +537,7 @@ const rendered = await Promise.all(
 
     if (n === 1) {
       masonryWall.style.cssText =
-        "display:flex;flex-direction:column;gap:20px;";
+        "columns:unset;display:flex;flex-direction:column;gap:20px;";
       masonryCards.forEach((card) => {
         card.style.marginBottom = "0";
         masonryWall.appendChild(card);
@@ -546,7 +546,7 @@ const rendered = await Promise.all(
     }
 
     masonryWall.style.cssText =
-      "display:flex;align-items:flex-start;gap:20px;";
+      "columns:unset;display:flex;flex-direction:row;align-items:flex-start;gap:20px;";
 
     const colEls = Array.from({ length: n }, () => {
       const col = document.createElement("div");
@@ -556,9 +556,13 @@ const rendered = await Promise.all(
       return col;
     });
 
-    masonryCards.forEach((card, i) => {
+    const colHeights = new Array(n).fill(0);
+
+    masonryCards.forEach((card) => {
+      const shortest = colHeights.indexOf(Math.min(...colHeights));
       card.style.marginBottom = "0";
-      colEls[i % n].appendChild(card);
+      colEls[shortest].appendChild(card);
+      colHeights[shortest] += card.offsetHeight + 20;
     });
   }
 
