@@ -57,12 +57,10 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     <!-- ── HERO ── -->
     <section class="hero">
       <div class="hero-left">
-        <div class="hero-eyebrow">
-          Personal blog &amp; a little corner of the internet
-        </div>
+        <div class="hero-eyebrow">{hero.eyebrow}</div>
         <h1 class="hero-title">
-          Nothing on pause.<br />
-          <em>Everything on purpose.</em>
+          {hero.titleLine1}<br />
+          <em>{hero.titleLine2}</em>
         </h1>
         <p class="hero-tagline">{hero.tagline}</p>
         <div class="hero-tags">

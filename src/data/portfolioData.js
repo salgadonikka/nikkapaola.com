@@ -21,6 +21,11 @@ const ICONS = {
   resume: `<svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
 
+// ── Portfolio page meta description ──────────────────────────────────────────
+
+export const metaDescription =
+  "Full-Stack Software Engineer with 11+ years of experience in .NET and React. Based in the Philippines, open to roles in Poland and Europe.";
+
 // ── Identity ──────────────────────────────────────────────────────────────────
 
 export const identity = {

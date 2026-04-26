@@ -165,6 +165,12 @@ export interface FloatingCard {
 }
 
 export interface HeroConfig {
+  /** Eyebrow text above the h1, e.g. "Personal blog & a little corner of the internet" */
+  eyebrow: string;
+  /** First line of the h1, e.g. "Nothing on pause." */
+  titleLine1: string;
+  /** Second line of the h1 (rendered in <em>), e.g. "Everything on purpose." */
+  titleLine2: string;
   tagline: string;
   tags: HeroTag[];
   /** Exactly two floating cards shown over the hero photo */
@@ -287,6 +293,9 @@ export const siteConfig = {
   // },
 
   hero: {
+    eyebrow: 'Personal blog & a little corner of the internet',
+    titleLine1: 'Nothing on pause.',
+    titleLine2: 'Everything on purpose.',
     tagline: 'A documentation of my life.',
     tags: [
       { label: 'Health',               style: 'tag-rose'     },

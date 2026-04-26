@@ -3,6 +3,7 @@
 import { Image } from "astro:assets";
 import portfolioPhoto from "../../assets/portfolio-photo.jpg";
 import { identity, status, contactLinks, contactCopy } from "../../data/portfolioData.js";
+import { siteConfig } from "../../site.config";
 ---
 
 <section
@@ -55,6 +56,6 @@ import { identity, status, contactLinks, contactCopy } from "../../data/portfoli
       ))}
     </div>
 
-    <a href="/home" class="t03c-back">← Back to nikkapaola.com</a>
+    <a href="/home" class="t03c-back">← Back to {siteConfig.title}</a>
   </div>
 </section>

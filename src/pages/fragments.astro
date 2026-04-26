@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { FEATURES } from "../site.config";
+import { FEATURES, siteConfig } from "../site.config";
 
 if (!FEATURES.fragments) return Astro.redirect("/404");
 
@@ -52,7 +52,7 @@ const rendered = await Promise.all(
 <html lang="en">
   <head>
     <BaseHead
-      title="Fragments - nikkapaola.com"
+      title={`Fragments - ${siteConfig.title}`}
       description="Short thoughts, small moments, and everything in between. Not quite a post, not quite a note. Just fragments."
     />
   </head>
@@ -256,6 +256,18 @@ const rendered = await Promise.all(
           </div>
           <div class="modal-text"></div>
           <div class="modal-actions">
+            <div class="modal-nav">
+              <button class="modal-prev" aria-label="Previous fragment">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <polyline points="10 3 4 8 10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="modal-next" aria-label="Next fragment">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <polyline points="6 3 12 8 6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
             <button class="modal-share">
               <svg
                 width="14"
@@ -373,15 +385,16 @@ const rendered = await Promise.all(
   const modalShare = modal.querySelector(".modal-share") as HTMLButtonElement;
   const modalScroll = modal.querySelector(".modal-scroll") as HTMLElement;
   const modalClose = modal.querySelector(".modal-close") as HTMLButtonElement;
+  const modalPrev = modal.querySelector(".modal-prev") as HTMLButtonElement;
+  const modalNext = modal.querySelector(".modal-next") as HTMLButtonElement;
   const shareLabel = modalShare.querySelector(".share-label") as HTMLElement;
 
   let currentId = "";
+  let currentIndex = -1;
 
-  function openModal(card: HTMLElement) {
+  function populateModal(card: HTMLElement) {
     const id = card.dataset.id!;
     currentId = id;
-    // Capture scroll position before showModal() can move it
-    const scrollY = window.scrollY;
 
     const store = document.getElementById(`store-${id}`)!;
 
@@ -482,6 +495,13 @@ const rendered = await Promise.all(
     modalShare.disabled = false;
 
     modalScroll.scrollTop = 0;
+  }
+
+  function openModal(card: HTMLElement) {
+    const scrollY = window.scrollY;
+    currentIndex = masonryCards.indexOf(card);
+    populateModal(card);
+    updateNavButtons();
     // Lock page scroll so the background doesn't jump
     document.documentElement.style.overflow = "hidden";
     modal.showModal();
@@ -495,6 +515,18 @@ const rendered = await Promise.all(
     modalMediaWrap.innerHTML = "";
     modalMediaWrap.hidden = true;
     modal.close();
+  }
+
+  function updateNavButtons() {
+    modalPrev.disabled = currentIndex <= 0;
+    modalNext.disabled = currentIndex >= masonryCards.length - 1;
+  }
+
+  function navigateTo(index: number) {
+    if (index < 0 || index >= masonryCards.length) return;
+    currentIndex = index;
+    populateModal(masonryCards[index]);
+    updateNavButtons();
   }
 
   // Open on card click
@@ -573,6 +605,34 @@ const rendered = await Promise.all(
     clearTimeout(_colResizeTimer);
     _colResizeTimer = setTimeout(buildMasonryCols, 120);
   });
+
+  // Prev / next button clicks
+  modalPrev.addEventListener("click", () => navigateTo(currentIndex - 1));
+  modalNext.addEventListener("click", () => navigateTo(currentIndex + 1));
+
+  // Keyboard navigation (arrow keys, only when modal is open)
+  window.addEventListener("keydown", (e) => {
+    if (!modal.open) return;
+    if (e.key === "ArrowLeft") navigateTo(currentIndex - 1);
+    else if (e.key === "ArrowRight") navigateTo(currentIndex + 1);
+  });
+
+  // Touch swipe: left/right navigates; vertical motion still scrolls
+  let _touchStartX = 0;
+  let _touchStartY = 0;
+  modal.addEventListener("touchstart", (e) => {
+    _touchStartX = e.touches[0].clientX;
+    _touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  modal.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - _touchStartX;
+    const dy = e.changedTouches[0].clientY - _touchStartY;
+    // Only fire if swipe is more horizontal than vertical and crosses threshold
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) navigateTo(currentIndex + 1); // swipe left → next
+      else navigateTo(currentIndex - 1);         // swipe right → prev
+    }
+  }, { passive: true });
 
   // Share button
   modalShare.addEventListener("click", async () => {
@@ -1013,10 +1073,43 @@ const rendered = await Promise.all(
 
   .modal-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 22px;
     padding-top: 18px;
     border-top: 1px solid var(--color-border);
+  }
+
+  .modal-nav {
+    display: flex;
+    gap: 6px;
+  }
+
+  .modal-prev,
+  .modal-next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--color-ink-soft);
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .modal-prev:hover:not(:disabled),
+  .modal-next:hover:not(:disabled) {
+    border-color: var(--color-terracotta);
+    color: var(--color-terracotta);
+  }
+
+  .modal-prev:disabled,
+  .modal-next:disabled {
+    opacity: 0.3;
+    cursor: default;
   }
 
   .modal-share {

@@ -1,6 +1,7 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
 import { SITE_TITLE } from "../consts";
+import { metaDescription } from "../data/portfolioData.js";
 import PortfolioMobileBar from "../components/portfolio/PortfolioMobileBar.astro";
 import PortfolioSidebar from "../components/portfolio/PortfolioSidebar.astro";
 import Tile01Intro from "../components/portfolio/Tile01Intro.astro";
@@ -28,7 +29,7 @@ const tabletSections = [
   <head>
     <BaseHead
       title={`Portfolio - ${SITE_TITLE}`}
-      description="Full-Stack Software Engineer with 11+ years of experience in .NET and React. Based in the Philippines, open to roles in Poland and Europe."
+      description={metaDescription}
     />
     <!-- Portfolio is always light mode regardless of user preference -->
     <script is:inline>
