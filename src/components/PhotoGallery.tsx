@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
-  images: string[];
+  images?: string[];
+  /** Cloudflare Worker URL that returns a JSON array of image URLs. */
+  albumUrl?: string;
   captions?: string[];
   /** Gallery variant: square-crop grid. Screenshots variant: natural-ratio, first image full-width. */
   variant?: 'gallery' | 'screenshots';
@@ -14,7 +16,8 @@ interface Props {
 }
 
 export default function PhotoGallery({
-  images,
+  images = [],
+  albumUrl,
   captions = [],
   variant = 'gallery',
   columns = 3,
@@ -22,13 +25,35 @@ export default function PhotoGallery({
   name = 'Screenshot',
 }: Props) {
   const [active, setActive] = useState<number | null>(null);
+  const [fetchedImages, setFetchedImages] = useState<string[] | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!albumUrl) return;
+    fetch(albumUrl)
+      .then((r) => {
+        if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+        return r.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) throw new Error('Expected JSON array');
+        setFetchedImages(data);
+      })
+      .catch((err) => {
+        setFetchError(err.message);
+        setFetchedImages([]);
+      });
+  }, [albumUrl]);
+
+  const resolvedImages = albumUrl ? (fetchedImages ?? []) : images;
+  const isLoading = !!albumUrl && fetchedImages === null;
 
   function prev() {
-    setActive((i) => (i === null ? null : (i - 1 + images.length) % images.length));
+    setActive((i) => (i === null ? null : (i - 1 + resolvedImages.length) % resolvedImages.length));
   }
 
   function next() {
-    setActive((i) => (i === null ? null : (i + 1) % images.length));
+    setActive((i) => (i === null ? null : (i + 1) % resolvedImages.length));
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -37,8 +62,24 @@ export default function PhotoGallery({
     if (e.key === 'Escape') setActive(null);
   }
 
-  const visible = maxVisible != null ? images.slice(0, maxVisible) : images;
-  const hiddenCount = images.length - visible.length;
+  if (isLoading) {
+    return (
+      <p style={{ color: 'var(--color-ink)', opacity: 0.45, fontFamily: 'var(--font-serif)', fontStyle: 'italic', margin: '2em 0' }}>
+        Loading album…
+      </p>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <p style={{ color: 'var(--color-terracotta)', fontFamily: 'var(--font-serif)', fontStyle: 'italic', margin: '2em 0' }}>
+        Could not load album: {fetchError}
+      </p>
+    );
+  }
+
+  const visible = maxVisible != null ? resolvedImages.slice(0, maxVisible) : resolvedImages;
+  const hiddenCount = resolvedImages.length - visible.length;
 
   const modal = active !== null && (
     <div
@@ -76,7 +117,7 @@ export default function PhotoGallery({
       >←</button>
 
       <img
-        src={images[active]}
+        src={resolvedImages[active]}
         alt={captions[active] ?? (variant === 'screenshots' ? `${name} screenshot ${active + 1}` : `Photo ${active + 1}`)}
         onClick={(e) => e.stopPropagation()}
         style={{ maxWidth: '90vw', maxHeight: '82vh', objectFit: 'contain', borderRadius: '4px' }}
@@ -96,7 +137,7 @@ export default function PhotoGallery({
       )}
 
       <p style={{ color: 'rgba(250,247,242,0.35)', fontSize: '0.75rem', marginTop: '10px' }}>
-        {active + 1} / {images.length}
+        {active + 1} / {resolvedImages.length}
       </p>
 
       <button
@@ -122,7 +163,7 @@ export default function PhotoGallery({
               <button
                 key={i}
                 onClick={() => setActive(i)}
-                aria-label={showOverlay ? `View all ${images.length} screenshots` : `${name} screenshot ${i + 1} — click to enlarge`}
+                aria-label={showOverlay ? `View all ${resolvedImages.length} screenshots` : `${name} screenshot ${i + 1} — click to enlarge`}
                 className="screenshot-btn"
               >
                 <img
