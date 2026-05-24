@@ -43,7 +43,8 @@ const rendered = await Promise.all(
     const youtubeId = fragment.data.youtube
       ? parseYoutubeId(fragment.data.youtube)
       : null;
-    return { fragment, Content, spotifyEmbed, youtubeId };
+    const videoUrl = fragment.data.video ?? null;
+    return { fragment, Content, spotifyEmbed, youtubeId, videoUrl };
   }),
 );
 ---
@@ -74,7 +75,7 @@ const rendered = await Promise.all(
           <p class="empty-state">"Fragments are coming. Check back soon."</p>
         ) : (
           <div class="fragment-wall">
-            {rendered.map(({ fragment, Content, spotifyEmbed, youtubeId }) => {
+            {rendered.map(({ fragment, Content, spotifyEmbed, youtubeId, videoUrl }) => {
               const tagInfo = fragment.data.tag
                 ? tagColors[fragment.data.tag]
                 : null;
@@ -110,17 +111,47 @@ const rendered = await Promise.all(
                     </svg>
                   </div>
                 </div>
+              ) : videoUrl ? (
+                <div class="card-media card-media--video">
+                  <video
+                    src={videoUrl}
+                    class="card-video"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                  ></video>
+                  <button
+                    class="video-unmute-btn"
+                    data-muted="true"
+                    data-card-id={fragment.id}
+                    aria-label="Unmute video"
+                  >
+                    <svg class="icon-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+                      <line x1="22" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <line x1="16" y1="9" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="icon-sound" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+                      <path d="M15 8a5 5 0 0 1 0 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    </svg>
+                  </button>
+                </div>
               ) : null;
 
               return (
-                <button
+                <div
                   class="fragment-card"
+                  role="button"
+                  tabindex="0"
                   id={`frag-${fragment.id}`}
                   data-id={fragment.id}
                   data-tag={fragment.data.tag ?? ""}
                   data-tag-bg={tagInfo?.bg ?? ""}
                   data-tag-color={tagInfo?.color ?? ""}
                   data-emoji={fragment.data.emoji ?? ""}
+                  data-video={videoUrl ?? ""}
                   aria-label="Open fragment"
                 >
                   {fragment.data.image && (
@@ -164,7 +195,7 @@ const rendered = await Promise.all(
                       <Content />
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -175,11 +206,12 @@ const rendered = await Promise.all(
     <!-- Hidden content store: full-res images + rendered text, cloned into modal on open -->
     <div hidden aria-hidden="true">
       {
-        rendered.map(({ fragment, Content, spotifyEmbed, youtubeId }) => (
+        rendered.map(({ fragment, Content, spotifyEmbed, youtubeId, videoUrl }) => (
           <div
             id={`store-${fragment.id}`}
             data-spotify-embed={spotifyEmbed ?? ""}
             data-youtube-id={youtubeId ?? ""}
+            data-video={videoUrl ?? ""}
           >
             {fragment.data.image && (
               <div class="store-image">
@@ -370,6 +402,22 @@ const rendered = await Promise.all(
   updateAllTimestamps();
   setInterval(updateAllTimestamps, 60_000);
 
+  // ── Video: card mute state ─────────────────────────────────────────────────
+  let currentUnmutedCardId: string | null = null;
+
+  function muteAllCardVideos() {
+    document.querySelectorAll<HTMLVideoElement>(".card-video").forEach((v) => {
+      v.muted = true;
+    });
+    document
+      .querySelectorAll<HTMLElement>(".video-unmute-btn[data-card-id]")
+      .forEach((btn) => {
+        btn.dataset.muted = "true";
+        btn.setAttribute("aria-label", "Unmute video");
+      });
+    currentUnmutedCardId = null;
+  }
+
   // ── Modal ──────────────────────────────────────────────────────────────────
   const modal = document.getElementById("fragment-modal") as HTMLDialogElement;
   const modalImageWrap = modal.querySelector(
@@ -392,6 +440,12 @@ const rendered = await Promise.all(
   let currentId = "";
   let currentIndex = -1;
 
+  // SVG icon strings for modal video controls (dynamically created, so defined as strings)
+  const MUTED_ICON_SVG = `<svg class="icon-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="22" y1="9" x2="16" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="9" x2="22" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+  const SOUND_ICON_SVG = `<svg class="icon-sound" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 8a5 5 0 0 1 0 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+  const PAUSE_ICON_SVG = `<svg class="icon-pause" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`;
+  const PLAY_ICON_SVG  = `<svg class="icon-play"  width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+
   function populateModal(card: HTMLElement) {
     const id = card.dataset.id!;
     currentId = id;
@@ -408,10 +462,62 @@ const rendered = await Promise.all(
       modalImageWrap.hidden = true;
     }
 
-    // Spotify / YouTube embed
+    // Media: video > spotify > youtube
+    const videoUrl = (store as HTMLElement).dataset.video;
     const spotifyEmbed = (store as HTMLElement).dataset.spotifyEmbed;
     const youtubeId = (store as HTMLElement).dataset.youtubeId;
-    if (spotifyEmbed) {
+
+    if (videoUrl) {
+      const container = document.createElement("div");
+      container.style.cssText = "position:relative;";
+
+      const video = document.createElement("video");
+      video.src = videoUrl;
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.setAttribute("playsinline", "");
+      video.style.cssText =
+        "display:block;width:100%;max-height:55vh;aspect-ratio:auto 16/9;object-fit:contain;background:#000;";
+
+      const unmuteBtn = document.createElement("button");
+      unmuteBtn.className = "video-unmute-btn";
+      unmuteBtn.dataset.muted = "true";
+      unmuteBtn.setAttribute("aria-label", "Unmute video");
+      unmuteBtn.innerHTML = MUTED_ICON_SVG + SOUND_ICON_SVG;
+      unmuteBtn.addEventListener("click", () => {
+        video.muted = !video.muted;
+        unmuteBtn.dataset.muted = video.muted ? "true" : "false";
+        unmuteBtn.setAttribute(
+          "aria-label",
+          video.muted ? "Unmute video" : "Mute video",
+        );
+      });
+
+      const pauseBtn = document.createElement("button");
+      pauseBtn.className = "video-pause-btn";
+      pauseBtn.dataset.playing = "true";
+      pauseBtn.setAttribute("aria-label", "Pause video");
+      pauseBtn.innerHTML = PAUSE_ICON_SVG + PLAY_ICON_SVG;
+      pauseBtn.addEventListener("click", () => {
+        if (video.paused) {
+          video.play();
+          pauseBtn.dataset.playing = "true";
+          pauseBtn.setAttribute("aria-label", "Pause video");
+        } else {
+          video.pause();
+          pauseBtn.dataset.playing = "false";
+          pauseBtn.setAttribute("aria-label", "Play video");
+        }
+      });
+
+      container.appendChild(video);
+      container.appendChild(unmuteBtn);
+      container.appendChild(pauseBtn);
+      modalMediaWrap.innerHTML = "";
+      modalMediaWrap.appendChild(container);
+      modalMediaWrap.hidden = false;
+    } else if (spotifyEmbed) {
       const iframe = document.createElement("iframe");
       iframe.src = spotifyEmbed;
       iframe.width = "100%";
@@ -500,6 +606,7 @@ const rendered = await Promise.all(
   function openModal(card: HTMLElement) {
     const scrollY = window.scrollY;
     currentIndex = masonryCards.indexOf(card);
+    muteAllCardVideos();
     populateModal(card);
     updateNavButtons();
     // Lock page scroll so the background doesn't jump
@@ -511,7 +618,7 @@ const rendered = await Promise.all(
 
   function closeModal() {
     document.documentElement.style.overflow = "";
-    // Clear media iframes so audio/video stops
+    // Clear media iframes/videos so audio/video stops
     modalMediaWrap.innerHTML = "";
     modalMediaWrap.hidden = true;
     modal.close();
@@ -529,9 +636,74 @@ const rendered = await Promise.all(
     updateNavButtons();
   }
 
-  // Open on card click
+  // Open on card click or keyboard activation
   document.querySelectorAll<HTMLElement>(".fragment-card").forEach((card) => {
     card.addEventListener("click", () => openModal(card));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openModal(card);
+      }
+    });
+  });
+
+  // Card video unmute buttons — stopPropagation so the card click (open modal) doesn't fire
+  document
+    .querySelectorAll<HTMLButtonElement>(".video-unmute-btn[data-card-id]")
+    .forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const cardId = btn.dataset.cardId!;
+        const cardEl = document.getElementById(`frag-${cardId}`);
+        const video = cardEl?.querySelector<HTMLVideoElement>(".card-video");
+        if (!video) return;
+
+        // Mute a different card that was previously unmuted
+        if (currentUnmutedCardId && currentUnmutedCardId !== cardId) {
+          const prevCard = document.getElementById(
+            `frag-${currentUnmutedCardId}`,
+          );
+          const prevVideo =
+            prevCard?.querySelector<HTMLVideoElement>(".card-video");
+          const prevBtn =
+            prevCard?.querySelector<HTMLElement>(".video-unmute-btn");
+          if (prevVideo) prevVideo.muted = true;
+          if (prevBtn) {
+            prevBtn.dataset.muted = "true";
+            prevBtn.setAttribute("aria-label", "Unmute video");
+          }
+          currentUnmutedCardId = null;
+        }
+
+        // Toggle this card
+        video.muted = !video.muted;
+        btn.dataset.muted = video.muted ? "true" : "false";
+        btn.setAttribute(
+          "aria-label",
+          video.muted ? "Unmute video" : "Mute video",
+        );
+        currentUnmutedCardId = video.muted ? null : cardId;
+      });
+    });
+
+  // Adapt card video tile to the video's actual aspect ratio (portrait vs landscape)
+  document.querySelectorAll<HTMLVideoElement>(".card-video").forEach((video) => {
+    const container = video.closest<HTMLElement>(".card-media--video");
+    if (!container) return;
+
+    const applyRatio = () => {
+      if (video.videoWidth && video.videoHeight) {
+        container.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+        buildMasonryCols();
+      }
+    };
+
+    // Metadata may already be available for cached videos
+    if (video.readyState >= 1) {
+      applyRatio();
+    } else {
+      video.addEventListener("loadedmetadata", applyRatio, { once: true });
+    }
   });
 
   // Close on X button
@@ -731,9 +903,9 @@ const rendered = await Promise.all(
 
   /* ── FRAGMENT CARD ── */
   .fragment-card {
-    all: unset;
     display: block;
     position: relative;
+    container-type: inline-size; /* enables cqw units so children can reference the card's width */
     background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 10px;
@@ -749,6 +921,8 @@ const rendered = await Promise.all(
     /* Masonry: keep each card in one column, space below */
     break-inside: avoid;
     margin-bottom: 20px;
+    /* Prevent text selection on click */
+    user-select: none;
   }
 
   .fragment-card:hover {
@@ -853,7 +1027,7 @@ const rendered = await Promise.all(
     margin-top: 0.75em;
   }
 
-  /* ── CARD MEDIA (Spotify / YouTube) ── */
+  /* ── CARD MEDIA (Spotify / YouTube / Video) ── */
   .card-media {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
@@ -912,6 +1086,62 @@ const rendered = await Promise.all(
   .fragment-card:hover .play-btn svg {
     background: rgba(0, 0, 0, 0.75);
   }
+
+  /* Video preview */
+  .card-media--video {
+    position: relative;
+    width: 100%; /* explicit width prevents the browser from shrinking it when aspect-ratio × max-height conflict */
+    aspect-ratio: 16 / 9;
+    max-height: 100cqw; /* same cap as photo tile (1:1 = height equals card width) */
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── MUTE / UNMUTE + PAUSE / PLAY BUTTONS (card + modal) ──
+     :global() is required because the modal buttons are created via document.createElement
+     and never receive Astro's scoped data attribute. */
+  :global(.video-unmute-btn),
+  :global(.video-pause-btn) {
+    position: absolute;
+    bottom: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    z-index: 2;
+    padding: 0;
+    transition: background 0.15s;
+  }
+
+  :global(.video-unmute-btn) { right: 10px; }
+  :global(.video-pause-btn)  { left: 10px;  }
+
+  :global(.video-unmute-btn:hover),
+  :global(.video-pause-btn:hover) {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  /* Show only the relevant icon based on state */
+  :global(.video-unmute-btn[data-muted="true"]   .icon-sound) { display: none; }
+  :global(.video-unmute-btn[data-muted="false"]  .icon-muted) { display: none; }
+  :global(.video-pause-btn[data-playing="true"]  .icon-play)  { display: none; }
+  :global(.video-pause-btn[data-playing="false"] .icon-pause) { display: none; }
 
   /* ── MODAL ── */
   #fragment-modal {
@@ -1013,7 +1243,7 @@ const rendered = await Promise.all(
     background: #f7f5f2; /* letterbox color for contain */
   }
 
-  /* Spotify / YouTube embed container */
+  /* Spotify / YouTube / Video embed container */
   .modal-media-wrap {
     flex-shrink: 0;
     border-bottom: 1px solid var(--color-border);
@@ -1021,7 +1251,7 @@ const rendered = await Promise.all(
     overflow: hidden;
   }
 
-  /* Spotify iframe height is fixed at 152px; YouTube uses aspect-ratio set inline */
+  /* Spotify iframe height is fixed at 152px; YouTube/video uses aspect-ratio set inline */
   .modal-media-wrap iframe {
     display: block;
     width: 100%;

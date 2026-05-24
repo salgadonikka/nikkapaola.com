@@ -70,6 +70,8 @@ const fragments = defineCollection({
       spotify: z.string().url().optional(),
       /** YouTube video URL — renders thumbnail on card, embedded player in modal */
       youtube: z.string().url().optional(),
+      /** Local video file path (e.g. /videos/clip.mp4) or CDN URL — autoplays muted on card and in modal */
+      video: z.string().optional(),
     }),
 });
 
