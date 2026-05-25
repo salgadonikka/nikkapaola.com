@@ -7,7 +7,7 @@ import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 import NewsletterForm from "../components/NewsletterForm.tsx";
-import { siteConfig } from "../site.config";
+import { siteConfig, FEATURES } from "../site.config";
 import myPhoto from "../assets/myphoto.jpg";
 
 const { hero, aboutStrip, topics } = siteConfig;
@@ -26,17 +26,21 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
   </head>
   <body>
     <!-- ── PORTFOLIO SPLASH ── -->
-    <div class="splash-overlay" id="splash">
-      <div class="splash-card">
-        <div class="splash-eyebrow">One moment</div>
-        <p class="splash-text">Taking you to my portfolio<span class="splash-dots"></span></p>
-      </div>
-    </div>
-    <script is:inline>
-      setTimeout(function () {
-        window.location.replace('/portfolio');
-      }, 1800);
-    </script>
+    {FEATURES.portfolioRedirect && (
+      <>
+        <div class="splash-overlay" id="splash">
+          <div class="splash-card">
+            <div class="splash-eyebrow">One moment</div>
+            <p class="splash-text">Taking you to my portfolio<span class="splash-dots"></span></p>
+          </div>
+        </div>
+        <script is:inline>
+          setTimeout(function () {
+            window.location.replace('/portfolio');
+          }, 1800);
+        </script>
+      </>
+    )}
 
     <Header />
     <!-- Google Tag Manager (noscript fallback) -->

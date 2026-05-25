@@ -27,6 +27,10 @@ export const FEATURES = {
    */
   fragments: true,
 
+  // ── Landing page ────────────────────────────────
+  /** Redirect / to /portfolio with a splash screen. Set false when not job-hunting. */
+  portfolioRedirect: false,
+
   // ── Special pages ────────────────────────────────
   /** /apps — published apps and business ventures */
   appsPage: true,
@@ -255,7 +259,7 @@ export const siteConfig = {
     { href: '/blog',       label: 'Blog'      },
     { href: '/fragments',  label: 'Fragments', feature: 'fragments' },
     { href: '/now',        label: 'Now'       },
-    { href: '/portfolio',  label: 'Portfolio' },
+   // { href: '/portfolio',  label: 'Portfolio' },
     { href: '/projects',   label: 'Projects'  },
     { href: '/about',      label: 'About'     },
   ],
