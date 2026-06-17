@@ -1,33 +1,30 @@
 ---
 import Icon from "../Icon.astro";
+import { siteConfig } from "../../site.config";
+
+const { nowTeaser } = siteConfig;
+const lastUpdated = new Date(nowTeaser.lastUpdated).toLocaleDateString("en-US", {
+  month: "short",
+  year: "numeric",
+});
 ---
 
 <div class="now-card">
   <div class="now-card-header">
-    <span class="now-card-label">Right now</span>
+    <div class="now-card-label">
+      <span class="live-dot" aria-hidden="true"></span>
+      Right now
+    </div>
     <a href="/now" class="now-card-more">Full /now →</a>
   </div>
+  <p class="now-card-updated">Updated {lastUpdated}</p>
   <ul class="now-card-list">
-    <!--<li>
-      <span class="now-card-icon"><Icon name="MapPin" size={13} weight="regular" /></span>
-      <span>Cavite, Philippines - working remotely</span>
-    </li>-->
-    <li>
-      <span class="now-card-icon"><Icon name="Leaf" size={13} weight="duotone" /></span>
-      <span>Planning a big (exciting) life change</span>
-    </li>
-    <li>
-      <span class="now-card-icon"><Icon name="Wrench" size={13} weight="duotone" /></span>
-      <span>Building Tamelo + my sister's portfolio site</span>
-    </li>
-    <li>
-      <span class="now-card-icon"><Icon name="Translate" size={13} weight="duotone" /></span>
-      <span>Learning Polish & 800+ days of Spanish on Duolingo</span>
-    </li>
-    <li>
-      <span class="now-card-icon"><Icon name="MusicNotes" size={13} weight="duotone" /></span>
-      <span>Still Taylor Swift. No notes.</span>
-    </li>
+    {nowTeaser.bullets.map((b) => (
+      <li>
+        <span class="now-card-icon"><Icon name={b.icon} size={13} weight="duotone" /></span>
+        <span>{b.text}</span>
+      </li>
+    ))}
   </ul>
 </div>
 
@@ -42,18 +39,36 @@ import Icon from "../Icon.astro";
   .now-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 12px;
+    align-items: center;
+    margin-bottom: 4px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--color-border);
   }
 
   .now-card-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     font-size: 0.65rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-terracotta);
     font-weight: 500;
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #4ade80;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse-live 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-live {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+    50%       { box-shadow: 0 0 0 4px rgba(74, 222, 128, 0); }
   }
 
   .now-card-more {
@@ -65,6 +80,13 @@ import Icon from "../Icon.astro";
 
   .now-card-more:hover {
     opacity: 0.75;
+  }
+
+  .now-card-updated {
+    font-size: 0.64rem;
+    color: var(--color-muted);
+    margin: 0 0 12px;
+    letter-spacing: 0.03em;
   }
 
   .now-card-list {
@@ -90,9 +112,5 @@ import Icon from "../Icon.astro";
     flex-shrink: 0;
     margin-top: 2px;
     color: var(--color-terracotta);
-  }
-
-  .now-card-list em {
-    font-style: italic;
   }
 </style>

@@ -16,7 +16,7 @@
 export const FEATURES = {
   // ── Core content ────────────────────────────────
   blog: true,
-  projects: true,
+  projects: false,
   nowPage: true,
   search: true,
   rss: true,
@@ -141,6 +141,17 @@ export interface KofiConfig {
   username: string;
 }
 
+export interface NowBullet {
+  icon: string;
+  text: string;
+}
+
+export interface NowTeaserConfig {
+  /** ISO date string — single source of truth; consumed by both homepage and /now */
+  lastUpdated: string;
+  bullets: NowBullet[];
+}
+
 export type TagStyle =
   | 'tag-rose'
   | 'tag-sage'
@@ -227,6 +238,7 @@ export interface SiteConfig {
   hero: HeroConfig;
   aboutStrip: AboutStripConfig;
   topics: Topic[];
+  nowTeaser: NowTeaserConfig;
 }
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -234,7 +246,7 @@ export interface SiteConfig {
 export const siteConfig = {
   title: 'nikkapaola.com',
   description:
-    'Nikka Salgado, a Full-Stack Software Developer writing about tech, life, travel, and the things worth remembering.',
+    'Nikka Salgado — writing about life, health, and travel. A personal documentation project.',
   url: 'https://nikkapaola.com',
 
   logo: {
@@ -246,7 +258,7 @@ export const siteConfig = {
   author: {
     name: 'Nikka Paola Salgado',
     shortName: 'Nikka Paola',
-    bio: 'Developer, traveler, thyroid cancer survivor. Writing about life, code, money, and the things in between.',
+    bio: 'Developer, traveler, thyroid cancer survivor. Writing about life, money, travel, and the things in between.',
   },
 
   social: {
@@ -259,8 +271,8 @@ export const siteConfig = {
     { href: '/blog',       label: 'Blog'      },
     { href: '/fragments',  label: 'Fragments', feature: 'fragments' },
     { href: '/now',        label: 'Now'       },
-   // { href: '/portfolio',  label: 'Portfolio' },
-    { href: '/projects',   label: 'Projects'  },
+    //{ href: '/portfolio',   label: 'Portfolio' },
+    //{ href: '/projects',   label: 'Projects' },
     { href: '/about',      label: 'About'     },
   ],
 
@@ -270,6 +282,7 @@ export const siteConfig = {
     { label: 'GitHub',    href: 'https://github.com/salgadonikka',         external: true  },
     { label: 'RSS',       href: '/rss.xml',                                external: true  },
     { label: 'Contact',   href: 'mailto:nikkapfs@gmail.com',               external: false },
+    { label: 'Dev',       href: 'https://dev.nikkapaola.com',              external: true  },
   ],
 
   analytics: {
@@ -302,10 +315,9 @@ export const siteConfig = {
     titleLine2: 'Everything on purpose.',
     tagline: 'A documentation of my life.',
     tags: [
-      { label: 'Health',               style: 'tag-rose'     },
-      { label: 'Travel',               style: 'tag-gold'     },
-      { label: 'Software Development', style: 'tag-blue'     },
-      { label: 'Finance',              style: 'tag-lavender' },
+      { label: 'Health',   style: 'tag-rose'     },
+      { label: 'Travel',   style: 'tag-gold'     },
+      { label: 'Finance',  style: 'tag-lavender' },
     ],
     floatingCards: [
       { icon: 'Laptop', label: 'Currently in', value: 'Focus mode'             },
@@ -315,7 +327,7 @@ export const siteConfig = {
   },
 
   aboutStrip: {
-    bio: "I'm Nikka, a Filipino software developer with a lot going on. This blog is where I write about the things I want to remember and the things I think might help someone else. I'm trying to live life intentionally and I want to put out something positive into the world. Cancer, code, money, travel, and the slow work of building a life that actually fits.",
+    bio: "I'm Nikka, a Filipino software developer with a lot going on. This blog is where I write about the things I want to remember and the things I think might help someone else. I'm trying to live life intentionally and I want to put out something positive into the world. Cancer, money, travel, and the slow work of building a life that actually fits.",
     facts: [
       { icon: 'MapPin',      label: 'Originally from',    value: 'The Philippines' },
       { icon: 'Leaf',        label: 'Next chapter',       value: 'A big move, soon'   },
@@ -325,15 +337,25 @@ export const siteConfig = {
   },
 
   topics: [
-    { icon: 'Flower',       name: 'Life & Self',      desc: 'Reflections, routines, and some life nuggets.',             count: 'Personal · Journal',   color: 'terracotta', cat: 'life'      },
-    { icon: 'HeartStraight', name: 'Health Journey',   desc: 'Thyroid cancer, recovery, and what comes after.',           count: 'Health · Survival',    color: 'dusty-rose', cat: 'health'    },
-    { icon: 'Compass',      name: 'Travel',           desc: "Places I've been, things I've learned there.",              count: 'Travel · Photography', color: 'gold',       cat: 'travel'    },
-    { icon: 'Moon',         name: 'A New Chapter',    desc: "Something is taking shape. I'll tell you when it's time.",  count: 'Coming Soon · TBA',    color: 'sage',       cat: 'tba'       },
-    { icon: 'Terminal',     name: 'Software Dev',     desc: 'Building things, career lessons, and tech thoughts.',       count: 'Tech · Career',        color: 'terracotta', cat: 'work'      },
-    { icon: 'ChartLineUp', name: 'Personal Finance', desc: 'Budgeting, saving, and making money less scary.',           count: 'Finance · Org',        color: 'blue',       cat: 'finance'   },
-    { icon: 'Palette',      name: 'Hobbies & Misc',   desc: "Everything else that doesn't fit a neat box.",              count: 'Lifestyle · Random',   color: 'lavender',   cat: 'misc'      },
-    { icon: 'BookOpen',     name: 'Learnings',        desc: "Books, courses, and things I'm figuring out.",              count: 'Growth · Notes',       color: 'sage',       cat: 'learnings' },
+    { icon: 'Flower',        name: 'Life & Self',      desc: 'Reflections, routines, and some life nuggets.',                            count: 'Personal · Journal',   color: 'terracotta', cat: 'life'      },
+    { icon: 'HeartStraight', name: 'Health Journey',   desc: 'Thyroid cancer, recovery, and what comes after.',                          count: 'Health · Survival',    color: 'dusty-rose', cat: 'health'    },
+    { icon: 'ForkKnife',     name: 'Recipes',          desc: 'High-protein, gluten-free-friendly meals I actually cook for myself.',      count: 'Food · Nutrition',     color: 'sage',       cat: 'recipes'   },
+    { icon: 'Compass',       name: 'Travel',           desc: "Places I've been, things I've learned there.",                             count: 'Travel · Photography', color: 'gold',       cat: 'travel'    },
+    { icon: 'Moon',          name: 'A New Chapter',    desc: "Something is taking shape. I'll tell you when it's time.",                 count: 'Coming Soon · TBA',    color: 'sage',       cat: 'tba'       },
+    { icon: 'ChartLineUp',   name: 'Personal Finance', desc: 'Budgeting, saving, and making money less scary.',                            count: 'Lifestyle · Random',   color: 'lavender',   cat: 'misc'      },
+    { icon: 'BookOpen',      name: 'Learnings',        desc: "Books, courses, and things I'm figuring out.",                             count: 'Finance · Org',        color: 'blue',       cat: 'finance'   },
+    { icon: 'Palette',       name: 'Misc',          desc: "Everything else that doesn't fit a neat box.",                           count: 'Growth · Notes',       color: 'sage',       cat: 'learnings' },
   ],
+
+  nowTeaser: {
+    lastUpdated: "2026-06-17",
+    bullets: [
+      { icon: "Leaf",          text: "Planning a big life change — exciting and terrifying in equal parts" },
+      { icon: "Briefcase",     text: "Software developer & people manager by day, focused on AI fluency" },
+      { icon: "BookOpen",      text: "Reading: The Courage to be Disliked + Atomic Habits" },
+      { icon: "HeartStraight", text: "Post-cancer stable, now navigating low ferritin levels" },
+    ],
+  },
 } satisfies SiteConfig;
 
 // ── Backwards-compat exports (replaces src/consts.ts) ─────────────────────────

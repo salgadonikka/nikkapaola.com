@@ -1,22 +1,34 @@
 ---
 import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Icon from "../components/Icon.astro";
 import Footer from "../components/Footer.astro";
-import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
-import NewsletterForm from "../components/NewsletterForm.tsx";
 import { siteConfig, FEATURES } from "../site.config";
 import myPhoto from "../assets/myphoto.jpg";
 
-const { hero, aboutStrip, topics } = siteConfig;
+const { hero, aboutStrip, topics, nowTeaser } = siteConfig;
 
-const recentPosts = (await getCollection("blog", ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 5);
+const tagColors: Record<string, { bg: string; color: string }> = {
+  life:    { bg: "#f2e4e1", color: "#a0514a" },
+  tech:    { bg: "#dfe8f0", color: "#3a5a78" },
+  travel:  { bg: "#f0e8d8", color: "#7a5c2a" },
+  finance: { bg: "#e0f0f8", color: "#2a5a78" },
+  random:  { bg: "#ece8f5", color: "#5a4a80" },
+};
 
-const [featuredPost, ...sidebarPosts] = recentPosts;
+const recentFragments = FEATURES.fragments
+  ? (await getCollection("fragments")).sort((a, b) => b.id.localeCompare(a.id)).slice(0, 4)
+  : [];
+
+const renderedFragments = await Promise.all(
+  recentFragments.map(async (fragment) => {
+    const { Content } = await render(fragment);
+    return { fragment, Content };
+  }),
+);
+
 ---
 
 <!doctype html>
@@ -130,64 +142,88 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
       </div>
     </section>
 
-    <!-- ── RECENT POSTS ── -->
-    <!--<section class="posts-section" id="posts">
-      <div class="section-header">
-        <h2 class="section-title">Recent <em>posts</em></h2>
-        <div class="section-line"></div>
-      </div>
+    <!-- ── RECENCY ROW: fragments + now ── -->
+    {(FEATURES.fragments && renderedFragments.length > 0) || FEATURES.nowPage ? (
+      <section class="recency-section">
+        <div class="recency-grid">
 
-      {recentPosts.length === 0 ? (
-        <p class="no-posts">Posts coming soon. Stay tuned ✦</p>
-      ) : (
-        <div class="posts-layout">
-          {featuredPost && (
-            <a href={`/blog/${featuredPost.id}/`} class="featured-post">
-              <div class="featured-image">
-                {featuredPost.data.heroImage ? (
-                  <Image
-                    src={featuredPost.data.heroImage}
-                    alt={featuredPost.data.title}
-                    width={800}
-                    height={450}
-                    class="featured-image-img"
-                  />
-                ) : (
-                  <span class="featured-image-text">✦</span>
-                )}
+          {FEATURES.fragments && renderedFragments.length > 0 && (
+            <div class="recency-fragments">
+              <div class="recency-col-header">
+                <h2 class="recency-col-title">Life <em>lately</em></h2>
+                <a href="/fragments" class="frags-view-all">All fragments →</a>
               </div>
-              <div class="featured-category">{featuredPost.data.category ?? 'Journal'}</div>
-              <h3 class="featured-title">{featuredPost.data.title}</h3>
-              <p class="featured-excerpt">{featuredPost.data.description}</p>
-              <div class="post-meta">
-                <span><FormattedDate date={featuredPost.data.pubDate} /></span>
-                {featuredPost.data.readingTime && <span>{featuredPost.data.readingTime}</span>}
+              <div class="fragments-strip">
+                {renderedFragments.map(({ fragment, Content }, i) => {
+                  const tagInfo = fragment.data.tag ? tagColors[fragment.data.tag] : null;
+                  const isTeaser = i === 3;
+                  return (
+                    <a
+                      href={isTeaser ? "/fragments" : `/fragments#frag-${fragment.id}`}
+                      class={`home-frag-card${isTeaser ? " home-frag-card--teaser" : ""}`}
+                    >
+                      {fragment.data.video && (
+                        <div class="hfc-media">
+                          <video src={fragment.data.video} autoplay muted loop playsinline class="hfc-video" />
+                        </div>
+                      )}
+                      {fragment.data.image && !fragment.data.video && (
+                        <div class="hfc-media">
+                          <Image src={fragment.data.image} alt="" width={400} height={200} class="hfc-img" />
+                        </div>
+                      )}
+                      <div class="hfc-body">
+                        <div class="hfc-meta">
+                          <time datetime={fragment.data.date.toISOString()} data-frag-ts={fragment.data.date.toISOString()}>
+                            {fragment.data.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                          </time>
+                          {fragment.data.tag && tagInfo && (
+                            <span class="hfc-tag-pill" style={`background:${tagInfo.bg};color:${tagInfo.color}`}>
+                              {fragment.data.tag}
+                            </span>
+                          )}
+                        </div>
+                        <div class="hfc-text"><Content /></div>
+                      </div>
+                      {isTeaser && (
+                        <div class="frag-see-more">
+                          <span>See more</span>
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <polyline points="6 3 12 8 6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      )}
+                    </a>
+                  );
+                })}
               </div>
-            </a>
+            </div>
           )}
 
-          {sidebarPosts.length > 0 && (
-            <aside class="posts-sidebar">
-              <h3>More recent</h3>
-              {sidebarPosts.map((post) => (
-                <a href={`/blog/${post.id}/`} class="post-list-item">
-                  <div class="post-list-cat">{post.data.category ?? 'Journal'}</div>
-                  <div class="post-list-title">{post.data.title}</div>
-                  <div class="post-list-date">
-                    <FormattedDate date={post.data.pubDate} />
-                    {post.data.readingTime && <> · {post.data.readingTime}</>}
-                  </div>
-                </a>
-              ))}
-            </aside>
+          {FEATURES.nowPage && (
+            <div class="recency-now">
+              <div class="recency-col-header">
+                <div class="now-eyebrow">
+                  <span class="live-dot" aria-hidden="true"></span>
+                  Right now
+                </div>
+                <a href="/now" class="frags-view-all">Full /now →</a>
+              </div>
+              <h2 class="now-teaser-title">What I'm <em>up to</em></h2>
+              <ul class="now-bullets">
+                {nowTeaser.bullets.map((b) => (
+                  <li class="now-bullet">
+                    <span class="now-bullet-icon"><Icon name={b.icon} size={16} weight="duotone" /></span>
+                    <span>{b.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
+
         </div>
-      )}
-
-      <div class="view-all-wrap">
-        <a href="/blog" class="btn-primary">View all posts</a>
-      </div>
-    </section>-->
+      </section>
+    ) : null}
 
     <!-- ── ABOUT STRIP ── -->
     <section class="about-strip" id="about">
@@ -209,18 +245,30 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
       </div>
     </section>
 
-    <!-- ── NEWSLETTER ── -->
-    <!--
-    <section class="newsletter-section">
-      <h2>Stay in the loop</h2>
-      <p>New posts when I have something worth saying - no filler, no spam. Just the good stuff.</p>
-      <NewsletterForm client:load />
-      <p class="newsletter-note">No spam. Unsubscribe anytime. ✦</p>
-    </section>
-    -->
     <Footer />
   </body>
 </html>
+
+<script>
+  function relativeTime(iso: string): string {
+    const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+    if (diff < 60) return "just now";
+    if (diff < 3600) { const m = Math.floor(diff / 60); return `${m} ${m === 1 ? "min" : "mins"} ago`; }
+    if (diff < 86400) { const h = Math.floor(diff / 3600); return `${h} ${h === 1 ? "hour" : "hours"} ago`; }
+    if (diff < 172800) return "yesterday";
+    if (diff < 604800) { const d = Math.floor(diff / 86400); return `${d} days ago`; }
+    const date = new Date(iso);
+    return date.toLocaleDateString("en-US", {
+      month: "short", day: "numeric",
+      ...(date.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}),
+    });
+  }
+  document.querySelectorAll<HTMLTimeElement>("time[data-frag-ts]").forEach((el) => {
+    const ts = el.dataset.fragTs!;
+    el.textContent = relativeTime(ts);
+    el.title = new Date(ts).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  });
+</script>
 
 <style>
   .splash-overlay {
@@ -1042,6 +1090,294 @@ const [featuredPost, ...sidebarPosts] = recentPosts;
     }
     .hero-tags {
       gap: 6px;
+    }
+  }
+</style>
+
+<style>
+  /* ── RECENCY ROW (fragments + now) ── */
+  .recency-section {
+    padding: 100px 60px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .recency-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .recency-fragments {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+  }
+
+  /* Left column header */
+  .recency-col-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .recency-col-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+
+  .recency-col-title em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
+
+  .frags-view-all {
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--color-terracotta);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: letter-spacing 0.2s;
+  }
+
+  .frags-view-all:hover {
+    letter-spacing: 0.1em;
+  }
+
+  /* Fragment cards: horizontal strip, 2 full + 3rd half-peeking */
+  .fragments-strip {
+    display: flex;
+    gap: 16px;
+    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .home-frag-card {
+    flex: 0 0 calc((100% - 48px) / 3.5);
+    /* no fixed height — stretches to fill strip height */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .home-frag-card:not(.home-frag-card--teaser):hover {
+    border-color: var(--color-terracotta);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .hfc-media {
+    width: 100%;
+    flex: 1;       /* fills card height above the body text */
+    min-height: 0;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .hfc-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hfc-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hfc-body {
+    padding: 10px 14px 12px;
+    flex-shrink: 0;   /* pinned at the bottom, media fills above */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .hfc-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.68rem;
+    color: var(--color-muted);
+    flex-wrap: wrap;
+  }
+
+  .hfc-tag-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hfc-text {
+    font-size: 0.82rem;
+    color: var(--color-ink-soft);
+    line-height: 1.65;
+    font-weight: 300;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .hfc-text p { margin: 0; }
+
+  /* "See more" gradient overlay on 3rd (teaser) card */
+  .frag-see-more {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.97) 45%
+    );
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 0 0 16px;
+    color: var(--color-terracotta);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .recency-now {
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    overflow: hidden;
+  }
+
+  .now-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-terracotta);
+    font-weight: 500;
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse-live 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-live {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+    50%       { box-shadow: 0 0 0 5px rgba(74, 222, 128, 0); }
+  }
+
+  .now-teaser-title {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .now-teaser-title em {
+    font-style: italic;
+    color: var(--color-terracotta);
+  }
+
+  .now-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .now-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.83rem;
+    color: var(--color-ink-soft);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .now-bullet-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--color-terracotta);
+    margin-top: 1px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .recency-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    /* When stacked: reset column heights and let now panel expand naturally */
+    .recency-fragments {
+      height: auto;
+    }
+    .recency-now {
+      height: auto;
+      overflow: visible;
+      max-width: 480px;
+    }
+    .fragments-strip {
+      flex: none;
+      height: 220px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .recency-section {
+      padding: 60px 24px;
+    }
+    .home-frag-card {
+      flex: 0 0 calc((100% - 16px) / 1.5);
+    }
+    .fragments-strip {
+      height: 200px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .home-frag-card {
+      flex: 0 0 calc((100% - 16px) / 1.5);
+    }
+    .fragments-strip {
+      height: 180px;
     }
   }
 </style>

@@ -7,8 +7,7 @@ import { FEATURES, siteConfig } from "../site.config";
 
 if (!FEATURES.nowPage) return Astro.redirect("/");
 
-// Update this date whenever you update the page content
-const lastUpdated = new Date("2026-04-04");
+const lastUpdated = new Date(siteConfig.nowTeaser.lastUpdated);
 ---
 
 <!doctype html>
@@ -56,7 +55,9 @@ const lastUpdated = new Date("2026-04-04");
         </section>-->
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="Briefcase" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="Briefcase" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Work</h2>
             <p>
@@ -68,7 +69,9 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="Leaf" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="Leaf" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>The big thing</h2>
             <p>
@@ -81,7 +84,9 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="BookOpen" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="BookOpen" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Reading</h2>
             <ul>
@@ -94,47 +99,65 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="HeartStraight" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="HeartStraight" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Health</h2>
             <p>
-              Post-thyroid cancer, doing well. Regular check-ups, TSH levels
-              stable. Focusing on building sustainable routines: sleep,
-              movement, less doom-scrolling.
+              Post-thyroid cancer, doing well and stable. Regular check-ups, but
+              I recently discovered that my ferritin levels are devastatingly
+              low. Now I know why my hair has been falling out! So I am
+              currently navigating that.. and still focusing on building
+              sustainable routines: sleep, movement, less doom-scrolling.
             </p>
           </div>
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="NotePencil" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="NotePencil" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Writing</h2>
             <p>
-              Publishing posts on <a
+              Haven't been publishing posts on <a
                 href="https://sidequeststofreedom.com/"
                 target="_blank"
                 rel="noopener">Side Quests To Freedom</a
-              >. Figuring out a sustainable way to maintain this along with its
-              social media pages <a
+              >. Still haven't figured out a sustainable way to maintain this
+              along with its social media pages <a
                 href="https://sidequeststofreedom.com/links"
                 target="_blank"
                 rel="noopener">linked here.</a
-              >
+              > I'm actually in a slump here. It's taken a step back due to priorities.
             </p>
           </div>
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="Wrench" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="Wrench" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Building</h2>
             <ul>
-              <li>
+              <!--<li>
                 <span class="now-li-body"
                   ><strong>Tamelo</strong><span
                     >My personal system for getting out of the procrastination
                     sinkhole. Started as a notebook task system, now building it
                     as an app to allow better organization.</span
+                  ></span
+              >
+              </li>-->
+              <li>
+                <span class="now-li-body"
+                  ><strong>My dedicated development subdomain</strong><span
+                    >I figured that dumping all the versions of myself in this
+                    one website makes it harder to maintain a clear identity. So
+                    I am building a separate subdomain for my development work.
+                    Still work in progress though.</span
                   ></span
                 >
               </li>
@@ -152,7 +175,9 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="Translate" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="Translate" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Learning</h2>
             <ul>
@@ -177,18 +202,22 @@ const lastUpdated = new Date("2026-04-04");
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="MusicNotes" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="MusicNotes" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Listening to</h2>
             <p>
-              Taylor Swift. Specifically, still Taylor Swift. This has been
-              going on for a couple of years now and I have made peace with it.
+              Taylor Swift. Specifically, still Taylor Swift. I knew it, I knew
+              you. ❤️
             </p>
           </div>
         </section>
 
         <section class="now-block">
-          <div class="now-icon"><Icon name="Pause" size={22} weight="duotone" /></div>
+          <div class="now-icon">
+            <Icon name="Pause" size={22} weight="duotone" />
+          </div>
           <div class="now-content">
             <h2>Not doing right now</h2>
             <p>
