@@ -16,6 +16,8 @@
   --color-border: #e8e2d9;
   --color-blossom: #f5dde8;
   --color-blossom-deep: #e8b4c8;
+  /* card surfaces (fragment tiles, post cards, etc.) */
+  --color-card-bg: #ffffff;
   /* nav glassmorphism bg — overridden in dark mode */
   --color-nav-bg: rgba(250, 247, 242, 0.88);
   /* code blocks stay dark regardless of theme */
@@ -30,6 +32,7 @@
 html[data-theme="dark"] {
   --color-cream: #1a1816;
   --color-warm-white: #211f1c;
+  --color-card-bg: #272420;
   --color-ink: #f0ece6;
   --color-ink-soft: #c8c4bc;
   --color-muted: #7a7670;
@@ -45,6 +48,7 @@ html[data-theme="dark"] {
   html:not([data-theme="light"]) {
     --color-cream: #1a1816;
     --color-warm-white: #211f1c;
+    --color-card-bg: #272420;
     --color-ink: #f0ece6;
     --color-ink-soft: #c8c4bc;
     --color-muted: #7a7670;

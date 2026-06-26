@@ -140,6 +140,11 @@ const renderedFragments = await Promise.all(
           ))
         }
       </div>
+      <div class="topics-dev-strip">
+        <Icon name="Code" size={14} weight="duotone" class="topics-dev-icon" />
+        <span>Also interested in the technical side?</span>
+        <a href="https://dev.nikkapaola.com" class="topics-dev-link" target="_blank" rel="noopener noreferrer">dev.nikkapaola.com →</a>
+      </div>
     </section>
 
     <!-- ── RECENCY ROW: fragments + now ── -->
@@ -157,10 +162,11 @@ const renderedFragments = await Promise.all(
                 {renderedFragments.map(({ fragment, Content }, i) => {
                   const tagInfo = fragment.data.tag ? tagColors[fragment.data.tag] : null;
                   const isTeaser = i === 3;
+                  const isQuote = !fragment.data.image && !fragment.data.video;
                   return (
                     <a
                       href={isTeaser ? "/fragments" : `/fragments#frag-${fragment.id}`}
-                      class={`home-frag-card${isTeaser ? " home-frag-card--teaser" : ""}`}
+                      class={`home-frag-card${isTeaser ? " home-frag-card--teaser" : ""}${isQuote ? " home-frag-card--quote" : ""}`}
                     >
                       {fragment.data.video && (
                         <div class="hfc-media">
@@ -779,6 +785,33 @@ const renderedFragments = await Promise.all(
     color: var(--color-muted);
   }
 
+  .topics-dev-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .topics-dev-icon {
+    color: var(--color-terracotta);
+    flex-shrink: 0;
+  }
+
+  .topics-dev-link {
+    color: var(--color-terracotta);
+    text-decoration: none;
+    font-weight: 500;
+    transition: letter-spacing 0.2s;
+  }
+
+  .topics-dev-link:hover {
+    letter-spacing: 0.03em;
+  }
+
   /* ── POSTS ── */
   .posts-section {
     padding: 100px 60px;
@@ -1005,6 +1038,7 @@ const renderedFragments = await Promise.all(
     font-weight: 300;
   }
 
+
   /* ── NEWSLETTER ── */
   .newsletter-section {
     padding: 80px 60px;
@@ -1112,6 +1146,7 @@ const renderedFragments = await Promise.all(
     display: flex;
     flex-direction: column;
     height: 350px;
+    min-width: 0; /* prevent grid column from expanding beyond 1fr due to content min-size */
   }
 
   /* Left column header */
@@ -1149,13 +1184,20 @@ const renderedFragments = await Promise.all(
     letter-spacing: 0.1em;
   }
 
-  /* Fragment cards: horizontal strip, 2 full + 3rd half-peeking */
+  /* Fragment cards: horizontal strip, scrollable carousel */
   .fragments-strip {
     display: flex;
     gap: 16px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;       /* Firefox */
+    -ms-overflow-style: none;    /* IE/Edge */
     flex: 1;
     min-height: 0;
+  }
+
+  .fragments-strip::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 
   .home-frag-card {
@@ -1163,9 +1205,9 @@ const renderedFragments = await Promise.all(
     /* no fixed height — stretches to fill strip height */
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: var(--color-card-bg);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
+    border-radius: 2px;
     overflow: hidden;
     text-decoration: none;
     cursor: pointer;
@@ -1176,6 +1218,51 @@ const renderedFragments = await Promise.all(
   .home-frag-card:not(.home-frag-card--teaser):hover {
     border-color: var(--color-terracotta);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ── QUOTE CARDS (text-only / spotify: no image, no video) ── */
+  .home-frag-card--quote {
+    background: var(--color-card-bg);
+  }
+
+  .home-frag-card--quote::before {
+    content: '\201C';
+    font-family: var(--font-serif);
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    font-size: 5.5rem;
+    line-height: 1;
+    color: var(--color-ink);
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .home-frag-card--quote .hfc-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-frag-card--quote .hfc-meta {
+    margin-bottom: 10px;
+  }
+
+  .home-frag-card--quote .hfc-text {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--color-ink);
+    font-weight: 400;
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
   }
 
   .hfc-media {
@@ -1264,7 +1351,7 @@ const renderedFragments = await Promise.all(
   .recency-now {
     background: var(--color-warm-white);
     border: 1px solid var(--color-border);
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 20px 24px;
     display: flex;
     flex-direction: column;
@@ -1340,6 +1427,10 @@ const renderedFragments = await Promise.all(
   }
 
   /* ── RESPONSIVE ── */
+  .recency-section {
+    overflow-x: hidden;
+  }
+
   @media (max-width: 1024px) {
     .recency-grid {
       grid-template-columns: 1fr;
@@ -1352,11 +1443,15 @@ const renderedFragments = await Promise.all(
     .recency-now {
       height: auto;
       overflow: visible;
-      max-width: 480px;
+      max-width: 100%;
     }
     .fragments-strip {
       flex: none;
       height: 220px;
+    }
+    /* Tablet: show 2.5 cards */
+    .home-frag-card {
+      flex: 0 0 calc((100% - 32px) / 2.5);
     }
   }
 
@@ -1364,6 +1459,7 @@ const renderedFragments = await Promise.all(
     .recency-section {
       padding: 60px 24px;
     }
+    /* Mobile: show 1.5 cards */
     .home-frag-card {
       flex: 0 0 calc((100% - 16px) / 1.5);
     }
@@ -1373,8 +1469,9 @@ const renderedFragments = await Promise.all(
   }
 
   @media (max-width: 480px) {
+    /* Small phones: show ~1.25 cards so each card fills more of the screen */
     .home-frag-card {
-      flex: 0 0 calc((100% - 16px) / 1.5);
+      flex: 0 0 calc((100% - 16px) / 1.25);
     }
     .fragments-strip {
       height: 180px;
